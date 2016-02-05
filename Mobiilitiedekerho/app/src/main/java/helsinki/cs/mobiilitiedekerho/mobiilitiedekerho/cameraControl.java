@@ -10,7 +10,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.MediaController;
 import android.widget.Toast;
+import android.widget.VideoView;
 
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
@@ -19,19 +21,24 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class cameraControl extends AppCompatActivity {
+
+
+public class CameraControl extends AppCompatActivity {
 
     private static final int VIDEO_CAPTURE = 101;
     private Uri fileUri;
-    private databaseControl dbControl = new databaseControl();
+    //private DatabaseControl dbControl = new DatabaseControl();
     private File mediaFile;
     private String mediaFileName;
     private String bucketName = "mobiilitiedekerho-testi";
+    private VideoControl vidCtrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_videobrowser);
+
+        Button playButton = (Button) findViewById(R.id.playButton);
 
         Button recordButton =
                 (Button) findViewById(R.id.recordButton);
@@ -89,12 +96,12 @@ public class cameraControl extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 Toast.makeText(this, "Video has been saved to:\n" +
                         data.getData(), Toast.LENGTH_LONG).show();
-                        TransferUtility transutil = dbControl.getTransferUtility();
-                TransferObserver observer = transutil.upload(
-                        bucketName,     /* The bucket to upload to */
-                        mediaFileName,    /* The key for the uploaded object */
-                        mediaFile        /* The file where the data to upload exists */
-                );
+                       // TransferUtility transutil = dbControl.getTransferUtility();
+              //  TransferObserver observer = transutil.upload(
+              //          bucketName,     /* The bucket to upload to */
+              //          mediaFileName,    /* The key for the uploaded object */
+              //          mediaFile        /* The file where the data to upload exists */
+              //  );
             } else if (resultCode == RESULT_CANCELED) {
                 Toast.makeText(this, "Video recording cancelled.",
                         Toast.LENGTH_LONG).show();
@@ -103,6 +110,18 @@ public class cameraControl extends AppCompatActivity {
                         Toast.LENGTH_LONG).show();
             }
         }
+    }
+    public void playButtonOnClick(View view) {
+        VideoView videoView = (VideoView)findViewById(R.id.viewTaskVideo);
+        String taskVideo = "https://s3.eu-central-1.amazonaws.com/p60v4ow30312-tasks/VID_20160201_150600.mp4";
+        Uri videoUri = Uri.parse(taskVideo);
+        MediaController mediaController = new
+                MediaController(this);
+        mediaController.setAnchorView(videoView);
+        mediaController.setMediaPlayer(videoView);
+        videoView.setMediaController(mediaController);
+        videoView.setVideoURI(videoUri);
+        videoView.start();
     }
 }
 

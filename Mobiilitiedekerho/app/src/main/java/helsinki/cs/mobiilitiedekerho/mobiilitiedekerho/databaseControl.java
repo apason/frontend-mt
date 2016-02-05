@@ -1,6 +1,6 @@
 package helsinki.cs.mobiilitiedekerho.mobiilitiedekerho;
 
-
+/**
 import android.app.Activity;
 
 import com.amazonaws.auth.CognitoCachingCredentialsProvider;
@@ -10,10 +10,8 @@ import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 
-/**
- * Created by Henry on 5.2.2016.
- */
-public class databaseControl {
+
+public class DatabaseControl {
 
     // Initialize the Amazon Cognito credentials provider
     public CognitoCachingCredentialsProvider getCredentialsProvider() {
@@ -36,4 +34,8 @@ public class databaseControl {
 
         return transferUtility;
     }
-}
+} */
+
+
+
+
