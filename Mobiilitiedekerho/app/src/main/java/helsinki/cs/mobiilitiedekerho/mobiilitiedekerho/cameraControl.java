@@ -2,6 +2,7 @@ package helsinki.cs.mobiilitiedekerho.mobiilitiedekerho;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -38,7 +39,7 @@ public class CameraControl extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_videobrowser);
 
-        Button playButton = (Button) findViewById(R.id.playButton);
+        //Button playButton = (Button) findViewById(R.id.playButton);
 
         Button recordButton =
                 (Button) findViewById(R.id.recordButton);
@@ -111,17 +112,30 @@ public class CameraControl extends AppCompatActivity {
             }
         }
     }
+
+    //Toistaa valitun videon
     public void playButtonOnClick(View view) {
-        VideoView videoView = (VideoView)findViewById(R.id.viewTaskVideo);
-        String taskVideo = "https://s3.eu-central-1.amazonaws.com/p60v4ow30312-tasks/VID_20160201_150600.mp4";
+        final VideoView videoView = (VideoView)findViewById(R.id.viewTaskVideo);
+        String taskVideo ="";
+        if (view.getId() == R.id.button1) taskVideo = "https://s3.eu-central-1.amazonaws.com/p60v4ow30312-tasks/VID_20160201_150600.mp4";
+        if (view.getId() == R.id.button2) taskVideo = "https://s3.eu-central-1.amazonaws.com/p60v4ow30312-answers/20160207_221819%5B1%5D.mp4";
         Uri videoUri = Uri.parse(taskVideo);
-        MediaController mediaController = new
-                MediaController(this);
+        MediaController mediaController = new MediaController(this);
         mediaController.setAnchorView(videoView);
         mediaController.setMediaPlayer(videoView);
         videoView.setMediaController(mediaController);
         videoView.setVideoURI(videoUri);
         videoView.start();
+
+        //tyhjentää ruudun videon toiston jälkeen
+        videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                videoView.setVisibility(View.GONE);
+                videoView.setVisibility(View.VISIBLE);
+            }
+        });
+
     }
 }
 
