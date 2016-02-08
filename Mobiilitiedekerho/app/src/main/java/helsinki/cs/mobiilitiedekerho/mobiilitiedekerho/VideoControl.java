@@ -18,7 +18,7 @@ public class VideoControl extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_videobrowser);
-        Button playButton = (Button) findViewById(R.id.playButton);
+        //Button playButton = (Button) findViewById(R.id.playButton);
 
 
     }
