@@ -33,6 +33,7 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:23.1.1'
     compile 'com.amazonaws:aws-android-sdk-s3:2.+'
+    compile fileTree(dir: 'libs', include: '*.jar')// googlen http clientin importautuksia varten
     //lisätty testiriippuvuudet ohjeen mukaan: http://developer.android.com/training/testing/start/index.html
     //mitä eroa on testCompilella ja androidTestCompilella?
     // Optional -- Mockito framework
