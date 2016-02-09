@@ -12,8 +12,6 @@ import com.google.api.client.util.Key;
 import com.google.gson.*; //pitää säätää
 import java.net.HttpURLConnection;
 import java.io.IOException;
-import java.util.List;
-import java.util.LinkedList; //???
 
 
 public class HttpService extends IntentService {
@@ -37,28 +35,31 @@ public class HttpService extends IntentService {
     }
     
     
-    
+    //Pitkä luokka, voi paloitella tarvittaessa, mutta ei siitä kyllä ole hyötyä kun kaikki tämä on tehtävä putkeen + jaettu jo metodissa kokonaisuuksiin.
     /**
     * This method returns the JSON as String of the wanted API call.
     * @param API_call: That is the API call to be executed.
     * @param paramsAndValues: Parameter and value pair, odd ones are the parameters and even ones the values.
-    * @param auth: true if is auhtenticate API call.
+    * Note: It does add automatically the user's hash except when the API call in question is the "AuthenticateUser".
+    * @return a HashMap (returned as abstraction Map) containing the response from the server. Keys are parameters' names and values are well the parameters values.
+    * (Note value field as Object so that also numbers can be passed from the server directly.)
     */
-    private String getResponse(String API_call, String... paramsAndValues, Boolean auth)) {
+    private Map <String, Object> getResponse(String API_call, String... paramsAndValues)) {
 	try {
-	
-	    InputStream in;
+	    //Creates the query to be added to the URL, that is the parameters of the API call.
 	    String query = "";
-	    for (int i = 0 ; i < params.size ; i+2) {
+	    for (int i = 0 ; i < params.size ; i+= 2) {
 		query += params[i] + "=" + values[i+1];
-		if (i < params.size -1) query += "&";
+		if (i < params.size -2) query += "&";
 	    }
 	    
+	    //Creates a URL connection, always has the user's hash with it except when the call is the authentication call.
 	    URL url;
-	    if (auth) url = new URL(urli + API_call + "?" + query);
+	    if (API_call == "AuthenticateUser") url = new URL(urli + API_call + "?" + query);
 	    else url = new URL(urli + API_call + "?" + userHash + query);
 	    HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
 	    
+	    //Creates a string (for GSON to be parsed) from the connection's inputStream.
             BufferedReader br = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
             StringBuilder sb = new StringBuilder();
             String line;
@@ -66,7 +67,11 @@ public class HttpService extends IntentService {
 		sb.append(line+"\n");
             }
             br.close();
-            return sb.toString();
+            
+            //Creates the response Map and returns it to the caller.
+            Map <String, Object> response = new HashMap <String, Object>();
+            Map <String, Object> response = (Map <String, Object>) gson.fromJson(sb.toString(), response.getClass());
+            return response;
                 
 	} catch (ClientProtocolException e) {
 	    e.printStackTrace();
@@ -77,29 +82,28 @@ public class HttpService extends IntentService {
 	} finally {
 	    urlConnection.disconnect();
 	}
-    
     }
 
 
-    /**
-    * This method parses the response dynamically, what it parses depends of which parameters are to be parsed.
-    * @param json: JSON response as string.
-    * @param responseParams: contains the params to be parsed (status is parsed by default).
-    */
-    private LinkedList<String> parseResponse(String json, String... responseParams)) {
-	Response response = new Gson().fromJson(json, Response.class);
-	
-	if (response.getStatus != "Succes") throws("Critical failure, nothing is to be done for now"); //No anyways jollain tavalla on huomioitava tämä. Ja se mitä se oikeati palautti.
-	
-	
-	LinkedList<String> list = new LinkedList<String>();
-	
-	for (int i = 0 ; i < responseParams.size ; i++) {
-	    list += response.get(responseParams[i]);
-	}
-    
-	return list;
-    }
+//     /**
+//     * This method parses the response dynamically, what it parses depends of which parameters are to be parsed.
+//     * @param json: JSON response as string.
+//     * @param responseParams: contains the params to be parsed (status is parsed by default).
+//     */
+//     private LinkedList<String> parseResponse(String json, String... responseParams)) {
+// 	Response response = new Gson().fromJson(json, Response.class);
+// 	
+// 	//if (response.getStatus != "Succes") throws("Critical failure, nothing is to be done for now"); //No anyways jollain tavalla on huomioitava tämä. Ja se mitä se oikeati palautti.
+// 	
+// 	
+// 	LinkedList<String> list = new LinkedList<String>();
+// 	
+// 	for (int i = 0 ; i < responseParams.size ; i++) {
+// 	    list += response.get(responseParams[i]);
+// 	}
+//     
+// 	return list;
+//     }
 
 
     /**
@@ -109,31 +113,28 @@ public class HttpService extends IntentService {
     * @param password: The user's password.
     */
     public void AuthenticateUser(String email, String password) {
-	String response = getResponse("AuthenticateUser", "email", email, "password", password);
-	LinkedList<String> list = parseResponse(response, "user_hash");
-	userHash = list.getFirst();
+	Map <String, Object> response = getResponse("AuthenticateUser", "email", email, "password", password);
+	userHash = response.get("user_hash");
     }
 
-    /** NYT tämä palauttaa vaan URI, no 1-rpintille OK.
+    /** NYT tämä palauttaa vaan URIn Stringina, no 1-rpintille OK.
     * Gets the description of the desired task.
     * @param taskId: The task's id of which description is to be retrieved.
+    * @return The task-video URI as string.
     */
     public String DescribeTask(String taskId) {
-	String response = getResponse("DescribeTask", "task_id", taskId);
-	LinkedList<String> list = parseResponse(response, "task_id", "uri", "loaded");
-	
-	return list.element(1);
+	Map <String, Object>  response = getResponse("DescribeTask", "task_id", taskId); //Contains: "task_id", "uri", "loaded"
+	return (String) response.get("uri");
     }
 
     /**
-    * Starts uploading a video to S3 relating to a task.
+    * Gets the information necesary to start uploading a video to S3 and notices the back-end server about the uploading so that it would be possible.
     * @param taskId: All answers does link to a certain task -> taskId is the task's id of the task to be answered.
-    * @return linked list in which first element is the task_id (useless?), the second the video's id, and the third is the uri to upload in S3.
+    * @return HashMap in which elements (key names are the following, as string, values as objects): "task_id" (useless?), the video's id to be: "answer_id", the "uri" to upload in S3.
     */
-    public LinkedList<String> StartAnswerUpload(String taskId) {
-	String response = getResponse("StartAnswerUpload", "task_id", taskId);
-	LinkedList<String> list = parseResponse(response, "task_id", "answer_id", "uri");
-	return list;
+    public Map <String, Object> StartAnswerUpload(String taskId) {
+	Map <String, Object>  response = getResponse("StartAnswerUpload", "task_id", taskId); //Contains: "task_id", "answer_id", "uri"
+	return response; //TODO: Better as a simple array.
     }
 
     /**
@@ -142,18 +143,16 @@ public class HttpService extends IntentService {
     * @param uploadStatus: Whether it succeeded or not,	succes if succeeded.
     */
     public void EndAnswerUpload(String taskId, String uploadStatus) {
-	String response = getResponse("EndAnswerUpload", "answer_id", answerId, "upload_status", uploadStatus);
-	LinkedList<String> list = parseResponse(response);
+	getResponse("EndAnswerUpload", "answer_id", answerId, "upload_status", uploadStatus);
     }
 
 
     /**
-    * Gets the description of the desired task. EI 1-sprintissä! On nyt void.
-    * @param answerId: The answer's id of which description is to be retrieved.
+    * Gets the description of the desired answer (that is a user-uploaded video). EI 1-sprintissä! On nyt void.
+    * @param answerId: The answer's id of which the description is to be retrieved.
     */
     public void DescribeAnswer(String answerId) {
-	String response = getResponse("DescribeAnswer", "answer_id", taskId);
-	LinkedList<String> list = parseResponse(response, "answer_id", "jne", "jne");
+	Map <String, Object>  response = getResponse("DescribeAnswer", "answer_id", taskId);
     }
 
 }
