@@ -10,13 +10,20 @@ import com.google.api.client.json.JsonObjectParser;
 import com.google.api.client.json.GenericJson;
 import com.google.api.client.util.Key;
 import com.google.gson.*; //pitää säätää
+
 import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.MalformedURLException;
+import java.util.Map;
+import java.util.HashMap;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.io.IOException;
 
 
 public class HttpService extends IntentService {
 
-    private String urli = mobiilitiedekerho.duckdns.org; //The IP of the back-end server, it is needed to add parameters to it to be able to do the GETttooooo stufff. Hard-coded.
+    private String urli = "mobiilitiedekerho.duckdns.org"; //The IP of the back-end server, it is needed to add parameters to it to be able to do the GETttooooo stufff. Hard-coded.
     private String userHash; //For now it is saved inside this class. TODO: Save persistently, etc.
 
 
@@ -44,20 +51,22 @@ public class HttpService extends IntentService {
     * @return a HashMap (returned as abstraction Map) containing the response from the server. Keys are parameters' names and values are well the parameters values.
     * (Note value field as Object so that also numbers can be passed from the server directly.)
     */
-    private Map <String, Object> getResponse(String API_call, String... paramsAndValues)) {
+    private Map <String, Object> getResponse(String API_call, String... paramsAndValues) {
+	
+	HttpURLConnection urlConnection;
 	try {
 	    //Creates the query to be added to the URL, that is the parameters of the API call.
 	    String query = "";
-	    for (int i = 0 ; i < params.size ; i+= 2) {
-		query += params[i] + "=" + values[i+1];
-		if (i < params.size -2) query += "&";
+	    for (int i = 0 ; i < params.length ; i+= 2) {
+		query += paramsAndValues[i] + "=" + paramsAndValues[i+1];
+		if (i < params.length -2) query += "&";
 	    }
 	    
 	    //Creates a URL connection, always has the user's hash with it except when the call is the authentication call.
 	    URL url;
 	    if (API_call == "AuthenticateUser") url = new URL(urli + API_call + "?" + query);
 	    else url = new URL(urli + API_call + "?" + userHash + query);
-	    HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+	    urlConnection = (HttpURLConnection) url.openConnection();
 	    
 	    //Creates a string (for GSON to be parsed) from the connection's inputStream.
             BufferedReader br = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
@@ -70,11 +79,9 @@ public class HttpService extends IntentService {
             
             //Creates the response Map and returns it to the caller.
             Map <String, Object> response = new HashMap <String, Object>();
-            Map <String, Object> response = (Map <String, Object>) gson.fromJson(sb.toString(), response.getClass());
+            response = (Map <String, Object>) gson.fromJson(sb.toString(), response.getClass());
             return response;
                 
-	} catch (ClientProtocolException e) {
-	    e.printStackTrace();
 	} catch (MalformedURLException e) {
 	    e.printStackTrace();
 	} catch (IOException e) {
@@ -82,39 +89,20 @@ public class HttpService extends IntentService {
 	} finally {
 	    urlConnection.disconnect();
 	}
+	//Miten huomioida status virheilmoitus: //if (response.getStatus != "Success") throws("Critical failure, nothing is to be done for now"); //No anyways jollain tavalla on huomioitava tämä. Ja se mitä se oikeati palautti.
     }
-
-
-//     /**
-//     * This method parses the response dynamically, what it parses depends of which parameters are to be parsed.
-//     * @param json: JSON response as string.
-//     * @param responseParams: contains the params to be parsed (status is parsed by default).
-//     */
-//     private LinkedList<String> parseResponse(String json, String... responseParams)) {
-// 	Response response = new Gson().fromJson(json, Response.class);
-// 	
-// 	//if (response.getStatus != "Succes") throws("Critical failure, nothing is to be done for now"); //No anyways jollain tavalla on huomioitava tämä. Ja se mitä se oikeati palautti.
-// 	
-// 	
-// 	LinkedList<String> list = new LinkedList<String>();
-// 	
-// 	for (int i = 0 ; i < responseParams.size ; i++) {
-// 	    list += response.get(responseParams[i]);
-// 	}
-//     
-// 	return list;
-//     }
+    
 
 
     /**
     * This does authenticate the user and get a hash for it.
-    * This call is special since it does not have the user's hash with it. Has coded inside the retrieving of the reponse because of this. Toki vois sen toteuttaa if chekkauksena tossa metodissa...
-    * @param email: The user's email adrres.
+    * This call is special since it does not have the user's hash with it. Has coded inside the retrieving of the response because of this. Toki vois sen toteuttaa if chekkauksena tossa metodissa...
+    * @param email: The user's email adress.
     * @param password: The user's password.
     */
     public void AuthenticateUser(String email, String password) {
 	Map <String, Object> response = getResponse("AuthenticateUser", "email", email, "password", password);
-	userHash = response.get("user_hash");
+	userHash = (String) response.get("user_hash");
     }
 
     /** NYT tämä palauttaa vaan URIn Stringina, no 1-rpintille OK.
@@ -128,7 +116,7 @@ public class HttpService extends IntentService {
     }
 
     /**
-    * Gets the information necesary to start uploading a video to S3 and notices the back-end server about the uploading so that it would be possible.
+    * Gets the information necessary to start uploading a video to S3 and notices the back-end server about the uploading so that it would be possible.
     * @param taskId: All answers does link to a certain task -> taskId is the task's id of the task to be answered.
     * @return HashMap in which elements (key names are the following, as string, values as objects): "task_id" (useless?), the video's id to be: "answer_id", the "uri" to upload in S3.
     */
@@ -140,9 +128,9 @@ public class HttpService extends IntentService {
     /**
     * Notice the server that the video upload to S3 has been accomplished/failed.
     * @param answerId: The id of the answer that has been uploading.
-    * @param uploadStatus: Whether it succeeded or not,	succes if succeeded.
+    * @param uploadStatus: Whether it succeeded or not,	success if succeeded.
     */
-    public void EndAnswerUpload(String taskId, String uploadStatus) {
+    public void EndAnswerUpload(String answerId, String uploadStatus) {
 	getResponse("EndAnswerUpload", "answer_id", answerId, "upload_status", uploadStatus);
     }
 
@@ -152,7 +140,7 @@ public class HttpService extends IntentService {
     * @param answerId: The answer's id of which the description is to be retrieved.
     */
     public void DescribeAnswer(String answerId) {
-	Map <String, Object>  response = getResponse("DescribeAnswer", "answer_id", taskId);
+	Map <String, Object>  response = getResponse("DescribeAnswer", "answer_id", answerId);
     }
 
 }
