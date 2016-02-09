@@ -118,7 +118,8 @@ public class CameraControl extends AppCompatActivity {
         final VideoView videoView = (VideoView)findViewById(R.id.viewTaskVideo);
         String taskVideo ="";
         if (view.getId() == R.id.button1) taskVideo = "https://s3.eu-central-1.amazonaws.com/p60v4ow30312-tasks/VID_20160201_150600.mp4";
-        if (view.getId() == R.id.button2) taskVideo = "https://s3.eu-central-1.amazonaws.com/p60v4ow30312-answers/20160207_221819%5B1%5D.mp4";
+        //if (view.getId() == R.id.button2) taskVideo = "https://s3.eu-central-1.amazonaws.com/p60v4ow30312-answers/20160207_221819%5B1%5D.mp4";
+        if (view.getId() == R.id.button2) taskVideo = "http://download.wavetlan.com/SVV/Media/HTTP/H264/Talkinghead_Media/H264_test1_Talkinghead_mp4_480x360.mp4";
         Uri videoUri = Uri.parse(taskVideo);
         MediaController mediaController = new MediaController(this);
         mediaController.setAnchorView(videoView);
