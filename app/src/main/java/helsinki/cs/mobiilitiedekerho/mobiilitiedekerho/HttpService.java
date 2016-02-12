@@ -1,8 +1,8 @@
 package helsinki.cs.mobiilitiedekerho.mobiilitiedekerho;
 
 
-import android.app.IntentService;
-import android.content.Intent;
+//import android.app.IntentService;
+//import android.content.Intent;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -16,31 +16,37 @@ import java.io.IOException;
 * Use the public methods for making API calls to the server, all methods returns the response as JSON string.
 * Note: JSON string contains status='succes' if succeeded OR "problem econtered" -string if there has happened a problem with the calling of the API.
 */
-public class HttpService extends IntentService {
+public class HttpService { // extends IntentService {
 
     private String urli = "mobiilitiedekerho.duckdns.org"; //The IP of the back-end server, it is needed to add parameters to it to be able to comunivate with it. Hard-coded.
+    private String userHash;
 
 //     public IBinder onBind(Intend intend) {
 // 	
 //     }
 
 
-    public HttpService() {
-	super("HttpService");
+    /**
+    * Creates a new HttPService class and set hash for use in API calls
+    * @param userHash: The hash of the current user as String.
+    */
+    public HttpService(String userHash) {
+	//super("HttpService");
+	this.userHash = userHash;
     }
     
-    @Override
-    protected void onHandleIntent(Intent intent) {
-	//En tiedä mitä tänne laittaa!
-    }
+//     @Override
+//     protected void onHandleIntent(Intent intent) {
+// 	//En tiedä mitä tänne laittaa!
+//     }
+//     
     
     
-    //Pitkä luokka, voi paloitella tarvittaessa, mutta ei siitä kyllä ole hyötyä kun kaikki tämä on tehtävä putkeen + jaettu jo metodissa kokonaisuuksiin.
     /**
     * This method returns the JSON response as String of the wanted API call.
     * @param API_call: That is the API call to be executed.
     * @param paramsAndValues: Parameter and value pair, odd ones are the parameters and even ones the values.
-    * Note: It does add automatically the user's hash except when the API call in question is the "AuthenticateUser".
+    * Note: It does add automatically the user's hash.
     * @return the response from the API call as a JSON string.
     */
     private String getResponse(String API_call, String... paramsAndValues) {
@@ -55,11 +61,10 @@ public class HttpService extends IntentService {
 		if (i < paramsAndValues.length -2) query += "&";
 	    }
 
-	    //Creates a URL connection, always has the user's hash with it except when the call is the authentication call.
+	    //Creates a URL connection, always has the user's hash with it.
 	    URL url;
-	    if (API_call == "AuthenticateUser") url = new URL(urli + API_call + "?" + query);
-	    //else url = new URL(urli + API_call + "?" + userHash + query);
-	    //urlConnection = (HttpURLConnection) url.openConnection();
+	    url = new URL(urli + API_call + "?" + userHash + query);
+	    urlConnection = (HttpURLConnection) url.openConnection();
 
 	    //Creates a string (for GSON to be parsed) from the connection's inputStream.
 	    BufferedReader br = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));

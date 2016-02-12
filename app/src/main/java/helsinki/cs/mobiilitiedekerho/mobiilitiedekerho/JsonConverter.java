@@ -16,8 +16,8 @@ import static java.lang.System.out;
 
 
 /**
-* Json converter class which parses a JSON String and stores the retrieved data for later use.
-* Use get*(...) for getting data.
+* Json converter class which to parse JSON Strings. It stores the retrieved data for later use.
+* Use newJson for assigning a new JSON from which to retrieve data, and use get*(...) for getting the info actually.
 */
 public class JsonConverter {
 
@@ -28,15 +28,23 @@ public class JsonConverter {
     private String key;
 
     /**
+    * Creates new JsonConverter.
+    * Call newJson for start with new JSON.
+    */
+    public JsonConverter() {}
+    
+    /**
     * Parses the wanted JSON string and stores the retrieved data for later use.
+    * Note: Cleares old data if exists.
     * @param json: JSON String to be parsed.
     */
-    public JsonConverter(String json) throws IOException {
+    public newJson(String json) throws IOException {
 	properties = new HashMap<String, String>();
 	objects = new ArrayList<HashMap<String, String>>();
 	JsonReader reader = new JsonReader(new StringReader(json));
 	parseJson(reader);
     }
+    
 
     private void parseJson(JsonReader reader) throws IOException
     {
