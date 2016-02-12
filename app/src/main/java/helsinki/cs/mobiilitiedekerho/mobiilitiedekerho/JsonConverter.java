@@ -1,20 +1,24 @@
 package fi.helsinki.cs.mobiilitiedekerho.backend;
 
-import java.io.IOException;
-
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-
-import java.io.StringReader;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 
-import static java.lang.System.out;
+import java.io.IOException;
+import java.io.StringReader;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import static java.lang.System.out;
+
+
+/**
+* Json converter class which parses a JSON String and stores the retrieved data for later use.
+* Use get*(...) for getting data.
+*/
 public class JsonConverter {
 
     private ArrayList<HashMap<String, String>> objects;
@@ -23,6 +27,10 @@ public class JsonConverter {
     //this is for first level properties and object list names only!
     private String key;
 
+    /**
+    * Parses the wanted JSON string and stores the retrieved data for later use.
+    * @param json: JSON String to be parsed.
+    */
     public JsonConverter(String json) throws IOException {
 	properties = new HashMap<String, String>();
 	objects = new ArrayList<HashMap<String, String>>();
@@ -105,25 +113,30 @@ public class JsonConverter {
 	}
         else if (token.equals(JsonToken.NUMBER))
 	    properties.put(key, "" + reader.nextInt());
-	//this is actually not needed
+	//'else-part' isn't' actually needed
 	else
 	    reader.skipValue();
     }
 
 
-    /*
-     * Example usage:
-     * jc.getProperty("status");
-     * returns value of "status" field in given json.
+    /**
+     * Returns the value of the parameter/field status.
+     * Example usage: jc.getProperty("status")
+     * @return returns the value of the field (that is the parameter responded from the server).
      */
     public String getProperty(String key){
 	return properties.get(key);
     }
-    // this function returns list of all objects in the json
+    /**
+    * 
+    * @return Arraylist of HashMaps containing the data of all parameter-value -pairs of an object in the json. 
+    */
     public ArrayList<HashMap<String, String>> getObjects(){
 	return objects;
     }
+    
     //returns first object in the list
+    // D: what is this for actually, this is of no use!!!??
     public HashMap<String, String> getObject(){
 	return objects.get(0);
     }
