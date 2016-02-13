@@ -12,9 +12,6 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import static java.lang.System.out;
-
-
 /**
 * Json converter class which to parse JSON Strings. It stores the retrieved data for later use.
 * Use newJson for assigning a new JSON from which to retrieve data, and use get*(...) for getting the info actually.
@@ -53,7 +50,6 @@ public class JsonConverter {
 
         while (reader.hasNext()) {
 
-	    //there is at least one element so this is ok.
 	    key = reader.nextName();
 
             JsonToken token = reader.peek();
@@ -67,8 +63,6 @@ public class JsonConverter {
 
     private void handleArray(JsonReader reader) throws IOException {
 	reader.beginArray();
-
-	System.out.print("handleArray\n");
 
         while (true) {
             JsonToken token = reader.peek();
@@ -88,8 +82,6 @@ public class JsonConverter {
 	
     private void handleArrayObject(JsonReader reader, HashMap<String, String> objn)
 	throws IOException {
-
-	System.out.print("handle array object\n");
 
 	reader.beginObject();
 	while(reader.hasNext()){
@@ -116,12 +108,11 @@ public class JsonConverter {
 
 	if(token.equals(JsonToken.STRING)){
 	    String s = reader.nextString();
-	    System.out.print("\n" + key + " : " + s + "\n");
 	    properties.put(key, s);
 	}
         else if (token.equals(JsonToken.NUMBER))
 	    properties.put(key, "" + reader.nextInt());
-	//'else-part' isn't' actually needed
+	//'else-part' isn't' actually needed?
 	else
 	    reader.skipValue();
     }
@@ -130,21 +121,25 @@ public class JsonConverter {
     /**
      * Returns the value of the parameter/field status.
      * Example usage: jc.getProperty("status")
-     * @return returns the value of the field (that is the parameter responded from the server).
+     * @return returns the value of the field if exists(that is the parameter responded from the server),
+     * otherwise null is returned
      */
     public String getProperty(String key){
 	return properties.get(key);
     }
     /**
-    * 
-    * @return Arraylist of HashMaps containing the data of all parameter-value -pairs of an object in the json. 
-    */
+     * @return Arraylist of HashMaps containing all OBJECTS
+     * (see the JsonResponse convention) of the json.
+     * Note that return valua can be empty list.
+     */
     public ArrayList<HashMap<String, String>> getObjects(){
 	return objects;
     }
     
-    //returns first object in the list
-    // D: what is this for actually, this is of no use!!!??
+    /**
+     * Returns first (or only) returned object.
+     * Note that return value can be null.
+     */
     public HashMap<String, String> getObject(){
 	return objects.get(0);
     }
