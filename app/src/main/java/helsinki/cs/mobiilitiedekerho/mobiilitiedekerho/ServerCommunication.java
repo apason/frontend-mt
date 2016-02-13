@@ -49,7 +49,7 @@ public class ServerCommunication extends IntentService {
 	
 	jc.newJson(getResponse("getAnonymiousHash"));
 	
-	hp.setHash(jc.getProperty(hash);
+	userHash = jc.getProperty("user_hash");
     }
     
     
@@ -82,18 +82,18 @@ public class ServerCommunication extends IntentService {
 		if (i < paramsAndValues.length -2) query += "&";
 	    }
 
-	    //Creates a URL connection, always has the user's hash with it.
+	    //Creates a URL connection.
 	    URL url;
-	    if (API_call == "getAnonymiousHash") url = new URL(urli + API_call + "?" + query);
+	    if (API_call == "getAnonymiousHash") url = new URL(urli + API_call);
 	    else url = new URL(urli + API_call + "?" + userHash + query);
 	    urlConnection = (HttpURLConnection) url.openConnection();
 
-	    //Creates a string (for GSON to be parsed) from the connection's inputStream.
+	    //Creates a string (for JsonConverter to be parsed) from the connection's inputStream.
 	    BufferedReader br = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
 	    StringBuilder sb = new StringBuilder();
 	    String line;
 	    while ((line = br.readLine()) != null) {
-		sb.append(line+"\n");
+		sb.append(line + "\n");
 	    }
 	    br.close();
 	    return sb.toString();
@@ -113,7 +113,6 @@ public class ServerCommunication extends IntentService {
 
     /**
     * This does authenticate the user and get a hash for it.
-    * The returned hash must be used on all other API calls.
     * @param email: The user's email adress.
     * @param password: The user's password.
     */
@@ -122,7 +121,7 @@ public class ServerCommunication extends IntentService {
 	
 	this.checkstatus();
 	
-	hp.setHash(jc.getProperty("user_hash"));
+	userHash = jc.getProperty("user_hash");
     }
 
     /**
