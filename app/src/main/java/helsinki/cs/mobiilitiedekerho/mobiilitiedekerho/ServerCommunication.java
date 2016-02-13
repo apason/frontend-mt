@@ -32,7 +32,8 @@ public class ServerCommunication extends IntentService {
     */
     public ServerCommunication() {
 	super("ServerCommunication");
-	getAnonymiousHash();
+	StartSession();
+	//getAnonymiousHash(); //To be removed?
     }
     
     @Override
@@ -42,15 +43,23 @@ public class ServerCommunication extends IntentService {
     
     
     
-    private getAnonymiousHash() {
-	//No one knows yet.
-	//TODO: Hand-shake with server (via another class?) and then API call to get anonymious hash.
+    private StartSession() {
+	jc.newJson(getResponse("StartSession"));
 	
-	
-	jc.newJson(getResponse("getAnonymiousHash"));
+	this.checkstatus();
 	
 	userHash = jc.getProperty("user_hash");
     }
+    
+//     private getAnonymiousHash() {
+// 	//No one knows yet.
+// 	//TODO: Hand-shake with server (via another class?) and then API call to get anonymious hash.
+// 	
+// 	
+// 	jc.newJson(getResponse("getAnonymiousHash"));
+// 	
+// 	userHash = jc.getProperty("user_hash");
+//     }
     
     
     private checkstatus() {
