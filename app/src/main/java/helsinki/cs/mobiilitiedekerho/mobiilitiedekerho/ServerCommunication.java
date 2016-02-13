@@ -4,19 +4,32 @@ package helsinki.cs.mobiilitiedekerho.mobiilitiedekerho;
 import android.app.IntentService;
 import android.content.Intent;
 
-
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.MalformedURLException;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.IOException;
 
 /**
-* Class for communicating with the server, uses other classes for retrieving data.
-* A wrap class designed for easing the use of the "communication-classes" in the android aplication from the UI.
+* A class for communicating with the back-end server via HTTP.
+* Use the public methods for making API calls to the server.
 */
 public class ServerCommunication extends IntentService {
 
-    private HttpService hp = new HttpSevice();
+    private String urli = "mobiilitiedekerho.duckdns.org"; //The IP of the back-end server, it is needed to add parameters to it to be able to comunivate with it. Hard-coded.
+    private String userHash;
+    
     private JsonConverter jc = new JsonConverter();
-    
 
-    
+//     public IBinder onBind(Intend intend) {
+// 	
+//     }
+
+
+    /**
+    * Creates a new HttPService class and gets a new anonymious hash for use in API calls.
+    */
     public ServerCommunication() {
 	super("ServerCommunication");
 	getAnonymiousHash();
@@ -27,20 +40,18 @@ public class ServerCommunication extends IntentService {
 	//En vieläkään tiedä mitä tänne laittaa!
     }
     
-//     public IBinder onBind(Intend intend) {
-// 	
-//     }
-    
     
     
     private getAnonymiousHash() {
-	String hash = Null;
-	
 	//No one knows yet.
-	//Hand-shake with server (via another class?) and then API call to get anonymious hash.
+	//TODO: Hand-shake with server (via another class?) and then API call to get anonymious hash.
+	
+	
+	jc.newJson(getResponse("getAnonymiousHash"));
 	
 	hp.setHash(jc.getProperty(hash);
     }
+    
     
     private checkstatus() {
 	String state = jc.getProperty("status");
@@ -51,18 +62,63 @@ public class ServerCommunication extends IntentService {
     
     
     /**
+    * private
+    * This method returns the JSON response as String of the wanted API call.
+    * TODO: Problem handling.
+    * @param API_call: That is the API call to be executed.
+    * @param paramsAndValues: Parameter and value pair, odd ones are the parameters and even ones the values.
+    * Note: It does add automatically the user's hash except if API_call is getAnonymiousHash.
+    * @return the response from the API call as a JSON string.
+    */
+    private String getResponse(String API_call, String... paramsAndValues) {
+	
+	HttpURLConnection urlConnection = null;
+	
+	try {
+	    //Creates the query to be added to the URL, that is the parameters of the API call.
+	    String query = "";
+	    for (int i = 0 ; i < paramsAndValues.length ; i+= 2) {
+		query += paramsAndValues[i] + "=" + paramsAndValues[i+1];
+		if (i < paramsAndValues.length -2) query += "&";
+	    }
+
+	    //Creates a URL connection, always has the user's hash with it.
+	    URL url;
+	    if (API_call == "getAnonymiousHash") url = new URL(urli + API_call + "?" + query);
+	    else url = new URL(urli + API_call + "?" + userHash + query);
+	    urlConnection = (HttpURLConnection) url.openConnection();
+
+	    //Creates a string (for GSON to be parsed) from the connection's inputStream.
+	    BufferedReader br = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+	    StringBuilder sb = new StringBuilder();
+	    String line;
+	    while ((line = br.readLine()) != null) {
+		sb.append(line+"\n");
+	    }
+	    br.close();
+	    return sb.toString();
+                
+	} catch (MalformedURLException e) {
+	    e.printStackTrace();
+	} catch (IOException e) {
+	    e.printStackTrace();
+	} finally {
+	    urlConnection.disconnect();
+    }
+	//Something. Check which error actually happened at the server.
+	return "Problem encountered"; //A problem has been encountered while either calling the API or the response its damaged in some way (strange if data checking...) => Some special precautions to take.
+    }
+    
+
+
+    /**
     * This does authenticate the user and get a hash for it.
     * The returned hash must be used on all other API calls.
     * @param email: The user's email adress.
     * @param password: The user's password.
     */
     public void AuthenticateUser(String email, String password) {
-	String response = hp.AuthenticateUser(String email, String password);
-	if (response = "problem encountered") {
-	    //Something. Either couldn't acces the server or response cannot be read.
-	}
-	
-	jc.newJson(response);
+	jc.newJson(getResponse("AuthenticateUser", "email", email, "password", password));
 	
 	this.checkstatus();
 	
@@ -75,12 +131,7 @@ public class ServerCommunication extends IntentService {
     * @return String containing the uri of the task.
     */
     public String DescribeTask(String taskId) {
-	String response =  hp.DescribeTask(String taskId);
-	if (response = "problem encountered") {
-	    //Something. Either couldn't acces the server or response cannot be read.
-	}
-	
-	jc.newJson(response);
+	jc.newJson(getResponse("DescribeTask", "task_id", taskId)); //JSON string containing the description of the task. (Contains: "task_id", "uri", "loaded")
 	
 	this.checkstatus();
 	
@@ -93,12 +144,7 @@ public class ServerCommunication extends IntentService {
     * @return A string containing needed information for uploading a video to S3: the 'uri'' to upload in S3...That's all.
     */
     public String StartAnswerUpload(String taskId) {
-	String response = hp.StartAnswerUpload(String taskId);
-	if (response = "problem encountered") {
-	    //Something. Either couldn't acces the server or response cannot be read.
-	}
-	
-	jc.newJson(response);
+	jc.newJson(getResponse("StartAnswerUpload", "task_id", taskId)); //A JSON string containing needed information for uploading a video to S3: "task_id" (useless?), the video's id to be: "answer_id", the "uri" to upload in S3.
 	
 	this.checkstatus();
 	
@@ -111,14 +157,21 @@ public class ServerCommunication extends IntentService {
     * @param uploadStatus: Whether it succeeded or not,	success if succeeded.
     */
     public void EndAnswerUpload(String answerId, String uploadStatus) {
-	String response = hp.EndAnswerUpload(String answerId, String uploadStatus);
-	if (response = "problem encountered") {
-	    //Something. Either couldn't acces the server or response cannot be read.
-	}
-	
-	jc.newJson(response);
+	jc.newJson(getResponse("EndAnswerUpload", "answer_id", answerId, "upload_status", uploadStatus));
 	
 	this.checkstatus();
     }
-    
+
+
+    /**
+    * Gets the description of the desired answer (that is a user-uploaded video). EI 1-sprintissä! On nyt void.
+    * @param answerId: The answer's id of which the description is to be retrieved.
+    * @return Sitä ei kukaan tiedä mitä!
+    */
+    public void DescribeAnswer(String answerId) {
+	jc.newJson(getResponse("DescribeAnswer", "answer_id", answerId));
+	
+	this.checkstatus();
+    }
+
 }
