@@ -111,6 +111,20 @@ public class ServerCommunication extends IntentService {
     
 
 
+    
+    /**
+    * This sign up to the server with the corresponding email and password.
+    * @param email: The user's email adress.
+    * @param password: The user's password.
+    */
+    public void CreateUser(String email, String password) {
+	jc.newJson(getResponse("CreateUser", "email", email, "password", password));
+	
+	this.checkstatus();
+	
+	userHash = jc.getProperty("user_hash");
+    }
+    
     /**
     * This does authenticate the user and get a hash for it.
     * @param email: The user's email adress.
