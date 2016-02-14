@@ -3,6 +3,7 @@ package helsinki.cs.mobiilitiedekerho.mobiilitiedekerho;
 
 import android.app.IntentService;
 import android.content.Intent;
+import android.content.Context;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -10,6 +11,8 @@ import java.net.MalformedURLException;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.IOException;
+
+import java.io.File;
 
 /**
 * A class for communicating with the back-end server via HTTP.
@@ -34,6 +37,7 @@ public class ServerCommunication extends IntentService {
 	super("ServerCommunication");
 	StartSession();
 	//getAnonymiousHash(); //To be removed?
+	CheckIfSavedUser();
     }
     
     @Override
@@ -42,7 +46,7 @@ public class ServerCommunication extends IntentService {
     }
     
     
-    
+    //Notices the server so that a anonymus session would be linked to this client.
     private StartSession() {
 	jc.newJson(getResponse("StartSession"));
 	
@@ -50,6 +54,46 @@ public class ServerCommunication extends IntentService {
 	
 	userHash = jc.getProperty("user_hash");
     }
+    
+    //If there is saved the data of a user, it does AuthenticateUser.
+    private CheckIfSavedUser() {
+	File path = context.getFilesDir(); //The data directory of the application.
+	File file = new File(path, "user.txt");
+	
+	if (file.exists) {
+	    BufferedReader br = new BufferedReader(new FileReader(file));
+	    try {
+		//Fort now:
+		String email = br.readLine();
+		String password = br.readLine();
+		br.close();
+		
+		this.AuthenticateUser(email, password);
+		//
+	    } catch (IOException e) {
+		e.printStackTrace();
+	    }
+	}
+	
+    }
+    
+    //Save the needed data into text file for future auto-login.
+    private saveUser(String email, String password) {
+	File path = context.getFilesDir(); //The data directory of the application.
+	File file = new File(path, "user.txt");
+	
+	if (!file.exists) {
+	    file.createNewFile();
+	}
+	
+	FileOutputStream stream = new FileOutputStream(file);
+	try {
+	    stream.write((email + password).getBytes());
+	} finally {
+	    stream.close();
+	}
+    }
+    
     
 //     private getAnonymiousHash() {
 // 	//No one knows yet.
@@ -132,6 +176,9 @@ public class ServerCommunication extends IntentService {
 	this.checkstatus();
 	
 	userHash = jc.getProperty("user_hash");
+	
+	//save user data (if succeeded):
+	saveUser(email, password);
     }
     
     /**
