@@ -88,7 +88,7 @@ public class ServerCommunication extends IntentService {
 	
 	FileOutputStream stream = new FileOutputStream(file);
 	try {
-	    stream.write((email + password).getBytes());
+	    stream.write((email + "\n" + password).getBytes());
 	} finally {
 	    stream.close();
 	}
