@@ -74,7 +74,7 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
                                     int resultCode, Intent data) {
 
         if (requestCode == VIDEO_CAPTURE) {
-            if (resultCode == MainActivity.RESULT_OK) {
+            if (resultCode == TaskActivity.RESULT_OK) {
                 Toast.makeText(CameraFragment.this.getActivity(), "Video has been saved to:\n" +
                         data.getData(), Toast.LENGTH_LONG).show();
                 // TransferUtility transutil = dbControl.getTransferUtility();
@@ -83,7 +83,7 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
                 //          mediaFileName,    /* The key for the uploaded object */
                 //          mediaFile        /* The file where the data to upload exists */
                 //  );
-            } else if (resultCode == MainActivity.RESULT_CANCELED) {
+            } else if (resultCode == TaskActivity.RESULT_CANCELED) {
                 Toast.makeText(CameraFragment.this.getActivity(), "Video recording cancelled.",
                         Toast.LENGTH_LONG).show();
             } else {

@@ -27,6 +27,13 @@
         android:layout_height="fill_parent"
         tools:layout="@layout/answer_video_fragment" />
 
+    // Fragment responsible for login button
+    <fragment android:name="helsinki.cs.mobiilitiedekerho.mobiilitiedekerho.LoginFragment"
+        android:id="@+id/login_fragment"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        tools:layout="@layout/answer_video_fragment" />
+
 
 
 </RelativeLayout>
