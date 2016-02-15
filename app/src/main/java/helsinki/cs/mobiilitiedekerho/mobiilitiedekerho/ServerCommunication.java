@@ -4,7 +4,10 @@ package helsinki.cs.mobiilitiedekerho.mobiilitiedekerho;
 import android.app.IntentService;
 import android.content.Intent;
 import android.content.Context;
+import android.os.Environment;
 
+import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.MalformedURLException;
@@ -23,7 +26,7 @@ public class ServerCommunication extends IntentService {
     private String urli = "mobiilitiedekerho.duckdns.org"; //The IP of the back-end server, it is needed to add parameters to it to be able to comunivate with it. Hard-coded.
     private String userHash;
     
-    private fi.helsinki.cs.mobiilitiedekerho.backend.JsonConverter jc = new fi.helsinki.cs.mobiilitiedekerho.backend.JsonConverter();
+    private JsonConverter jc = new JsonConverter();
 
 //     public IBinder onBind(Intend intend) {
 // 	
@@ -47,22 +50,22 @@ public class ServerCommunication extends IntentService {
     
     
     //Notices the server so that a anonymus session would be linked to this client.
-    private StartSession() {
-	jc.newJson(getResponse("StartSession"));
-	
-	this.checkstatus();
-	
-	userHash = jc.getProperty("user_hash");
+    private void StartSession() {
+			jc.newJson(getResponse("StartSession"));
+
+			this.checkstatus();
+
+			userHash = jc.getProperty("user_hash");
     }
     
     //If there is saved the data of a user, it does AuthenticateUser.
-    private CheckIfSavedUser() {
-	File path = context.getFilesDir(); //The data directory of the application.
+    private void CheckIfSavedUser() {
+	File path = Environment.getDataDirectory(); //The data directory of the application.
 	File file = new File(path, "user.txt");
 	
-	if (file.exists) {
-	    BufferedReader br = new BufferedReader(new FileReader(file));
+	if (file.exists()) {
 	    try {
+			BufferedReader br = new BufferedReader(new FileReader(file));
 		//Fort now:
 		String email = br.readLine();
 		String password = br.readLine();
@@ -78,20 +81,28 @@ public class ServerCommunication extends IntentService {
     }
     
     //Save the needed data into text file for future auto-login.
-    private saveUser(String email, String password) {
-	File path = context.getFilesDir(); //The data directory of the application.
-	File file = new File(path, "user.txt");
+    private void saveUser(String email, String password) {
+		FileOutputStream stream = null;
+		try {
+			File path = Environment.getDataDirectory(); //The data directory of the application.
+			File file = new File(path, "user.txt");
 	
-	if (!file.exists) {
-	    file.createNewFile();
-	}
+			if (!file.exists()) {
+	    		file.createNewFile();
+			}
 	
-	FileOutputStream stream = new FileOutputStream(file);
-	try {
-	    stream.write((email + "\n" + password).getBytes());
-	} finally {
-	    stream.close();
-	}
+			stream = new FileOutputStream(file);
+
+			stream.write((email + "\n" + password).getBytes());
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				stream.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
     }
     
     
@@ -106,7 +117,7 @@ public class ServerCommunication extends IntentService {
 //     }
     
     
-    private checkstatus() {
+    private void checkstatus() {
 	String state = jc.getProperty("status");
 	if (state != "succes") {
 	    //Something. Check which error actually happened at the server.

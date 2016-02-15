@@ -1,4 +1,4 @@
-package fi.helsinki.cs.mobiilitiedekerho.backend;
+package helsinki.cs.mobiilitiedekerho.mobiilitiedekerho;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
@@ -35,11 +35,16 @@ public class JsonConverter {
     * Note: Cleares old data if exists.
     * @param json: JSON String to be parsed.
     */
-    public newJson(String json) throws IOException {
-	properties = new HashMap<String, String>();
-	objects = new ArrayList<HashMap<String, String>>();
-	JsonReader reader = new JsonReader(new StringReader(json));
-	parseJson(reader);
+    public void newJson(String json) {
+		try {
+			properties = new HashMap<String, String>();
+			objects = new ArrayList<HashMap<String, String>>();
+			JsonReader reader = new JsonReader(new StringReader(json));
+			parseJson(reader);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
     }
     
 
