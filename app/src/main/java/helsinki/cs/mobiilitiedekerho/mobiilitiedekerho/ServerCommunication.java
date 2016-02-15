@@ -23,7 +23,7 @@ public class ServerCommunication extends IntentService {
     private String urli = "mobiilitiedekerho.duckdns.org"; //The IP of the back-end server, it is needed to add parameters to it to be able to comunivate with it. Hard-coded.
     private String userHash;
     
-    private JsonConverter jc = new JsonConverter();
+    private fi.helsinki.cs.mobiilitiedekerho.backend.JsonConverter jc = new fi.helsinki.cs.mobiilitiedekerho.backend.JsonConverter();
 
 //     public IBinder onBind(Intend intend) {
 // 	

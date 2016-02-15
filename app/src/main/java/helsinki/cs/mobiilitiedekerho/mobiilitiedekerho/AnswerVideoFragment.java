@@ -23,7 +23,7 @@ public class AnswerVideoFragment extends Fragment implements View.OnClickListene
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.answer_video_fragment, container, false);
 
-        //Lisää tapahtumankuuntelijat painikkeille
+        //Set onclick listeners for the task video buttons
         Button button1 =
                 (Button) view.findViewById(R.id.button1);
         button1.setOnClickListener(this);
@@ -32,7 +32,7 @@ public class AnswerVideoFragment extends Fragment implements View.OnClickListene
                 (Button) view.findViewById(R.id.button2);
         button2.setOnClickListener(this);
 
-        //Alusta VideoView videon toistoa varten
+        // Add functionality to the VideoView
         videoView = (VideoView) view.findViewById(R.id.viewTaskVideo);
         MediaController mediaController = new MediaController(AnswerVideoFragment.this.getActivity());
         mediaController.setAnchorView(videoView);
@@ -47,14 +47,14 @@ public class AnswerVideoFragment extends Fragment implements View.OnClickListene
     public void onClick(View v) {
         String taskVideo;
         switch (v.getId()) {
-            //Toistaa button1:een liittyvän videon
+            // Play video related to button 1
             case R.id.button1:
                 taskVideo = "https://s3.eu-central-1.amazonaws.com/p60v4ow30312-tasks/VID_20160201_150600.mp4";
                 Uri videoUri = Uri.parse(taskVideo);
                 videoView.setVideoURI(videoUri);
                 videoView.start();
 
-                //tyhjentää ruudun videon toiston jälkeen
+                // Empty VideoView after playback has finished
                 videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                     @Override
                     public void onCompletion(MediaPlayer mp) {
@@ -63,7 +63,7 @@ public class AnswerVideoFragment extends Fragment implements View.OnClickListene
                     }
                 });
                 break;
-            //Toistaa button2:een liittyvän videon
+            // Play video related to button 2
             case R.id.button2:
                 //if (view.getId() == R.id.button2) taskVideo = "https://s3.eu-central-1.amazonaws.com/p60v4ow30312-answers/20160207_221819%5B1%5D.mp4";
                 taskVideo = "http://download.wavetlan.com/SVV/Media/HTTP/H264/Talkinghead_Media/H264_test1_Talkinghead_mp4_480x360.mp4";
@@ -71,7 +71,7 @@ public class AnswerVideoFragment extends Fragment implements View.OnClickListene
                 videoView.setVideoURI(videoUri2);
                 videoView.start();
 
-                //tyhjentää ruudun videon toiston jälkeen
+                // Empty VideoView after playback has finished
                 videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                     @Override
                     public void onCompletion(MediaPlayer mp) {

@@ -7,7 +7,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        // Piirrä activity_main.xml:ssä määritellyt fragmentit laitteen näytölle
+        // Draw components described in activity_main.xml on screen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
     }

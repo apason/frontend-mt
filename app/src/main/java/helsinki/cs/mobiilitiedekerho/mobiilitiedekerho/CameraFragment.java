@@ -33,7 +33,7 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.camera_fragment, container, false);
-        // Alusta nauhoitusnappi
+        // Add onClickListener to the record button
         Button recordButton =
                 (Button) view.findViewById(R.id.recordButton);
         recordButton.setOnClickListener(this);
@@ -44,28 +44,27 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View v) {
 
-            //Luo puhelimen muistiin uusi hakemisto 'Mobiilitiedekerho', johon appiin liittyvät videot
-            //tallennetaan.
+            // Create a new folder on the device, where videos related to this app are stored
               File mediaStorageDirectory = new File(Environment.getExternalStoragePublicDirectory(
                     Environment.DIRECTORY_PICTURES), "Mobiilitiedekerho");
 
-                //Jos hakemistoa ei pystytty luomaan, niin ilmoita siitä.
+                // If the new folder could not be created, then notify
                 if (!mediaStorageDirectory.exists()) {
                     if (!mediaStorageDirectory.mkdirs()) {
                         Log.e("Mobiilitiedekerho", "failed to create directory");
                     }
                 }
 
-                //Luodaan kuvattavalle videolle uniikki nimi VID + timestamp + .mp4
+                // Create a file for saving the shot video VID + timestamp + .mp4
                 String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
                 mediaFile = new File(mediaStorageDirectory.getPath() + File.separator +
                         "VID_"+ timeStamp + ".mp4");
                 mediaFileName = mediaFile.getName();
-                //Luo uusi video-intent, jonka tallennustiedoiksi annetaan äsken luotu osoite ja nimi.
+                // Create a new Intent to shoot video and save the result to the file specified earlier
                 Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
                 fileUri = Uri.fromFile(mediaFile);
 
-                //Käynnistetään äsken lutu intent käyttäen laitteen omaa kamerasoftaa.
+                // Start the intent using the device's own camera software
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
                 startActivityForResult(intent, VIDEO_CAPTURE);
         }
