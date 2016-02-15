@@ -5,7 +5,7 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
 
-    // Videon kuvauksesta vastaava fragmentti
+    // Fragment responsible for operating the camera
     <fragment android:name="helsinki.cs.mobiilitiedekerho.mobiilitiedekerho.CameraFragment"
         android:id="@+id/camera_fragment"
         android:layout_width="wrap_content"
@@ -13,14 +13,14 @@
         android:layout_marginLeft="10dp"
         tools:layout="@layout/camera_fragment" />
 
-    // Vastausvideoiden toistosta vastaava fragmentti
+    // Fragment responsible for playing the task video
     <fragment android:name="helsinki.cs.mobiilitiedekerho.mobiilitiedekerho.TaskVideoFragment"
         android:id="@+id/task_video_fragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         tools:layout="@layout/task_video_fragment"/>
 
-    // Tehtävävideon toistosta vastaava fragmentti
+    // Fragment responsible for playing the answer videos
     <fragment android:name="helsinki.cs.mobiilitiedekerho.mobiilitiedekerho.AnswerVideoFragment"
         android:id="@+id/answer_video_fragment"
         android:layout_width="fill_parent"

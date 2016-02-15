@@ -8,6 +8,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
@@ -39,12 +40,21 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     private void openLoginPopup() {
         // Inflate the popup_layout.xml
         LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View view = inflater.inflate(R.layout.login_fragment, null); //custom_layout is your xml file which contains popuplayout
+        View view = inflater.inflate(R.layout.login_fragment, null);
         RelativeLayout layout = (RelativeLayout) view.findViewById(R.id.login_fragment);
 
+        // Request loginPopup to be drawn to the center of the screen
         loginPopup = new PopupWindow(layout);
         loginPopup.showAtLocation(view, Gravity.CENTER, 0, 0);
 
+        // Add buttons to the popup and set onclicklisteners
+        Button closePopupButton =
+                (Button) view.findViewById(R.id.cancel_button);
+        closePopupButton.setOnClickListener(this);
+
+        Button loginButton =
+                (Button) view.findViewById(R.id.login_button);
+        loginButton.setOnClickListener(this);
 
     }
 }
