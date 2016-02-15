@@ -6,6 +6,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.View.OnClickListener;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -48,13 +49,25 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         loginPopup.showAtLocation(view, Gravity.CENTER, 0, 0);
 
         // Add buttons to the popup and set onclicklisteners
-        Button closePopupButton =
-                (Button) view.findViewById(R.id.cancel_button);
-        closePopupButton.setOnClickListener(this);
-
         Button loginButton =
                 (Button) view.findViewById(R.id.login_button);
-        loginButton.setOnClickListener(this);
+        loginButton.setOnClickListener(login_listener);
+
+        Button closePopupButton =
+                (Button) view.findViewById(R.id.cancel_button);
+        closePopupButton.setOnClickListener(close_popup_listener);
 
     }
+
+    private OnClickListener close_popup_listener = new OnClickListener() {
+        public void onClick(View v) {
+            loginPopup.dismiss();
+        }
+    };
+
+    private OnClickListener login_listener = new OnClickListener() {
+        public void onClick(View v) {
+            // Login code here
+        }
+    };
 }
