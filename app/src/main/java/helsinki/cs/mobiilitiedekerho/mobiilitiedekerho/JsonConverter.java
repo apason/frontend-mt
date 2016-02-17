@@ -13,9 +13,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
-* Json converter class which to parse JSON Strings. It stores the retrieved data for later use.
-* Use newJson for assigning a new JSON from which to retrieve data, and use get*(...) for getting the info actually.
-*/
+ * Json converter class which to parse JSON Strings. It stores the retrieved data for later use.
+ * Use newJson for assigning a new JSON from which to retrieve data, and use get*(...) for getting the info actually.
+ */
 public class JsonConverter {
 
     private ArrayList<HashMap<String, String>> objects;
@@ -25,19 +25,20 @@ public class JsonConverter {
     private String key;
 
     /**
-    * Creates new JsonConverter.
-    * Call newJson for start with new JSON.
-    */
+     * Creates new JsonConverter.
+     * Call newJson for start with new JSON.
+     */
     public JsonConverter() {}
-    
+
     /**
-    * Parses the wanted JSON string and stores the retrieved data for later use.
-    * Note: Cleares old data if exists.
-    * @param json: JSON String to be parsed.
-    */
+     * Parses the wanted JSON string and stores the retrieved data for later use.
+     * Note: Cleares old data if exists.
+     * @param json: JSON String to be parsed.
+     */
     public void newJson(String json) {
         try {
-        properties = new HashMap<String, String>();
+            properties = new HashMap<String, String>();
+
             objects = new ArrayList<HashMap<String, String>>();
             JsonReader reader = new JsonReader(new StringReader(json));
             parseJson(reader);
@@ -46,7 +47,7 @@ public class JsonConverter {
         }
 
     }
-    
+
 
     private void parseJson(JsonReader reader) throws IOException
     {
@@ -63,7 +64,7 @@ public class JsonConverter {
             else
                 handleProperty(reader, token);
         }
- 
+
     }
 
     private void handleArray(JsonReader reader) throws IOException {
@@ -84,8 +85,9 @@ public class JsonConverter {
                 reader.endObject();
         }
     }
-        
+
     private void handleArrayObject(JsonReader reader, HashMap<String, String> objn)
+
         throws IOException {
 
         reader.beginObject();
@@ -93,7 +95,7 @@ public class JsonConverter {
 
             String key = reader.nextName();
             JsonToken token = reader.peek();
-            
+
             if(token.equals(JsonToken.NUMBER)){
                 Integer value = reader.nextInt();
                 objn.put(key, "" + value);
@@ -102,12 +104,14 @@ public class JsonConverter {
                 objn.put(key, reader.nextString());
             else
                 reader.skipValue();
-                
+
         }
     }
 
     private void handleProperty(JsonReader reader, JsonToken token)
-        throws IOException {
+
+            throws IOException {
+
 
         token = reader.peek();
 
@@ -117,6 +121,7 @@ public class JsonConverter {
         }
         else if (token.equals(JsonToken.NUMBER))
             properties.put(key, "" + reader.nextInt());
+
         //'else-part' isn't' actually needed?
         else
             reader.skipValue();
@@ -140,7 +145,7 @@ public class JsonConverter {
     public ArrayList<HashMap<String, String>> getObjects(){
         return objects;
     }
-    
+
     /**
      * Returns first (or only) returned object.
      * Note that return value can be null.
@@ -149,5 +154,3 @@ public class JsonConverter {
         return objects.get(0);
     }
 }
-
-

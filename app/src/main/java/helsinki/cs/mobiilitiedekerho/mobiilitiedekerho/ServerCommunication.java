@@ -3,6 +3,10 @@ package helsinki.cs.mobiilitiedekerho.mobiilitiedekerho;
 
 import android.app.IntentService;
 import android.content.Intent;
+<<<<<<< HEAD
+=======
+import android.net.wifi.WifiConfiguration;
+>>>>>>> sprint2
 import android.os.Environment;
 
 import java.net.HttpURLConnection;
@@ -80,6 +84,7 @@ public class ServerCommunication extends IntentService {
         }
         
     }
+    
     
     //Save the needed data into a text file for future auto-login. (TODO:  Encryption / better way to save data.)
     private void saveUser(String email, String password) {
