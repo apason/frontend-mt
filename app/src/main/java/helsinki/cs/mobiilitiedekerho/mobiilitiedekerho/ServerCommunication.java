@@ -3,7 +3,7 @@ package helsinki.cs.mobiilitiedekerho.mobiilitiedekerho;
 
 import android.app.IntentService;
 import android.content.Intent;
-import android.content.Context;
+import android.net.wifi.WifiConfiguration;
 import android.os.Environment;
 
 import java.net.HttpURLConnection;
@@ -18,14 +18,14 @@ import java.io.FileReader;
 import java.util.HashMap;
 
 /**
-* A class for communicating with the back-end server via HTTP.
-* Use the public methods for making API calls to the server.
-*/
+ * A class for communicating with the back-end server via HTTP.
+ * Use the public methods for making API calls to the server.
+ */
 public class ServerCommunication extends IntentService {
 
     private String urli = "mobiilitiedekerho.duckdns.org"; //The IP of the back-end server, it is needed to add parameters to it to be able to comunivate with it. Hard-coded.
-    private String userHash;
-    
+    private String authToken;
+
     private JsonConverter jc = new JsonConverter();
 
 //     public IBinder onBind(Intend intend) {
@@ -33,28 +33,30 @@ public class ServerCommunication extends IntentService {
 //     }
 
 
+
     /**
-    * Creates a new HttPService class and gets a new anonymious hash for use in API calls.
-    */
+     * Creates a new HttPService class and gets a new anonymous hash for use in API calls.
+     */
     public ServerCommunication() {
         super("ServerCommunication");
         StartSession();
         CheckIfSavedUser();
     }
-    
+
     @Override
     protected void onHandleIntent(Intent intent) {
         //En vieläkään tiedä mitä tänne laittaa!
     }
+
     
-    
+
     //Notices the server so that a anonymus session would be linked to this client.
     private void StartSession() {
         jc.newJson(getResponse("StartSession"));
 
         this.checkstatus();
 
-        userHash = jc.getProperty("user_hash");
+        authToken = jc.getProperty("auth_token");
     }
     
     //If there is saved the login data of a user, it does AuthenticateUser().
@@ -62,6 +64,16 @@ public class ServerCommunication extends IntentService {
         File path = Environment.getDataDirectory(); //The data directory of the application.
         File file = new File(path, "user.txt");
         
+        this.checkStatus();
+
+        authToken = jc.getProperty("auth_token");
+    }
+
+    //If there is saved the data of a user, it does AuthenticateUser.
+    private void CheckIfSavedUser() {
+        File path = Environment.getDataDirectory(); //The data directory of the application.
+        File file = new File(path, "user.txt");
+
         if (file.exists()) {
             try {
                 BufferedReader br = new BufferedReader(new FileReader(file));
@@ -69,9 +81,8 @@ public class ServerCommunication extends IntentService {
                 String email = br.readLine();
                 String password = br.readLine();
                 br.close();
-                
+
                 this.AuthenticateUser(email, password);
-                //
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -80,17 +91,19 @@ public class ServerCommunication extends IntentService {
     }
     
     //Save the needed data into a text file for future auto-login. (TODO: Encryption)
+    //Save the needed data into text file for future auto-login.
     private void saveUser(String email, String password) {
         FileOutputStream stream = null;
         try {
             File path = Environment.getDataDirectory(); //The data directory of the application.
             File file = new File(path, "user.txt");
-        
+
             if (!file.exists()) {
                 file.createNewFile();
             }
-        
+
             stream = new FileOutputStream(file);
+
             stream.write((email + "\n" + password).getBytes());
         } catch (IOException e) {
             e.printStackTrace();
@@ -103,28 +116,30 @@ public class ServerCommunication extends IntentService {
         }
     }
     
-    
-    private void checkstatus() {
+
+    private boolean checkStatus() {
         String state = jc.getProperty("status");
-        if (state != "succes") {
+        if (state != "success") {
             //Something. Check which error actually happened at the server.
+            return false;
         }
+        return true;
     }
-    
-    
+
+
     /**
-    * private
-    * This method returns the JSON response as String of the wanted API call.
-    * TODO: Problem handling.
-    * @param API_call: That is the API call to be executed.
-    * @param paramsAndValues: Parameter and value pair, odd ones are the parameters and even ones the values.
-    * Note: It does add automatically the user's hash except if API_call is getAnonymiousHash.
-    * @return the response from the API call as a JSON string.
-    */
+     * private
+     * This method returns the JSON response as String of the wanted API call.
+     * TODO: Problem handling.
+     * @param API_call: That is the API call to be executed.
+     * @param paramsAndValues: Parameter and value pair, odd ones are the parameters and even ones the values.
+     * Note: It does add automatically the user's hash except if API_call is getAnonymiousHash.
+     * @return the response from the API call as a JSON string.
+     */
     private String getResponse(String API_call, String... paramsAndValues) {
-        
+
         HttpURLConnection urlConnection = null;
-        
+
         try {
             //Creates the query to be added to the URL, that is the parameters of the API call.
             String query = "";
@@ -135,8 +150,8 @@ public class ServerCommunication extends IntentService {
 
             //Creates a URL connection.
             URL url;
-            if (API_call == "getAnonymiousHash") url = new URL(urli + API_call);
-            else url = new URL(urli + API_call + "?" + userHash + query);
+            if (API_call == "GetAuthToken" && paramsAndValues.size() == 0) url = new URL(urli + API_call);
+            else url = new URL(urli + API_call + "?" + authToken + query);
             urlConnection = (HttpURLConnection) url.openConnection();
 
             //Creates a string (for JsonConverter to be parsed) from the connection's inputStream.
@@ -148,71 +163,78 @@ public class ServerCommunication extends IntentService {
             }
             br.close();
             return sb.toString();
-                
+            
         } catch (MalformedURLException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
             urlConnection.disconnect();
-    }
+        }
+            
         return "Problem encountered"; //A problem has been encountered while either calling the API or the response its damaged in some way (strange if data checking...) => Some special precautions to take.
     }
-    
 
 
-    
+
+
     /**
-    * This sign up to the server with the corresponding email and password.
-    * @param email: The user's email adress.
-    * @param password: The user's password.
-    */
+     * This sign up to the server with the corresponding email and password.
+     * @param email: The user's email address.
+     * @param password: The user's password.
+     */
     public void CreateUser(String email, String password) {
-        jc.newJson(getResponse("CreateUser", "email", email, "password", password));
-        
-        this.checkstatus();
-        
-        userHash = jc.getProperty("user_hash");
-        
+        jc.newJson(getResponse("GetAuthToken", "email", email, "password", password));
+
+        this.checkStatus();
+
+        authToken = jc.getProperty("auth_token");
+
+        //save user data (if succeeded):
         saveUser(email, password);
     }
-    
+
     /**
-    * This does authenticate the user and get a hash for it.
-    * @param email: The user's email adress.
-    * @param password: The user's password.
-    */
-    public void AuthenticateUser(String email, String password) {
-        jc.newJson(getResponse("AuthenticateUser", "email", email, "password", password));
-        
-        this.checkstatus();
-        
-        userHash = jc.getProperty("user_hash");
+     * This does authenticate the user and get a hash for it.
+     * @param email: The user's email address.
+     * @param password: The user's password.
+     * @return Whether authentication succeeded or not.
+     */
+    public boolean AuthenticateUser(String email, String password) {
+        jc.newJson(getResponse("GetAuthToken", "email", email, "password", password));
+
+        boolean fine = this.checkStatus();
+        if (fine) {
+            authToken = jc.getProperty("auth_token");
+            StatusService.StaticStatusService.loggedIn = true;
+            return true;
+        }
+        else return false;
     }
 
     /**
-    * Gets the description of the desired task (a task video that is).
-    * @param taskId: The task's id of which description is to be retrieved.
-    * @return String containing the uri of the task. (for now)
-    */
+     * Gets the description of the desired task (a task video that is).
+     * @param taskId: The task's id of which description is to be retrieved.
+     * @return String containing the uri of the task. TODO needs image too!
+     */
     public String DescribeTask(String taskId) {
-        jc.newJson(getResponse("DescribeTask", "task_id", taskId));
-        
-        this.checkstatus();
-        
+        jc.newJson(getResponse("DescribeTask", "task_id", taskId)); //JSON string containing the description of the task. (Contains: "task_id", "uri", "loaded")
+
+        this.checkStatus();
+
         return jc.getProperty("uri");
     }
 
     /**
-    * Gets the information necessary to start uploading a video to S3 and notices the back-end server about the uploading so that it would be possible.
-    * @param taskId: All answers does link to a certain task -> taskId is the task's id of the task to be answered.
-    * @return A string containing needed information for uploading a video to S3: the 'uri'' to upload in S3...That's all.
-    */
+     * Gets the information necessary to start uploading a video to S3 and notices the back-end server about the uploading so that it would be possible.
+     * @param taskId: All answers does link to a certain task -> taskId is the task's id of the task to be answered.
+     * @return A string containing needed information for uploading a video to S3: the 'uri'' to upload in S3...That's all.
+     */
     public String StartAnswerUpload(String taskId) {
-        jc.newJson(getResponse("StartAnswerUpload", "task_id", taskId));
-        
-        this.checkstatus();
-        
+        jc.newJson(getResponse("StartAnswerUpload", "task_id", taskId)); //A JSON string containing needed information for uploading a video to S3: "task_id" (useless?), the video's id to be: "answer_id", the "uri" to upload in S3.
+
+        this.checkStatus();
+
         return jc.getProperty("uri");
     }
 
@@ -239,7 +261,7 @@ public class ServerCommunication extends IntentService {
         
         this.checkstatus();
         
-        return HashMap<String, String> jc.getObject();
+        return jc.getObject();
     }
 
 }
