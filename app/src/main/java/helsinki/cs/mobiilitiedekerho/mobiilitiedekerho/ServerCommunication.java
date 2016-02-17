@@ -35,7 +35,7 @@ public class ServerCommunication extends IntentService {
 
 
     /**
-     * Creates a new HttPService class and gets a new anonymous hash for use in API calls.
+     * Creates a new HttPService class and gets a new anonymous token for use in API calls.
      */
     public ServerCommunication() {
         super("ServerCommunication");
@@ -50,7 +50,7 @@ public class ServerCommunication extends IntentService {
 
     
 
-    //Notices the server so that a anonymous session would be linked to this client.
+    //Notices the server so that a anonymous token would be linked to this client.
     private void StartSession() {
         jc.newJson(getResponse("StartSession"));
 
@@ -260,7 +260,7 @@ public class ServerCommunication extends IntentService {
     * @param taskId: The task's id of which answers are to be retrieved.
     * @return An ArrayList<HashMap<String, String>> containing info about all the answer related to the task, please do use as search key the parameter which value is to be retrived.
     * Each HashMap entry is the info of a task.
-    * (Note: Useful ones: "uri", "enabled"; "task_id", "user_id")
+    * (Note: Useful ones: "uri", "enabled"; "user_id")
     */
     public ArrayList<HashMap<String, String>> DescribeTaskAnswers(String taskId) {
         jc.newJson(getResponse("DescribeTaskAnswers", "answer_id", answerId));
@@ -289,7 +289,7 @@ public class ServerCommunication extends IntentService {
     /**
     * Get all the Ids, and both icon names of all categories. Note: This method is supposed to be used in Main Menu, gives all just all the needed information for Main Menu.
     * @return A HashMap<String, String> containing the info told above from all categories, please do use as search key the parameter which value is to be retrived.
-    * (Note: The returned parameters: "BGName", "IconName", "AnimatedIconName")
+    * (Note: The returned parameters: "category_id" "BGName", "IconName", "AnimatedIconName")
     */
     public ArrayList<HashMap<String, String>> GetAllCategories() {
         jc.newJson(getResponse("GetAllCategories"));
