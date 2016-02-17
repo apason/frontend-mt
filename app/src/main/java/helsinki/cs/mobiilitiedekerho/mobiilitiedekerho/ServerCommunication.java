@@ -3,7 +3,10 @@ package helsinki.cs.mobiilitiedekerho.mobiilitiedekerho;
 
 import android.app.IntentService;
 import android.content.Intent;
+<<<<<<< HEAD
+=======
 import android.net.wifi.WifiConfiguration;
+>>>>>>> sprint2
 import android.os.Environment;
 
 import java.net.HttpURLConnection;
@@ -16,6 +19,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.util.HashMap;
+import java.util.ArrayList;
 
 /**
  * A class for communicating with the back-end server via HTTP.
@@ -35,12 +39,12 @@ public class ServerCommunication extends IntentService {
 
 
     /**
-     * Creates a new HttPService class and gets a new anonymous hash for use in API calls.
+     * Creates a new HttPService class and gets a new anonymous token for use in API calls.
      */
     public ServerCommunication() {
         super("ServerCommunication");
         StartSession();
-        CheckIfSavedUser();
+        CheckIfSavedUser(); //Important note: The protected 'global' variable loggedIn will be changed to true if there is a saved user.
     }
 
     @Override
@@ -50,26 +54,17 @@ public class ServerCommunication extends IntentService {
 
     
 
-    //Notices the server so that a anonymus session would be linked to this client.
+    //Notices the server so that a anonymous token would be linked to this client.
     private void StartSession() {
         jc.newJson(getResponse("StartSession"));
 
-        this.checkstatus();
-
-        authToken = jc.getProperty("auth_token");
-    }
-    
-    //If there is saved the login data of a user, it does AuthenticateUser().
-    private void CheckIfSavedUser() {
-        File path = Environment.getDataDirectory(); //The data directory of the application.
-        File file = new File(path, "user.txt");
-        
         this.checkStatus();
 
         authToken = jc.getProperty("auth_token");
     }
+    
 
-    //If there is saved the data of a user, it does AuthenticateUser.
+    //If there is saved the data of a user, it does AuthenticateUser. (TODO: Encrypted/etc file loading.)
     private void CheckIfSavedUser() {
         File path = Environment.getDataDirectory(); //The data directory of the application.
         File file = new File(path, "user.txt");
@@ -90,8 +85,8 @@ public class ServerCommunication extends IntentService {
         
     }
     
-    //Save the needed data into a text file for future auto-login. (TODO: Encryption)
-    //Save the needed data into text file for future auto-login.
+    
+    //Save the needed data into a text file for future auto-login. (TODO:  Encryption / better way to save data.)
     private void saveUser(String email, String password) {
         FileOutputStream stream = null;
         try {
@@ -120,7 +115,7 @@ public class ServerCommunication extends IntentService {
     private boolean checkStatus() {
         String state = jc.getProperty("status");
         if (state != "success") {
-            //Something. Check which error actually happened at the server.
+            //Something. Check which error actually happened at the server. Maybe that is.
             return false;
         }
         return true;
@@ -172,7 +167,7 @@ public class ServerCommunication extends IntentService {
             urlConnection.disconnect();
         }
             
-        return "Problem encountered"; //A problem has been encountered while either calling the API or the response its damaged in some way (strange if data checking...) => Some special precautions to take.
+        return "{status:Problem encountered}"; //A problem has been encountered while either calling the API or the response its damaged in some way (strange if data checking...) => Some special precautions to take.
     }
 
 
@@ -228,7 +223,7 @@ public class ServerCommunication extends IntentService {
     /**
      * Gets the information necessary to start uploading a video to S3 and notices the back-end server about the uploading so that it would be possible.
      * @param taskId: All answers does link to a certain task -> taskId is the task's id of the task to be answered.
-     * @return A string containing needed information for uploading a video to S3: the 'uri'' to upload in S3...That's all.
+     * @return A string containing the needed information for uploading a video to S3: the 'uri'' to upload in S3...That's all.
      */
     public String StartAnswerUpload(String taskId) {
         jc.newJson(getResponse("StartAnswerUpload", "task_id", taskId)); //A JSON string containing needed information for uploading a video to S3: "task_id" (useless?), the video's id to be: "answer_id", the "uri" to upload in S3.
@@ -246,7 +241,7 @@ public class ServerCommunication extends IntentService {
     public void EndAnswerUpload(String answerId, String uploadStatus) {
         jc.newJson(getResponse("EndAnswerUpload", "answer_id", answerId, "upload_status", uploadStatus));
         
-        this.checkstatus();
+        this.checkStatus();
     }
 
 
@@ -254,14 +249,59 @@ public class ServerCommunication extends IntentService {
     * Gets the description of the desired answer (that is a user-uploaded video).
     * @param answerId: The answer's id of which the description is to be retrieved.
     * @return A HashMap<String, String> containing info about the answer, please do use as search key the parameter which value is to be retrived.
-    * (Note: Useful ones: "uri". "enabled"; "task_id", "user_id")
+    * (Note: Useful ones: "uri", "enabled"; "task_id", "user_id")
     */
     public HashMap<String, String> DescribeAnswer(String answerId) {
-        jc.newJson(getResponse("DescribeAnswer", "answer_id", answerId))
+        jc.newJson(getResponse("DescribeAnswer", "answer_id", answerId));
         
-        this.checkstatus();
+        this.checkStatus();
         
         return jc.getObject();
+    }
+    
+    
+    /**
+    * Gets all the info of all answers related to the task. 
+    * @param taskId: The task's id of which answers are to be retrieved.
+    * @return An ArrayList<HashMap<String, String>> containing info about all the answer related to the task, please do use as search key the parameter which value is to be retrived.
+    * Each HashMap entry is the info of a task.
+    * (Note: Useful ones: "uri", "enabled"; "user_id")
+    */
+    public ArrayList<HashMap<String, String>> DescribeTaskAnswers(String taskId) {
+        jc.newJson(getResponse("DescribeTaskAnswers", "answer_id", answerId));
+        
+        this.checkStatus();
+        
+        return jc.getObjects();
+    }
+    
+    
+    /**
+    * Get all the info of the wanted category.
+    * @param categoryId the id of the category which info is wanted to be retrieved.
+    * @return A HashMap<String, String> containing info about the category, please do use as search key the parameter which value is to be retrived.
+    * (Note: Useful ones: "Name", "BGName", "IconName", "AnimatedIconName", "tasks")
+    */
+    public HashMap<String, String> DescribeCategory(String categoryId) {
+        jc.newJson(getResponse("DescribeCategory", "category_id", categoryId));
+        
+        this.checkStatus();
+        
+        return jc.getObject();
+    }
+    
+    
+    /**
+    * Get all the Ids, and both icon names of all categories. Note: This method is supposed to be used in Main Menu, gives all just all the needed information for Main Menu.
+    * @return A HashMap<String, String> containing the info told above from all categories, please do use as search key the parameter which value is to be retrived.
+    * (Note: The returned parameters: "category_id" "BGName", "IconName", "AnimatedIconName")
+    */
+    public ArrayList<HashMap<String, String>> GetAllCategories() {
+        jc.newJson(getResponse("GetAllCategories"));
+        
+        this.checkStatus();
+        
+        return.jc.getObjects();
     }
 
 }
