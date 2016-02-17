@@ -14,11 +14,12 @@ import android.widget.ImageButton;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class LoginFragment extends Fragment implements View.OnClickListener {
 
     View view;
-    private PopupWindow loginPopup;
+    PopupWindow loginPopup;
     TextView emailTV;
     TextView passwordTV;
 
@@ -53,8 +54,8 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         loginPopup = new PopupWindow(layout);
         loginPopup.showAtLocation(view, Gravity.CENTER, 0, 0);
 
+        // Add TextView elements to the screen.
         emailTV = (TextView) view.findViewById(R.id.username);
-
         passwordTV = (TextView) view.findViewById(R.id.password);
 
         // Add buttons to the popup and set onclicklisteners
@@ -70,12 +71,21 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 
     private OnClickListener login_listener = new OnClickListener() {
         public void onClick(View v) {
-            // On click of login button get content from textViews and check if they match a valid
+            // On click of login button get content from TextViews and check if they match a valid
             // user using ServerCommunication.
             String email = emailTV.getText().toString();
             String password = passwordTV.getText().toString();
             ServerCommunication servcom = new ServerCommunication();
-            servcom.AuthenticateUser(email, password);
+            if (servcom.AuthenticateUser(email, password) == true) {
+                // TODO Sign in user
+                Toast.makeText(LoginFragment.this.getActivity(), "Kirjautuminen onnistui!",
+                        Toast.LENGTH_LONG).show();
+                loginPopup.dismiss();
+            }
+            // If username or password is incorrect empty TextViews and notify user.
+            emailTV.setText(""); passwordTV.setText("");
+            Toast.makeText(LoginFragment.this.getActivity(), "Sähköpostiosoite tai salasana väärin!",
+                    Toast.LENGTH_LONG).show();
         }
     };
 

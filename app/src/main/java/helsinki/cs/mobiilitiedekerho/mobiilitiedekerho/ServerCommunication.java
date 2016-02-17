@@ -3,7 +3,6 @@ package helsinki.cs.mobiilitiedekerho.mobiilitiedekerho;
 
 import android.app.IntentService;
 import android.content.Intent;
-import android.content.Context;
 import android.os.Environment;
 
 import java.io.FileOutputStream;
@@ -17,6 +16,8 @@ import java.io.IOException;
 
 import java.io.File;
 
+import static helsinki.cs.mobiilitiedekerho.mobiilitiedekerho.StatusService.StaticStatusService.loggedIn;
+
 /**
 * A class for communicating with the back-end server via HTTP.
 * Use the public methods for making API calls to the server.
@@ -24,7 +25,7 @@ import java.io.File;
 public class ServerCommunication extends IntentService {
 
     private String urli = "mobiilitiedekerho.duckdns.org"; //The IP of the back-end server, it is needed to add parameters to it to be able to comunivate with it. Hard-coded.
-    private String userHash;
+    private String authToken;
     
     private JsonConverter jc = new JsonConverter();
 
@@ -34,7 +35,7 @@ public class ServerCommunication extends IntentService {
 
 
     /**
-    * Creates a new HttPService class and gets a new anonymious hash for use in API calls.
+    * Creates a new HttPService class and gets a new anonymous hash for use in API calls.
     */
     public ServerCommunication() {
 	super("ServerCommunication");
@@ -53,9 +54,9 @@ public class ServerCommunication extends IntentService {
     private void StartSession() {
 			jc.newJson(getResponse("StartSession"));
 
-			this.checkstatus();
+			this.checkStatus();
 
-			userHash = jc.getProperty("user_hash");
+			authToken = jc.getProperty("user_hash");
     }
     
     //If there is saved the data of a user, it does AuthenticateUser.
@@ -111,17 +112,19 @@ public class ServerCommunication extends IntentService {
 // 	//TODO: Hand-shake with server (via another class?) and then API call to get anonymious hash.
 // 	
 // 	
-// 	jc.newJson(getResponse("getAnonymiousHash"));
+// 	jc.newJson(getResponse("getAnonymousHash"));
 // 	
 // 	userHash = jc.getProperty("user_hash");
 //     }
     
     
-    private void checkstatus() {
+    private boolean checkStatus() {
 	String state = jc.getProperty("status");
-	if (state != "succes") {
+	if (state != "success") {
 	    //Something. Check which error actually happened at the server.
+		return false;
 	}
+	return true;
     }
     
     
@@ -148,8 +151,8 @@ public class ServerCommunication extends IntentService {
 
 	    //Creates a URL connection.
 	    URL url;
-	    if (API_call == "getAnonymiousHash") url = new URL(urli + API_call);
-	    else url = new URL(urli + API_call + "?" + userHash + query);
+	    if (API_call == "GetAuthToken") url = new URL(urli + API_call);
+	    else url = new URL(urli + API_call + "?" + authToken + query);
 	    urlConnection = (HttpURLConnection) url.openConnection();
 
 	    //Creates a string (for JsonConverter to be parsed) from the connection's inputStream.
@@ -178,15 +181,15 @@ public class ServerCommunication extends IntentService {
     
     /**
     * This sign up to the server with the corresponding email and password.
-    * @param email: The user's email adress.
+    * @param email: The user's email address.
     * @param password: The user's password.
     */
     public void CreateUser(String email, String password) {
-	jc.newJson(getResponse("CreateUser", "email", email, "password", password));
+	jc.newJson(getResponse("GetAuthToken", "email", email, "password", password));
 	
-	this.checkstatus();
+	this.checkStatus();
 	
-	userHash = jc.getProperty("user_hash");
+	authToken = jc.getProperty("auth_token");
 	
 	//save user data (if succeeded):
 	saveUser(email, password);
@@ -194,16 +197,20 @@ public class ServerCommunication extends IntentService {
     
     /**
     * This does authenticate the user and get a hash for it.
-    * @param email: The user's email adress.
+    * @param email: The user's email address.
     * @param password: The user's password.
     */
-    public void AuthenticateUser(String email, String password) {
-	jc.newJson(getResponse("AuthenticateUser", "email", email, "password", password));
-	
-	this.checkstatus();
-	
-	userHash = jc.getProperty("user_hash");
-    }
+    public boolean AuthenticateUser(String email, String password) {
+	jc.newJson(getResponse("GetAuthToken", "email", email, "password", password));
+
+    boolean fine = this.checkStatus();
+	if (fine) {
+		authToken = jc.getProperty("auth_token");
+        loggedIn = true;
+        return true;
+	}
+	else return false;
+	}
 
     /**
     * Gets the description of the desired task (a task video that is).
@@ -213,7 +220,7 @@ public class ServerCommunication extends IntentService {
     public String DescribeTask(String taskId) {
 	jc.newJson(getResponse("DescribeTask", "task_id", taskId)); //JSON string containing the description of the task. (Contains: "task_id", "uri", "loaded")
 	
-	this.checkstatus();
+	this.checkStatus();
 	
 	return jc.getProperty("uri");
     }
@@ -226,7 +233,7 @@ public class ServerCommunication extends IntentService {
     public String StartAnswerUpload(String taskId) {
 	jc.newJson(getResponse("StartAnswerUpload", "task_id", taskId)); //A JSON string containing needed information for uploading a video to S3: "task_id" (useless?), the video's id to be: "answer_id", the "uri" to upload in S3.
 	
-	this.checkstatus();
+	this.checkStatus();
 	
 	return jc.getProperty("uri");
     }
@@ -239,7 +246,7 @@ public class ServerCommunication extends IntentService {
     public void EndAnswerUpload(String answerId, String uploadStatus) {
 	jc.newJson(getResponse("EndAnswerUpload", "answer_id", answerId, "upload_status", uploadStatus));
 	
-	this.checkstatus();
+	this.checkStatus();
     }
 
 
@@ -251,7 +258,7 @@ public class ServerCommunication extends IntentService {
     public void DescribeAnswer(String answerId) {
 	jc.newJson(getResponse("DescribeAnswer", "answer_id", answerId));
 	
-	this.checkstatus();
+	this.checkStatus();
     }
 
 }
