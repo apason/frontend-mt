@@ -33,10 +33,17 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.camera_fragment, container, false);
+
+
         // Add onClickListener to the record button
         Button recordButton =
                 (Button) view.findViewById(R.id.recordButton);
         recordButton.setOnClickListener(this);
+
+        // If user hasn't logged in disable camera functionality.
+        if (StatusService.StaticStatusService.loggedIn = false) {
+            recordButton.setEnabled(false);
+        }
 
         return view;
     }

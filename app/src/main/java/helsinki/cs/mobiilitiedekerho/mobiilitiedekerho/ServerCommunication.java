@@ -3,6 +3,7 @@ package helsinki.cs.mobiilitiedekerho.mobiilitiedekerho;
 
 import android.app.IntentService;
 import android.content.Intent;
+import android.net.wifi.WifiConfiguration;
 import android.os.Environment;
 
 import java.io.FileOutputStream;
@@ -15,8 +16,6 @@ import java.io.InputStreamReader;
 import java.io.IOException;
 
 import java.io.File;
-
-import static helsinki.cs.mobiilitiedekerho.mobiilitiedekerho.StatusService.StaticStatusService.loggedIn;
 
 /**
 * A class for communicating with the back-end server via HTTP.
@@ -73,7 +72,6 @@ public class ServerCommunication extends IntentService {
 		br.close();
 		
 		this.AuthenticateUser(email, password);
-		//
 	    } catch (IOException e) {
 		e.printStackTrace();
 	    }
@@ -206,7 +204,7 @@ public class ServerCommunication extends IntentService {
     boolean fine = this.checkStatus();
 	if (fine) {
 		authToken = jc.getProperty("auth_token");
-        loggedIn = true;
+        StatusService.StaticStatusService.loggedIn = true;
         return true;
 	}
 	else return false;

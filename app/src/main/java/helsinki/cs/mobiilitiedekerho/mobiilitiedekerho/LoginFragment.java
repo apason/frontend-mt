@@ -77,15 +77,16 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
             String password = passwordTV.getText().toString();
             ServerCommunication servcom = new ServerCommunication();
             if (servcom.AuthenticateUser(email, password) == true) {
-                // TODO Sign in user
                 Toast.makeText(LoginFragment.this.getActivity(), "Kirjautuminen onnistui!",
                         Toast.LENGTH_LONG).show();
                 loginPopup.dismiss();
+            } else {
+                // If username or password is incorrect empty TextViews and notify user.
+                emailTV.setText("");
+                passwordTV.setText("");
+                Toast.makeText(LoginFragment.this.getActivity(), "Sähköpostiosoite tai salasana väärin!",
+                        Toast.LENGTH_LONG).show();
             }
-            // If username or password is incorrect empty TextViews and notify user.
-            emailTV.setText(""); passwordTV.setText("");
-            Toast.makeText(LoginFragment.this.getActivity(), "Sähköpostiosoite tai salasana väärin!",
-                    Toast.LENGTH_LONG).show();
         }
     };
 
