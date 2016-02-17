@@ -13,13 +13,6 @@
         android:layout_marginLeft="10dp"
         tools:layout="@layout/camera_fragment" />
 
-    // Fragment responsible for playing the task video
-    <fragment android:name="helsinki.cs.mobiilitiedekerho.mobiilitiedekerho.TaskVideoFragment"
-        android:id="@+id/task_video_fragment"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        tools:layout="@layout/task_video_fragment"/>
-
     // Fragment responsible for playing the answer videos
     <fragment android:name="helsinki.cs.mobiilitiedekerho.mobiilitiedekerho.AnswerVideoFragment"
         android:id="@+id/answer_video_fragment"
@@ -33,7 +26,5 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         tools:layout="@layout/answer_video_fragment" />
-
-
 
 </RelativeLayout>

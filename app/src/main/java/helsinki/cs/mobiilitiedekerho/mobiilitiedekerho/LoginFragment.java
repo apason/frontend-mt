@@ -13,11 +13,16 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 public class LoginFragment extends Fragment implements View.OnClickListener {
 
     View view;
     private PopupWindow loginPopup;
+    TextView emailTV;
+    TextView passwordTV;
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -48,6 +53,10 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         loginPopup = new PopupWindow(layout);
         loginPopup.showAtLocation(view, Gravity.CENTER, 0, 0);
 
+        emailTV = (TextView) view.findViewById(R.id.username);
+
+        passwordTV = (TextView) view.findViewById(R.id.password);
+
         // Add buttons to the popup and set onclicklisteners
         Button loginButton =
                 (Button) view.findViewById(R.id.login_button);
@@ -59,15 +68,25 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 
     }
 
+    private OnClickListener login_listener = new OnClickListener() {
+        public void onClick(View v) {
+            // On click of login button get content from textViews and check if they match a valid
+            // user using ServerCommunication.
+            String email = emailTV.getText().toString();
+            String password = passwordTV.getText().toString();
+            ServerCommunication servcom = new ServerCommunication();
+            servcom.AuthenticateUser(email, password);
+        }
+    };
+
+    // On click of close button close the popup.
     private OnClickListener close_popup_listener = new OnClickListener() {
         public void onClick(View v) {
             loginPopup.dismiss();
         }
     };
 
-    private OnClickListener login_listener = new OnClickListener() {
-        public void onClick(View v) {
-            // Login code here
-        }
-    };
+
+
+
 }
