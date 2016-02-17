@@ -16,7 +16,7 @@
         <EditText
             android:layout_width="324dp"
             android:layout_height="61dp"
-            android:inputType="text"
+            android:inputType="textEmailAddress"
             android:id="@+id/username"
             android:layout_gravity="left|top"
             android:background="#d9d9d9"
@@ -33,7 +33,7 @@
         <TextView
             android:layout_width="185dp"
             android:layout_height="30dp"
-            android:text="Käyttäjätunnus"
+            android:text="Sähköpostiosoite"
             android:id="@+id/usernameText"
             android:layout_gravity="right|top"
             android:layout_marginTop="30dp"
@@ -58,7 +58,8 @@
             android:id="@+id/login_button"
             android:layout_gravity="left|bottom"
             android:layout_margin="10dp"
-            android:background="#76fe61" />
+            android:background="#76fe61"
+            android:clickable="true"/>
 
         <Button
             android:layout_width="176dp"
@@ -67,7 +68,8 @@
             android:id="@+id/cancel_button"
             android:layout_gravity="right|bottom"
             android:layout_margin="10dp"
-            android:background="#fc8b8b" />
+            android:background="#fc8b8b"
+            android:clickable="true"/>
     </FrameLayout>
 
 </RelativeLayout>

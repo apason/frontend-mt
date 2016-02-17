@@ -37,7 +37,11 @@ public class JsonConverter {
      */
     public void newJson(String json) {
         try {
+<<<<<<< HEAD
             properties = new HashMap<String, String>();
+=======
+        properties = new HashMap<String, String>();
+>>>>>>> loginbranch
             objects = new ArrayList<HashMap<String, String>>();
             JsonReader reader = new JsonReader(new StringReader(json));
             parseJson(reader);
@@ -86,7 +90,11 @@ public class JsonConverter {
     }
 
     private void handleArrayObject(JsonReader reader, HashMap<String, String> objn)
+<<<<<<< HEAD
             throws IOException {
+=======
+        throws IOException {
+>>>>>>> loginbranch
 
         reader.beginObject();
         while(reader.hasNext()){
@@ -107,7 +115,11 @@ public class JsonConverter {
     }
 
     private void handleProperty(JsonReader reader, JsonToken token)
+<<<<<<< HEAD
             throws IOException {
+=======
+        throws IOException {
+>>>>>>> loginbranch
 
         token = reader.peek();
 
@@ -117,7 +129,11 @@ public class JsonConverter {
         }
         else if (token.equals(JsonToken.NUMBER))
             properties.put(key, "" + reader.nextInt());
+<<<<<<< HEAD
             //'else-part' isn't' actually needed?
+=======
+        //'else-part' isn't' actually needed?
+>>>>>>> loginbranch
         else
             reader.skipValue();
     }
