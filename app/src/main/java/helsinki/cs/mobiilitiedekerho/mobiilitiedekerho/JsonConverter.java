@@ -135,7 +135,7 @@ public class JsonConverter {
     /**
      * @return Arraylist of HashMaps containing all OBJECTS
      * (see the JsonResponse convention) of the json.
-     * Note that return valua can be empty list.
+     * Note that return value can be an empty list.
      */
     public ArrayList<HashMap<String, String>> getObjects(){
         return objects;

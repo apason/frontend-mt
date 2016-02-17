@@ -3,7 +3,6 @@ package helsinki.cs.mobiilitiedekerho.mobiilitiedekerho;
 
 import android.app.IntentService;
 import android.content.Intent;
-import android.net.wifi.WifiConfiguration;
 import android.os.Environment;
 
 import java.net.HttpURLConnection;
@@ -16,6 +15,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.util.HashMap;
+import java.util.ArrayList;
 
 /**
  * A class for communicating with the back-end server via HTTP.
@@ -257,11 +257,27 @@ public class ServerCommunication extends IntentService {
     * (Note: Useful ones: "uri". "enabled"; "task_id", "user_id")
     */
     public HashMap<String, String> DescribeAnswer(String answerId) {
-        jc.newJson(getResponse("DescribeAnswer", "answer_id", answerId))
+        jc.newJson(getResponse("DescribeAnswer", "answer_id", answerId));
         
         this.checkstatus();
         
         return jc.getObject();
+    }
+    
+    
+    /**
+    * Gets all the info of all answers related to the task. 
+    * @param taskId: The task's id of which answers are to be retrieved.
+    * @return A ArrayList<HashMap<String, String>> containing info about all the answer related to the task, please do use as search key the parameter which value is to be retrived.
+    * Each HashMap entry is the info of a task.
+    * (Note: Useful ones: "uri". "enabled"; "task_id", "user_id")
+    */
+    public ArrayList<HashMap<String, String>> DescribeTaskAnswers(String taskId) {
+        jc.newJson(getResponse("DescribeTaskAnswersr", "answer_id", answerId));
+        
+        this.checkstatus();
+        
+        return jc.getObjects();
     }
 
 }
