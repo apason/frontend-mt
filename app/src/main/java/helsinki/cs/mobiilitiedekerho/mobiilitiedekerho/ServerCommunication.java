@@ -3,10 +3,6 @@ package helsinki.cs.mobiilitiedekerho.mobiilitiedekerho;
 
 import android.app.IntentService;
 import android.content.Intent;
-<<<<<<< HEAD
-=======
-import android.net.wifi.WifiConfiguration;
->>>>>>> sprint2
 import android.os.Environment;
 
 import java.net.HttpURLConnection;
