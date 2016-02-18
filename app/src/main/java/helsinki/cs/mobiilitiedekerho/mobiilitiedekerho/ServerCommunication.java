@@ -290,7 +290,7 @@ public class ServerCommunication extends IntentService {
     /**
     * Get all the Ids, and both icon names of all categories. Note: This method is supposed to be used in Main Menu, gives all just all the needed information for Main Menu.
     * @return A HashMap<String, String> containing the info told above from all categories, please do use as search key the parameter which value is to be retrived.
-    * (Note: The returned parameters: "category_id" "BGName", "IconName", "AnimatedIconName")
+    * (Note: The returned parameters: "category_id", "IconName", "AnimatedIconName")
     */
     public ArrayList<HashMap<String, String>> GetAllCategories() {
         jc.newJson(getResponse("GetAllCategories"));
