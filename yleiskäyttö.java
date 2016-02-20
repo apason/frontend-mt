@@ -15,7 +15,7 @@ if (CommunicationBound) {
     CommunicationBound = false;
 }
 
-//And here comes the big one:
+//And here comes the big one, must be added somewhere in all activities:
 /** Defines callbacks for service binding, passed to bindService() */
 private ServiceConnection CommunicationConnection = new ServiceConnection() {
 
