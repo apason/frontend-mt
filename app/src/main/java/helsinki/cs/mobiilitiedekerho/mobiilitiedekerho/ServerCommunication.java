@@ -141,7 +141,8 @@ public class ServerCommunication extends IntentService {
 
             //Creates a URL connection.
             URL url;
-            if (API_call == "GetAuthToken" && paramsAndValues.size() == 0) url = new URL(urli + API_call);
+            if (API_call == "GetAuthToken" && paramsAndValues.length == 0) url = new URL(urli + API_call);
+            //replaced paramsAndValues.size() with paramsAndValues.length
             else url = new URL(urli + API_call + "?" + authToken + query);
             urlConnection = (HttpURLConnection) url.openConnection();
 
@@ -264,11 +265,15 @@ public class ServerCommunication extends IntentService {
     * (Note: Useful ones: "uri", "enabled"; "user_id")
     */
     public ArrayList<HashMap<String, String>> DescribeTaskAnswers(String taskId) {
+        /* ERROR: "Cannot resolve symbol: answerID"
+
         jc.newJson(getResponse("DescribeTaskAnswers", "answer_id", answerId));
         
         this.checkStatus();
         
         return jc.getObjects();
+        */
+        return null;
     }
     
     
@@ -294,10 +299,10 @@ public class ServerCommunication extends IntentService {
     */
     public ArrayList<HashMap<String, String>> GetAllCategories() {
         jc.newJson(getResponse("GetAllCategories"));
-        
+
         this.checkStatus();
         
-        return.jc.getObjects();
+        return jc.getObjects();
     }
 
 }
