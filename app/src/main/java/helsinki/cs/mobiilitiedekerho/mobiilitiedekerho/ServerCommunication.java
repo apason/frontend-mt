@@ -21,16 +21,34 @@ import java.util.ArrayList;
  * A class for communicating with the back-end server via HTTP.
  * Use the public methods for making API calls to the server.
  */
-public class ServerCommunication extends IntentService {
+public class ServerCommunication extends Service {
 
+    private final IBinder mBinder = new LocalBinder(); // Binder given to the activities.
+
+    
     private String urli = "mobiilitiedekerho.duckdns.org"; //The IP of the back-end server, it is needed to add parameters to it to be able to comunivate with it. Hard-coded.
     private String authToken;
 
     private JsonConverter jc = new JsonConverter();
 
-//     public IBinder onBind(Intend intend) {
-//      
-//     }
+    
+
+    /**
+     * Class used for the client Binder.
+     * I believe that it is supposed to be called the getService() to be able to use the public methods.
+     */
+    public class LocalBinder extends Binder {
+        ServerCommunication getService() {
+            // Return the instance of ServerCommunication so that the activities can call public methods.
+            return ServerCommunication.this;
+        }
+    }
+
+    
+    @Override
+    public IBinder onBind(Intent intent) {
+        return mBinder;
+    }
 
 
 
