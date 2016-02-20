@@ -65,6 +65,8 @@ public class ServerCommunication extends Service {
     //Thanks to this the service will keep running even if all activityes pointing to this are destroyed/stoped/paused:
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        StartSession();
+        CheckIfSavedUser(); //Important note: The protected 'global' variable loggedIn will be changed to true if there is a saved user.
         //See of this class cares!
         return START_NOT_STICKY;
     }
