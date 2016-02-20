@@ -276,7 +276,7 @@ public class ServerCommunication extends IntentService {
     * Get all the info of the wanted category.
     * @param categoryId the id of the category which info is wanted to be retrieved.
     * @return A HashMap<String, String> containing info about the category, please do use as search key the parameter which value is to be retrived.
-    * (Note: Useful ones: "Name", "BGName", "IconName", "AnimatedIconName", "tasks")
+    * (Note: Useful ones: "Name", "BGName", "IconName", "AnimatedIconName")
     */
     public HashMap<String, String> DescribeCategory(String categoryId) {
         jc.newJson(getResponse("DescribeCategory", "category_id", categoryId));
@@ -288,9 +288,9 @@ public class ServerCommunication extends IntentService {
     
     
     /**
-    * Get all the Ids, and both icon names of all categories. Note: This method is supposed to be used in Main Menu, gives all just all the needed information for Main Menu.
-    * @return A HashMap<String, String> containing the info told above from all categories, please do use as search key the parameter which value is to be retrived.
-    * (Note: The returned parameters: "category_id" "BGName", "IconName", "AnimatedIconName")
+    * Get all the info from all categories. Note: This method is supposed to be used in Main Menu..
+    * @return A ArrayList<HashMap<String, String>> containing the info e from all categories, please do use as search key the parameter which value is to be retrived.
+    * (Note: Useful ones, at the Main Menu: "IconName", "AnimatedIconName")
     */
     public ArrayList<HashMap<String, String>> GetAllCategories() {
         jc.newJson(getResponse("GetAllCategories"));
