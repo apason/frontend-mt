@@ -141,7 +141,8 @@ public class ServerCommunication extends IntentService {
 
             //Creates a URL connection.
             URL url;
-            if (API_call == "GetAuthToken" && paramsAndValues.size() == 0) url = new URL(urli + API_call);
+            if (API_call == "GetAuthToken" && paramsAndValues.length == 0) url = new URL(urli + API_call);
+            //replaced paramsAndValues.size() with paramsAndValues.length
             else url = new URL(urli + API_call + "?" + authToken + query);
             urlConnection = (HttpURLConnection) url.openConnection();
 
@@ -264,7 +265,8 @@ public class ServerCommunication extends IntentService {
     * (Note: Useful ones: "uri", "enabled"; "user_id")
     */
     public ArrayList<HashMap<String, String>> DescribeTaskAnswers(String taskId) {
-        jc.newJson(getResponse("DescribeTaskAnswers", "answer_id", answerId));
+
+        jc.newJson(getResponse("DescribeTaskAnswers", "task_id", taskId));
         
         this.checkStatus();
         
@@ -288,16 +290,16 @@ public class ServerCommunication extends IntentService {
     
     
     /**
-    * Get all the info from all categories. Note: This method is supposed to be used in Main Menu..
+    * Get all the info from all categories. Note: This method is supposed to be used in Main Menu.
     * @return A ArrayList<HashMap<String, String>> containing the info e from all categories, please do use as search key the parameter which value is to be retrived.
     * (Note: Useful ones, at the Main Menu: "IconName", "AnimatedIconName")
     */
     public ArrayList<HashMap<String, String>> GetAllCategories() {
         jc.newJson(getResponse("GetAllCategories"));
-        
+
         this.checkStatus();
         
-        return.jc.getObjects();
+        return jc.getObjects();
     }
 
 }
