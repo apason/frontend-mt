@@ -193,7 +193,7 @@ public class ServerCommunication extends Service {
             urlConnection.disconnect();
         }
             
-        return "{status:Problem encountered}"; //A problem has been encountered while either calling the API or the response its damaged in some way (strange if data checking...) => Some special precautions to take.
+        return "{\"status\":\"CommunicationWithServerError\"}"; //A problem has been encountered while either calling the API or the response its damaged in some way (strange if data checking...) => Some special precautions to take?
     }
 
 
