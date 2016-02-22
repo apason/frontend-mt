@@ -2,8 +2,12 @@ package helsinki.cs.mobiilitiedekerho.mobiilitiedekerho;
 
 
 import android.app.IntentService;
+import android.app.Service;
 import android.content.Intent;
+import android.os.Binder;
 import android.os.Environment;
+import android.os.IBinder;
+import android.util.Log;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -21,16 +25,34 @@ import java.util.ArrayList;
  * A class for communicating with the back-end server via HTTP.
  * Use the public methods for making API calls to the server.
  */
-public class ServerCommunication extends IntentService {
+public class ServerCommunication extends Service {
+
+    private final IBinder mBinder = new LocalBinder(); // Binder given to the activities.
+
 
     private String urli = "mobiilitiedekerho.duckdns.org"; //The IP of the back-end server, it is needed to add parameters to it to be able to comunivate with it. Hard-coded.
     private String authToken;
 
     private JsonConverter jc = new JsonConverter();
 
-//     public IBinder onBind(Intend intend) {
-//      
-//     }
+
+
+    /**
+     * Class used for the client Binder.
+     * I believe that it is supposed to be called the getService() to be able to use the public methods.
+     */
+    public class LocalBinder extends Binder {
+        public ServerCommunication getService() {
+            // Return the instance of ServerCommunication so that the activities can call public methods.
+            return ServerCommunication.this;
+        }
+    }
+
+
+    @Override
+    public IBinder onBind(Intent intent) {
+        return mBinder;
+    }
 
 
 
@@ -38,17 +60,28 @@ public class ServerCommunication extends IntentService {
      * Creates a new HttPService class and gets a new anonymous token for use in API calls.
      */
     public ServerCommunication() {
-        super("ServerCommunication");
+
         StartSession();
         CheckIfSavedUser(); //Important note: The protected 'global' variable loggedIn will be changed to true if there is a saved user.
     }
 
+
+    //Thanks to this the service will keep running even if all activityes pointing to this are destroyed/stoped/paused:
     @Override
-    protected void onHandleIntent(Intent intent) {
-        //En vieläkään tiedä mitä tänne laittaa!
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        StartSession();
+        CheckIfSavedUser(); //Important note: The protected 'global' variable loggedIn will be changed to true if there is a saved user.
+        //See of this class cares!
+        return START_NOT_STICKY;
     }
 
-    
+//     @Override
+//     protected void onHandleIntent(Intent intent) {
+//         //En vieläkään tiedä mitä tänne laittaa!
+    //Onneksi ei tarvinut mitään :D
+//     }
+
+
 
     //Notices the server so that a anonymous token would be linked to this client.
     private void StartSession() {
@@ -58,7 +91,7 @@ public class ServerCommunication extends IntentService {
 
         authToken = jc.getProperty("auth_token");
     }
-    
+
 
     //If there is saved the data of a user, it does AuthenticateUser. (TODO: Encrypted/etc file loading.)
     private void CheckIfSavedUser() {
@@ -78,10 +111,10 @@ public class ServerCommunication extends IntentService {
                 e.printStackTrace();
             }
         }
-        
+
     }
-    
-    
+
+
     //Save the needed data into a text file for future auto-login. (TODO:  Encryption / better way to save data.)
     private void saveUser(String email, String password) {
         FileOutputStream stream = null;
@@ -106,7 +139,7 @@ public class ServerCommunication extends IntentService {
             }
         }
     }
-    
+
 
     private boolean checkStatus() {
         String state = jc.getProperty("status");
@@ -142,10 +175,10 @@ public class ServerCommunication extends IntentService {
             //Creates a URL connection.
             URL url;
             if (API_call == "GetAuthToken" && paramsAndValues.length == 0) url = new URL(urli + API_call);
-            //replaced paramsAndValues.size() with paramsAndValues.length
+                //replaced paramsAndValues.size() with paramsAndValues.length
             else url = new URL(urli + API_call + "?" + authToken + query);
             urlConnection = (HttpURLConnection) url.openConnection();
-
+            Log.i("osoite ", "url");
             //Creates a string (for JsonConverter to be parsed) from the connection's inputStream.
             BufferedReader br = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
             StringBuilder sb = new StringBuilder();
@@ -155,16 +188,18 @@ public class ServerCommunication extends IntentService {
             }
             br.close();
             return sb.toString();
-            
+
         } catch (MalformedURLException e) {
+            Log.i("errori ", "url");
             e.printStackTrace();
         } catch (IOException e) {
+            Log.i("error2 ", "url");
             e.printStackTrace();
         } finally {
             urlConnection.disconnect();
         }
-            
-        return "{status:Problem encountered}"; //A problem has been encountered while either calling the API or the response its damaged in some way (strange if data checking...) => Some special precautions to take.
+
+        return "{\"status\":\"CommunicationWithServerError\"}"; //A problem has been encountered while either calling the API or the response its damaged in some way (strange if data checking...) => Some special precautions to take?
     }
 
 
@@ -231,77 +266,77 @@ public class ServerCommunication extends IntentService {
     }
 
     /**
-    * Notice the server that the video upload to S3 has been accomplished/failed.
-    * @param answerId: The id of the answer that has been uploading.
-    * @param uploadStatus: Whether it succeeded or not, "success" if succeeded.
-    */
+     * Notice the server that the video upload to S3 has been accomplished/failed.
+     * @param answerId: The id of the answer that has been uploading.
+     * @param uploadStatus: Whether it succeeded or not, "success" if succeeded.
+     */
     public void EndAnswerUpload(String answerId, String uploadStatus) {
         jc.newJson(getResponse("EndAnswerUpload", "answer_id", answerId, "upload_status", uploadStatus));
-        
+
         this.checkStatus();
     }
 
 
     /**
-    * Gets the description of the desired answer (that is a user-uploaded video).
-    * @param answerId: The answer's id of which the description is to be retrieved.
-    * @return A HashMap<String, String> containing info about the answer, please do use as search key the parameter which value is to be retrived.
-    * (Note: Useful ones: "uri", "enabled"; "task_id", "user_id")
-    */
+     * Gets the description of the desired answer (that is a user-uploaded video).
+     * @param answerId: The answer's id of which the description is to be retrieved.
+     * @return A HashMap<String, String> containing info about the answer, please do use as search key the parameter which value is to be retrived.
+     * (Note: Useful ones: "uri", "enabled"; "task_id", "user_id")
+     */
     public HashMap<String, String> DescribeAnswer(String answerId) {
         jc.newJson(getResponse("DescribeAnswer", "answer_id", answerId));
-        
+
         this.checkStatus();
-        
+
         return jc.getObject();
     }
-    
-    
-    /**
-    * Gets all the info of all answers related to the task. 
-    * @param taskId: The task's id of which answers are to be retrieved.
-    * @return An ArrayList<HashMap<String, String>> containing info about all the answer related to the task, please do use as search key the parameter which value is to be retrived.
-    * Each HashMap entry is the info of a task.
-    * (Note: Useful ones: "uri", "enabled"; "user_id")
-    */
-    public ArrayList<HashMap<String, String>> DescribeTaskAnswers(String taskId) {
-        /* ERROR: "Cannot resolve symbol: answerID"
 
-        jc.newJson(getResponse("DescribeTaskAnswers", "answer_id", answerId));
-        
-        this.checkStatus();
-        
-        return jc.getObjects();
-        */
-        return null;
-    }
-    
-    
+
     /**
-    * Get all the info of the wanted category.
-    * @param categoryId the id of the category which info is wanted to be retrieved.
-    * @return A HashMap<String, String> containing info about the category, please do use as search key the parameter which value is to be retrived.
-    * (Note: Useful ones: "Name", "BGName", "IconName", "AnimatedIconName", "tasks")
-    */
+     * Gets all the info of all answers related to the task.
+     * @param taskId: The task's id of which answers are to be retrieved.
+     * @return An ArrayList<HashMap<String, String>> containing info about all the answer related to the task, please do use as search key the parameter which value is to be retrived.
+     * Each HashMap entry is the info of a task.
+     * (Note: Useful ones: "uri", "enabled"; "user_id")
+     */
+    public ArrayList<HashMap<String, String>> DescribeTaskAnswers(String taskId) {
+
+        jc.newJson(getResponse("DescribeTaskAnswers", "task_id", taskId));
+
+        this.checkStatus();
+
+        return jc.getObjects();
+    }
+
+
+    /**
+     * Get all the info of the wanted category.
+     * @param categoryId the id of the category which info is wanted to be retrieved.
+     * @return A HashMap<String, String> containing info about the category, please do use as search key the parameter which value is to be retrived.
+     * (Note: Useful ones: "Name", "BGName", "IconName", "AnimatedIconName")
+     */
     public HashMap<String, String> DescribeCategory(String categoryId) {
         jc.newJson(getResponse("DescribeCategory", "category_id", categoryId));
-        
+
         this.checkStatus();
-        
+        String viesti;
+        if (this.checkStatus()) viesti = "hep";
+        else viesti ="";
+        Log.i("hoplaa ", viesti);
         return jc.getObject();
     }
-    
-    
+
+
     /**
-    * Get all the Ids, and both icon names of all categories. Note: This method is supposed to be used in Main Menu, gives all just all the needed information for Main Menu.
-    * @return A HashMap<String, String> containing the info told above from all categories, please do use as search key the parameter which value is to be retrived.
-    * (Note: The returned parameters: "category_id", "IconName", "AnimatedIconName")
-    */
+     * Get all the info from all categories. Note: This method is supposed to be used in Main Menu.
+     * @return A ArrayList<HashMap<String, String>> containing the info e from all categories, please do use as search key the parameter which value is to be retrived.
+     * (Note: Useful ones, at the Main Menu: "IconName", "AnimatedIconName")
+     */
     public ArrayList<HashMap<String, String>> GetAllCategories() {
         jc.newJson(getResponse("GetAllCategories"));
 
         this.checkStatus();
-        
+
         return jc.getObjects();
     }
 

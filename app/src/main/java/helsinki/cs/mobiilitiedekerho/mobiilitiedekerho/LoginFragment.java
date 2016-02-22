@@ -45,6 +45,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     }
 
     private void openLoginPopup() {
+        /* REMOVED TEMPORARILY BECAUSE OF A BUG
         // Inflate the popup_layout.xml
         LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = inflater.inflate(R.layout.login_fragment, null);
@@ -66,7 +67,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         Button closePopupButton =
                 (Button) view.findViewById(R.id.cancel_button);
         closePopupButton.setOnClickListener(close_popup_listener);
-
+*/
     }
 
     private OnClickListener login_listener = new OnClickListener() {
@@ -75,6 +76,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
             // user using ServerCommunication.
             String email = emailTV.getText().toString();
             String password = passwordTV.getText().toString();
+            /*
             ServerCommunication servcom = new ServerCommunication();
             if (servcom.AuthenticateUser(email, password) == true) {
                 Toast.makeText(LoginFragment.this.getActivity(), "Kirjautuminen onnistui!",
@@ -87,6 +89,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                 Toast.makeText(LoginFragment.this.getActivity(), "Sähköpostiosoite tai salasana väärin!",
                         Toast.LENGTH_LONG).show();
             }
+            */
         }
     };
 

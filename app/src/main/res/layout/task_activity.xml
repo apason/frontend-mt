@@ -19,12 +19,12 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         tools:layout="@layout/answer_video_fragment" />
-
+<!-- REMOVED TEMPRORARILY BECAUSE OF A BUG
     // Fragment responsible for login button
     <fragment android:name="helsinki.cs.mobiilitiedekerho.mobiilitiedekerho.LoginFragment"
         android:id="@+id/login_fragment"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        tools:layout="@layout/answer_video_fragment" />
-
+        tools:layout="@layout/login_button_fragment" />
+-->
 </RelativeLayout>

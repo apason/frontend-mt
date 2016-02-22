@@ -17,12 +17,14 @@ public class TaskActivity extends AppCompatActivity {
         //get message (task_id) from category activity:
         Intent intent = getIntent();
         String message = intent.getStringExtra(CategoryActivity.EXTRA_MESSAGE);
-
+        Log.i("viesti ", message);
+        /*
         // yksi tapa välittää viesti fragmentille on Bundle:
         //http://stackoverflow.com/questions/12739909/send-data-from-activity-to-fragment-in-android
         Bundle bundle = new Bundle();
         bundle.putString("taskidmessage", message);
         TaskVideoFragment fragobj = new TaskVideoFragment();
         fragobj.setArguments(bundle);
+        */
     }
 }
