@@ -29,12 +29,11 @@ public class ServerCommunication extends Service {
 
     private final IBinder mBinder = new LocalBinder(); // Binder given to the activities.
 
-
+    
     private String urli = "mobiilitiedekerho.duckdns.org"; //The IP of the back-end server, it is needed to add parameters to it to be able to comunivate with it. Hard-coded.
     private String authToken;
 
     private JsonConverter jc = new JsonConverter();
-
 
 
     /**
@@ -42,12 +41,15 @@ public class ServerCommunication extends Service {
      * I believe that it is supposed to be called the getService() to be able to use the public methods.
      */
     public class LocalBinder extends Binder {
+
         public ServerCommunication getService() {
+
+
+
             // Return the instance of ServerCommunication so that the activities can call public methods.
             return ServerCommunication.this;
         }
     }
-
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -74,6 +76,12 @@ public class ServerCommunication extends Service {
         //See of this class cares!
         return START_NOT_STICKY;
     }
+    
+//     @Override
+//     protected void onHandleIntent(Intent intent) {
+//         //En vieläkään tiedä mitä tänne laittaa!
+            //Onneksi ei tarvinut mitään :D
+//     }
 
 //     @Override
 //     protected void onHandleIntent(Intent intent) {
@@ -319,10 +327,6 @@ public class ServerCommunication extends Service {
         jc.newJson(getResponse("DescribeCategory", "category_id", categoryId));
 
         this.checkStatus();
-        String viesti;
-        if (this.checkStatus()) viesti = "hep";
-        else viesti ="";
-        Log.i("hoplaa ", viesti);
         return jc.getObject();
     }
 
