@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.PopupWindow;
@@ -55,8 +56,8 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         login.setTitle("Kirjaudu mobiilitiedekerhoon");
 
         // Add TextView elements to the dialog
-        emailTV = (TextView) view.findViewById(R.id.username);
-        passwordTV = (TextView) view.findViewById(R.id.password);
+        emailTV = (EditText) login.findViewById(R.id.username);
+        passwordTV = (EditText) login.findViewById(R.id.password);
 
         // Add buttons to the dialog and set onclicklisteners
         Button loginButton =
@@ -65,11 +66,11 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onClick(View v) {
                 // TODO On click of login button get content from TextViews and check if they match a valid user using ServerCommunication.
-                email = emailTV.getText().toString();
-                password = passwordTV.getText().toString();
+                    email = emailTV.getText().toString();
+                    password = passwordTV.getText().toString();
 
                 ServerCommunication servcom = new ServerCommunication();
-                if (servcom.AuthenticateUser(email, password) == true) {
+                if (servcom.AuthenticateUser(email, password)) {
                     Toast.makeText(LoginFragment.this.getActivity(), "Kirjautuminen onnistui!",
                             Toast.LENGTH_LONG).show();
                     login.dismiss();

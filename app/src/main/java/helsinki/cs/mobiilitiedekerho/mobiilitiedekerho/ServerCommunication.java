@@ -151,11 +151,7 @@ public class ServerCommunication extends Service {
 
     private boolean checkStatus() {
         String state = jc.getProperty("status");
-        if (state != "success") {
-            //Something. Check which error actually happened at the server. Maybe that is.
-            return false;
-        }
-        return true;
+        return state == "success";
     }
 
 
