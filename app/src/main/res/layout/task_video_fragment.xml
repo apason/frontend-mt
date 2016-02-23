@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+    android:layout_width="fill_parent" android:layout_height="fill_parent">
 
     <Button android:id="@+id/taskbutton"
             android:paddingRight="10dp"
@@ -9,16 +9,13 @@
             android:layout_width="wrap_content"
             android:clickable="true"
             android:text="TEHTÄVÄ"
-            android:layout_gravity="end"
+            android:layout_gravity="center"
             android:typeface="monospace"
             android:longClickable="false"
             android:textColor="#FFFFFF"
             android:background="@drawable/green_button"
-            android:layout_marginRight="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="-15dp"
-            android:layout_marginBottom="10dp"
-            android:layout_centerInParent="true"
+            android:maxWidth="100dp"
+            android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
-            android:maxWidth="100dp" />
+            android:layout_alignParentEnd="true"/>
     </RelativeLayout>

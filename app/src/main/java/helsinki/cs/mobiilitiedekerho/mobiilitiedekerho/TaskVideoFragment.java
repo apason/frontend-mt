@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.MediaController;
+import android.widget.Toast;
 import android.widget.VideoView;
 
 
@@ -42,8 +43,7 @@ public class TaskVideoFragment extends Fragment implements View.OnClickListener 
     public void onClick(View v){
         //task_id from TaskActivity.java:
         String text = getArguments().getString("task");
-        Log.i("taskId", text);
-
+        Toast.makeText(getActivity(), text, Toast.LENGTH_LONG).show();
         //String taskVideo = "http://download.wavetlan.com/SVV/Media/HTTP/H264/Talkinghead_Media/H264_test1_Talkinghead_mp4_480x360.mp4";
         //VideoPlayer vp = new VideoPlayer(videoView, taskVideo);
         //vp.playVideo();

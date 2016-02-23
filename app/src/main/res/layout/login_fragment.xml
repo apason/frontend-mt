@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent" android:layout_height="match_parent"
+    >
 
 
     <FrameLayout
@@ -11,7 +12,7 @@
         android:layout_alignParentStart="true"
         android:layout_margin="30dp"
         android:background="#b9000000"
-        android:id="@+id/frameLayout">
+        android:id="@+id/login_popup">
 
         <EditText
             android:layout_width="324dp"
@@ -72,4 +73,4 @@
             android:clickable="true"/>
     </FrameLayout>
 
-</RelativeLayout>
+</FrameLayout>

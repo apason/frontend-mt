@@ -26,12 +26,14 @@ public class TaskActivity extends AppCompatActivity {
         CameraFragment cf = new CameraFragment();
         AnswerVideoFragment avf = new AnswerVideoFragment();
         TaskVideoFragment tvf = new TaskVideoFragment();
+        LoginFragment lf = new LoginFragment();
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
         transaction.add(R.id.task_video_fragment, tvf);
         transaction.add(R.id.camera_fragment, cf);
         transaction.add(R.id.answer_video_fragment, avf);
+        transaction.add(R.id.login_button_fragment, lf);
 
         Bundle bundle = new Bundle();
         bundle.putString("task", message);
