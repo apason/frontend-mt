@@ -30,7 +30,7 @@ public class ServerCommunication extends Service {
     private final IBinder mBinder = new LocalBinder(); // Binder given to the activities.
 
     
-    private String urli = "mobiilitiedekerho.duckdns.org"; //The IP of the back-end server, it is needed to add parameters to it to be able to comunivate with it. Hard-coded.
+    private String urli = "http://mobiilitiedekerho.duckdns.org"; //The IP of the back-end server, it is needed to add parameters to it to be able to comunivate with it. Hard-coded.
     private String authToken;
 
     private JsonConverter jc = new JsonConverter();
