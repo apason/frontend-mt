@@ -1,11 +1,12 @@
 package helsinki.cs.mobiilitiedekerho.mobiilitiedekerho;
 
-import android.app.Fragment;
 import android.media.MediaPlayer;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.MediaController;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,6 +46,10 @@ public class AnswerVideoFragment extends Fragment implements View.OnClickListene
 
     @Override
     public void onClick(View v) {
+        //task_id from TaskActivity.java:
+        String text = getArguments().getString("task");
+        Log.i("taskId", text);
+
         String taskVideo;
         switch (v.getId()) {
             // Play video related to button 1

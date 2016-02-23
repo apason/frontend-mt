@@ -5,20 +5,33 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
 
-    // Fragment responsible for operating the camera
-    <fragment android:name="helsinki.cs.mobiilitiedekerho.mobiilitiedekerho.CameraFragment"
-        android:id="@+id/camera_fragment"
-        android:layout_width="wrap_content"
+    <FrameLayout
+        android:id="@+id/task_video_fragment"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        tools:layout="@layout/camera_fragment" />
+        android:orientation="vertical" />
+<!--
+    // Fragment responsible for playing the task video
+    <fragment android:name="helsinki.cs.mobiilitiedekerho.mobiilitiedekerho.TaskVideoFragment"
+              android:id="@+id/task_video_fragment"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              tools:layout="@layout/task_video_fragment" />
+-->
+    // Fragment responsible for operating the camera
+    <FrameLayout
+        android:id="@+id/camera_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"/>
 
     // Fragment responsible for playing the answer videos
-    <fragment android:name="helsinki.cs.mobiilitiedekerho.mobiilitiedekerho.AnswerVideoFragment"
+    <FrameLayout
         android:id="@+id/answer_video_fragment"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        tools:layout="@layout/answer_video_fragment" />
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+
 <!-- REMOVED TEMPRORARILY BECAUSE OF A BUG
     // Fragment responsible for login button
     <fragment android:name="helsinki.cs.mobiilitiedekerho.mobiilitiedekerho.LoginFragment"

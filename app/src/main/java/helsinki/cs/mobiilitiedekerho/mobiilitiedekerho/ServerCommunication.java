@@ -98,6 +98,7 @@ public class ServerCommunication extends Service {
         this.checkStatus();
 
         authToken = jc.getProperty("auth_token");
+        Log.i("autorisointi ", authToken);
     }
 
 
@@ -324,6 +325,7 @@ public class ServerCommunication extends Service {
      * (Note: Useful ones: "Name", "BGName", "IconName", "AnimatedIconName")
      */
     public HashMap<String, String> DescribeCategory(String categoryId) {
+        Log.i("osoite1 ", "url");
         jc.newJson(getResponse("DescribeCategory", "category_id", categoryId));
 
         this.checkStatus();
