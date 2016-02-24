@@ -5,8 +5,6 @@
               android:layout_height="match_parent"
               android:background="@drawable/landscape" >
 
-
-
     // Fragment responsible for login
     <FrameLayout
         android:id="@+id/login_button_fragment"
@@ -15,7 +13,7 @@
         android:layout_height="wrap_content" />
 
     <LinearLayout
-        android:id="@+id/category"
+        android:id="@+id/tasks_fragment"
         android:orientation="horizontal"
         android:clickable="true"
         android:layout_width="match_parent"

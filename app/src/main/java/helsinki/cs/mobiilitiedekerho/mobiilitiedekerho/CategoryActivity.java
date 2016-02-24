@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class CategoryActivity extends AppCompatActivity implements View.OnClickListener {
+public class CategoryActivity extends AppCompatActivity {
 
     // task_id viestinä (MESSAGE) TaskActivity.javalle:
     public final static String EXTRA_MESSAGE = "helsinki.cs.mobiilitiedekerho.mobiilitiedekerho.MESSAGE";
@@ -49,55 +49,21 @@ public class CategoryActivity extends AppCompatActivity implements View.OnClickL
         setContentView(R.layout.clouds_layout);
 
         LoginFragment lf = new LoginFragment();
+        TasksFragment tf = new TasksFragment();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.add(R.id.tasks_fragment, tf);
         transaction.add(R.id.login_button_fragment, lf);
-
-
-        ll = (LinearLayout) findViewById(R.id.category);
-        //ll.setOrientation(FrameLayout.HORIZONTAL);
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-
-
-        //HashMap<String, String> tasks = commService.DescribeCategory("1");
-        //String koko = Integer.toString(tasks.size());
-        //Log.i("koko", koko);
-        //IMAGEBUTTONS ARE DRAWN LIKE THIS WHEN SERVER COMMUNICATION IS USED:
-/*
-        sc = new ServerCommunication();
-
-        // only one category in this sprint: category_id = String "0" ?
-        // HashMap<String, String> task: Key = task_id &  Value = name ???
-        HashMap<String, String> tasks = sc.DescribeCategory("0");
-        ImageButton [] taskbutton = new ImageButton[tasks.size()];
-        for (int i = 0; i < tasks.size()-1; i++) {
-            taskbutton[i] = new ImageButton(this);
-            taskbutton[i].setImageResource(R.drawable.rain);
-            taskbutton[i].setLayoutParams(lp);
-            taskbutton[i].setOnClickListener(this);
-            taskbutton[i].setBackgroundColor(Color.TRANSPARENT);
-            taskbutton[i].setId(Integer.parseInt(tasks.get(i)));
-            ll.addView(taskbutton[i], lp);
-        }
-        */
-
-        ImageButton [] taskbutton = new ImageButton[2];
-        for (int i = 0; i < 2; i++) {
-            taskbutton[i] = new ImageButton(this);
-            if (i == 0) taskbutton[i].setImageResource(R.drawable.rain);
-            if (i == 1) taskbutton[i].setImageResource(R.drawable.snow);
-            taskbutton[i].setLayoutParams(lp);
-            taskbutton[i].setOnClickListener(this);
-            taskbutton[i].setBackgroundColor(Color.TRANSPARENT);
-            //taskbutton[i].setTag(i); = TURHA RIVI?
-            taskbutton[i].setId(i);
-            // lopulliseen versioon ServerCommunicationista getID:llä tai vastaavalla metodilla: taskbutton[i].setId(tasks.getId())
-            ll.addView(taskbutton[i], lp);
-            }
-
         transaction.commit();
-
     }
 
+    //Starts TaskActivity with a particular task chosen
+    public void startTask(String id) {
+        Intent intent = new Intent(this, TaskActivity.class);
+        intent.putExtra(EXTRA_MESSAGE, id); // s = task_id
+        startActivity(intent);
+    }
+
+/*
     //Starts TaskActivity and passes task_id as MESSAGE to TaskActivity class
     @Override
     public void onClick(View v) {
@@ -107,7 +73,7 @@ public class CategoryActivity extends AppCompatActivity implements View.OnClickL
         startActivity(intent);
     }
 
-
+*/
    //** Defines callbacks for service binding, passed to bindService() *//*
     private ServiceConnection CommunicationConnection = new ServiceConnection() {
 
