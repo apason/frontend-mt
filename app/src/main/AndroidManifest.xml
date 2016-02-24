@@ -27,9 +27,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".CategoryActivity" />
         </activity>
-        <service android:name=".ServerCommunication">
 
-        </service>
 
     </application>
 

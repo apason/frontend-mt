@@ -12,6 +12,8 @@ import android.view.Window;
 //public class TaskActivity extends FragmentActivity {
 public class TaskActivity extends AppCompatActivity {
 
+    VideoScreen vs;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // Draw components described in activity_main.xml on screen
@@ -27,6 +29,7 @@ public class TaskActivity extends AppCompatActivity {
         AnswerVideoFragment avf = new AnswerVideoFragment();
         TaskVideoFragment tvf = new TaskVideoFragment();
         LoginFragment lf = new LoginFragment();
+        vs = new VideoScreen();
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
@@ -34,6 +37,7 @@ public class TaskActivity extends AppCompatActivity {
         transaction.add(R.id.camera_fragment, cf);
         transaction.add(R.id.answer_video_fragment, avf);
         transaction.add(R.id.login_button_fragment, lf);
+        transaction.add(R.id.video_view_fragment, vs);
 
         Bundle bundle = new Bundle();
         bundle.putString("task", message);
@@ -41,5 +45,9 @@ public class TaskActivity extends AppCompatActivity {
         tvf.setArguments(bundle);
 
         transaction.commit();
+    }
+
+    public void playback (String uri) {
+        vs.playVideo(uri);
     }
 }

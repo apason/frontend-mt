@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.graphics.Color;
 import android.os.IBinder;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,9 +15,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -25,9 +29,7 @@ public class CategoryActivity extends AppCompatActivity implements View.OnClickL
 
     // task_id viestinä (MESSAGE) TaskActivity.javalle:
     public final static String EXTRA_MESSAGE = "helsinki.cs.mobiilitiedekerho.mobiilitiedekerho.MESSAGE";
-    //private ServerCommunication sc;
     LinearLayout ll;
-    //ServerCommunication sc;
     ServerCommunication commService;
     boolean CommunicationBound = false; //false at the beggining
 
@@ -39,16 +41,20 @@ public class CategoryActivity extends AppCompatActivity implements View.OnClickL
         //All activities must have these variables
 
 
-//On onStart() there must be added (after super calling):
+        //On onStart() there must be added (after super calling):
         Intent intent = new Intent(this, ServerCommunication.class);
         bindService(intent, CommunicationConnection, Context.BIND_AUTO_CREATE); //CommunicationConnection told in this file
-
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.clouds_layout);
 
+        LoginFragment lf = new LoginFragment();
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.add(R.id.login_button_fragment, lf);
+
+
         ll = (LinearLayout) findViewById(R.id.category);
-        ll.setOrientation(LinearLayout.HORIZONTAL);
+        //ll.setOrientation(FrameLayout.HORIZONTAL);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 
 
@@ -88,6 +94,8 @@ public class CategoryActivity extends AppCompatActivity implements View.OnClickL
             ll.addView(taskbutton[i], lp);
             }
 
+        transaction.commit();
+
     }
 
     //Starts TaskActivity and passes task_id as MESSAGE to TaskActivity class
@@ -95,7 +103,6 @@ public class CategoryActivity extends AppCompatActivity implements View.OnClickL
     public void onClick(View v) {
         String s = Integer.toString(v.getId());
         Intent intent = new Intent(this, TaskActivity.class);
-        Log.i("veisti ", s);
         intent.putExtra(EXTRA_MESSAGE, s); // s = task_id
         startActivity(intent);
     }
