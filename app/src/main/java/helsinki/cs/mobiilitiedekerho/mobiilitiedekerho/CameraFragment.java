@@ -130,7 +130,7 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
                 if(selectedFile.exists()) {
                     CognitoCachingCredentialsProvider credentialsProvider = new CognitoCachingCredentialsProvider(
                             getContext(),
-                            "eu-west-1:c509c687-f021-46e0-841e-2c988f2add59", // Identity Pool ID
+                            "HIDDEN", // Identity Pool ID
                             Regions.EU_WEST_1 // Region
                     );
                     // Create an S3 client

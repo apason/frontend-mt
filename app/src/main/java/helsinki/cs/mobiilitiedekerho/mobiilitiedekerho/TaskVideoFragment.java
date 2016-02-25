@@ -28,26 +28,17 @@ public class TaskVideoFragment extends Fragment implements View.OnClickListener 
         Button tbutton =
             (Button) view.findViewById(R.id.taskbutton);
         tbutton.setOnClickListener(this);
-/*
-        videoView = (VideoView) view.findViewById(R.id.viewTaskVideo);
-        MediaController mediaController = new MediaController(TaskVideoFragment.this.getActivity());
-        mediaController.setAnchorView(videoView);
-        mediaController.setMediaPlayer(videoView);
-        videoView.setMediaController(mediaController);
-*/
+
         return view;
     }
-
 
     @Override
     public void onClick(View v){
         //task_id from TaskActivity.java:
-        String text = getArguments().getString("task");
-        Toast.makeText(getActivity(), text, Toast.LENGTH_LONG).show();
-        //String taskVideo = "http://download.wavetlan.com/SVV/Media/HTTP/H264/Talkinghead_Media/H264_test1_Talkinghead_mp4_480x360.mp4";
-        //VideoPlayer vp = new VideoPlayer(videoView, taskVideo);
-        //vp.playVideo();
+        String id = getArguments().getString("task");
+        // String taskVideo = ServiceCommunication.DescribeTask(id);
+        String taskVideo = "http://download.wavetlan.com/SVV/Media/HTTP/H264/Talkinghead_Media/H264_test1_Talkinghead_mp4_480x360.mp4";
+        ((TaskActivity) getActivity()).playback(taskVideo);
     }
-
 
 }

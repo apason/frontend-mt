@@ -1,24 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent" android:layout_height="fill_parent" android:orientation="horizontal"
-              android:gravity="right">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="fill_parent" android:layout_height="fill_parent">
 
     <Button android:id="@+id/taskbutton"
             android:paddingRight="10dp"
             android:paddingLeft="10dp"
             android:layout_height="wrap_content"
-            android:layout_width="100dp"
+            android:layout_width="wrap_content"
             android:clickable="true"
             android:text="TEHTÄVÄ"
+            android:layout_gravity="center"
             android:typeface="monospace"
             android:longClickable="false"
             android:textColor="#FFFFFF"
             android:background="@drawable/green_button"
             android:maxWidth="100dp"
             android:layout_centerVertical="true"
-            android:layout_alignParentRight="false"
-            android:layout_alignParentEnd="false" android:layout_marginRight="10dp"
-            android:layout_gravity="center_vertical"/>
-
-
-</LinearLayout>
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="false"
+            android:layout_marginRight="10dp"/>
+</RelativeLayout>
