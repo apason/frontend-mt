@@ -10,14 +10,17 @@
         android:id="@+id/task_video_fragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical" />
+        android:orientation="vertical"
+        android:layout_gravity="center_vertical"
+        android:layout_alignParentEnd="false" android:layout_below="@+id/login_button_fragment"/>
 
     // Fragment responsible for operating the camera
     <FrameLayout
         android:id="@+id/camera_fragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp" />
+        android:layout_marginLeft="10dp" android:layout_below="@+id/task_video_fragment"
+        android:layout_marginTop="10dp"/>
 
     // Fragment responsible for playing the answer videos
     <FrameLayout
