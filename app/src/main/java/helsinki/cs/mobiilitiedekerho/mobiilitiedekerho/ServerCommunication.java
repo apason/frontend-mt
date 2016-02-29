@@ -8,12 +8,6 @@ package helsinki.cs.mobiilitiedekerho.mobiilitiedekerho;
  * Please note: Method descriptions are the descriptions of what the HTTP call will do, NOT what this actual method does.
  */
 public class ServerCommunication{
-
-    /**
-     * Creates a new HttPService class.
-     */
-    public ServerCommunication() {}
-    
     
     
     /**
@@ -138,7 +132,6 @@ public class ServerCommunication{
      */
     public String GetAllCategories() {
         return getResponse("GetAllCategories");
-
     }
 
 }

@@ -11,7 +11,10 @@ import java.io.FileReader;
  */
 public class FileHandling {
     
-    //If there is saved the data of a user, it does return the url of AuthenticateUser if not then YOUR PROBLEM. (TODO: Encrypted/etc file loading.)
+    /**
+    * If there is saved the data of a user, it does return the url of AuthenticateUser if not then YOUR PROBLEM.
+    * (TODO: Encrypted/etc file loading.)
+    */
     public String CheckIfSavedUser() {
         File path = Environment.getDataDirectory(); //The data directory of the application.
         File file = new File(path, "user.txt");
@@ -33,8 +36,10 @@ public class FileHandling {
 
     }
 
-
-    //Save the needed data into a text file for future auto-login. (TODO:  Encryption / better way to save data.)
+    /**
+    * Save the needed data into a text file for future auto-login.
+    * (TODO:  Encryption / better way to save data.)
+    */
     public void saveUser(String email, String password) {
         FileOutputStream stream = null;
         try {

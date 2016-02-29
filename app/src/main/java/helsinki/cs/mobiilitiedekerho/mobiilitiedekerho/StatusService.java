@@ -11,9 +11,9 @@ public class StatusService {
         protected static String nick;
         protected static String token;
         
-        private final JsonConverter jc = new JsonConverter();
-        private final ServerCommunication sc = new ServerCommunication();
-        private final FileHandling fh = new FileHandling();
+        protected final JsonConverter jc = new JsonConverter();
+        protected final ServerCommunication sc = new ServerCommunication();
+        protected final FileHandling fh = new FileHandling();
         
     }
 
