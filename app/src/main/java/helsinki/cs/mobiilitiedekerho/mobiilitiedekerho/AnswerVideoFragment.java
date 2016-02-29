@@ -41,7 +41,8 @@ public class AnswerVideoFragment extends Fragment implements View.OnClickListene
         //task_id from TaskActivity.java:
         String id = getArguments().getString("task");
         Log.i("taskId", id);
-        String taskVideo ="http://download.wavetlan.com/SVV/Media/HTTP/MP4/ConvertedFiles/Media-Convert/Unsupported/test7.mp4";
+        String a = "video";
+        String taskVideo ="https://d3kto7252bccha.cloudfront.net/" + a +".mp4";
         //taskVideo = ServiceCommunication.describeAnswer(id);
         ((TaskActivity) getActivity()).playback(taskVideo);
     }
