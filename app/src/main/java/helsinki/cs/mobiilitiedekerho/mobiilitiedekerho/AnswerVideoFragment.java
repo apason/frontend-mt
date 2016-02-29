@@ -1,11 +1,12 @@
 package helsinki.cs.mobiilitiedekerho.mobiilitiedekerho;
 
-import android.app.Fragment;
 import android.media.MediaPlayer;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.MediaController;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,55 +33,18 @@ public class AnswerVideoFragment extends Fragment implements View.OnClickListene
                 (Button) view.findViewById(R.id.button2);
         button2.setOnClickListener(this);
 
-        // Add functionality to the VideoView
-        videoView = (VideoView) view.findViewById(R.id.viewTaskVideo);
-        MediaController mediaController = new MediaController(AnswerVideoFragment.this.getActivity());
-        mediaController.setAnchorView(videoView);
-        mediaController.setMediaPlayer(videoView);
-        videoView.setMediaController(mediaController);
-
         return view;
     }
 
-
     @Override
     public void onClick(View v) {
-        String taskVideo;
-        switch (v.getId()) {
-            // Play video related to button 1
-            case R.id.button1:
-                taskVideo = "https://s3.eu-central-1.amazonaws.com/p60v4ow30312-tasks/VID_20160201_150600.mp4";
-                Uri videoUri = Uri.parse(taskVideo);
-                videoView.setVideoURI(videoUri);
-                videoView.start();
-
-                // Empty VideoView after playback has finished
-                videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                    @Override
-                    public void onCompletion(MediaPlayer mp) {
-                        videoView.setVisibility(View.GONE);
-                        videoView.setVisibility(View.VISIBLE);
-                    }
-                });
-                break;
-            // Play video related to button 2
-            case R.id.button2:
-                //if (view.getId() == R.id.button2) taskVideo = "https://s3.eu-central-1.amazonaws.com/p60v4ow30312-answers/20160207_221819%5B1%5D.mp4";
-                taskVideo = "http://download.wavetlan.com/SVV/Media/HTTP/H264/Talkinghead_Media/H264_test1_Talkinghead_mp4_480x360.mp4";
-                Uri videoUri2 = Uri.parse(taskVideo);
-                videoView.setVideoURI(videoUri2);
-                videoView.start();
-
-                // Empty VideoView after playback has finished
-                videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                    @Override
-                    public void onCompletion(MediaPlayer mp) {
-                        videoView.setVisibility(View.GONE);
-                        videoView.setVisibility(View.VISIBLE);
-                    }
-                });
-                break;
-        }
+        //task_id from TaskActivity.java:
+        String id = getArguments().getString("task");
+        Log.i("taskId", id);
+        String a = "video";
+        String taskVideo ="https://d3kto7252bccha.cloudfront.net/" + a +".mp4";
+        //taskVideo = ServiceCommunication.describeAnswer(id);
+        ((TaskActivity) getActivity()).playback(taskVideo);
     }
 }
 
