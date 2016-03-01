@@ -9,7 +9,7 @@ public class StatusService {
     
         protected static boolean loggedIn;
         protected static String nick;
-        protected static String token;
+        protected static String authToken;
         
         protected static final JsonConverter jc = new JsonConverter();
         protected static final ServerCommunication sc = new ServerCommunication();

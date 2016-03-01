@@ -21,7 +21,6 @@ public class ServerCommunication{
      */
     private String getResponse(String API_call, String... paramsAndValues) {
 
-        try {
             //Creates the query to be added to the URL, that is the parameters of the API call.
             String query = "";
             for (int i = 0 ; i < paramsAndValues.length ; i+= 2) {
