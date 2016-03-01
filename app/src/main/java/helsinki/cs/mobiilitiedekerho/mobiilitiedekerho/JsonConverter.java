@@ -24,12 +24,7 @@ public class JsonConverter {
     //this is for first level properties and object list names only!
     private String key;
 
-    /**
-     * Creates new JsonConverter.
-     * Call newJson for start with new JSON.
-     */
-    public JsonConverter() {}
-
+    
     /**
      * Parses the wanted JSON string and stores the retrieved data for later use.
      * Note: Cleares old data if exists.
