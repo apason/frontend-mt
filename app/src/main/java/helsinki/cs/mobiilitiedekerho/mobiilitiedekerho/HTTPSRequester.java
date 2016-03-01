@@ -23,7 +23,7 @@ protected class HTTPSRequester extends AsyncTask<String, void, String> {
     * Constructor for HTTPSRequester.
     * @param act a interface for being able to pass the response for the calling ativity.
     */
-    public YourTask(TaskCompleted act){
+    public HTTPSRequester(TaskCompleted act){
         this.act = act;
     }
 
