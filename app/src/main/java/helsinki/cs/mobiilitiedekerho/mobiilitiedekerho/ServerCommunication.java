@@ -45,7 +45,7 @@ public class ServerCommunication{
     * @return true if succes is the status in the response. 
     */
     public boolean checkStatus() {
-        String state = jc.getProperty("status");
+        String state = StatusService.StaticStatusService.jc.getProperty("status");
         return state == "success";
     }
     
