@@ -16,6 +16,7 @@ import android.os.AsyncTask;
  */
 protected class S3Upload extends AsyncTask<String, void, String> {
 //TODO: No idea yet of what to do!
+    private TaskCompleted act;
     
     /**
     * Constructor for S3Upload.
@@ -33,4 +34,5 @@ protected class S3Upload extends AsyncTask<String, void, String> {
     protected void onPostExecute(String result) {
         act.taskCompleted(result);
     }
+    
 }
