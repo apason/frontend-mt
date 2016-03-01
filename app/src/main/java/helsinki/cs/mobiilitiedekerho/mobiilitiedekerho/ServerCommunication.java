@@ -29,7 +29,7 @@ public class ServerCommunication{
                 if (i < paramsAndValues.length -2) query += "&";
             }
 
-            //Cretaes the textual representation of the url.
+            //Creates the textual representation of the url.
             StringBuilder sb = new StringBuilder();
             if (API_call == "GetAuthToken" && paramsAndValues.length == 0) sb.append(StatusService.StaticStatusService.urli + API_call);
             else sb.append(StatusService.StaticStatusService.urli + API_call + "?" + StatusService.StaticStatusService.authToken + query);
@@ -42,7 +42,7 @@ public class ServerCommunication{
     /**
     * Check if the status in response is success, that is if everything went allright.
     * TODO: If not, then what?
-    * @return true if succes is the status in the response. 
+    * @return true if success is the status in the response. 
     */
     public boolean checkStatus() {
         String state = StatusService.StaticStatusService.jc.getProperty("status");
