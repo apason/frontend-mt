@@ -1,17 +1,17 @@
 package helsinki.cs.mobiilitiedekerho.mobiilitiedekerho;
 
+import android.content.Context;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.view.Gravity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.VideoView;
-import android.util.Log;
 
 public class TasksFragment extends Fragment implements View.OnClickListener {
 
@@ -25,13 +25,16 @@ public class TasksFragment extends Fragment implements View.OnClickListener {
         LinearLayout ll = (LinearLayout) view.findViewById(R.id.tasks);
         ll.setOrientation(LinearLayout.HORIZONTAL);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        //lp.height = 400;
-        //lp.gravity=Gravity.CENTER;
+
         ImageButton[] taskbutton = new ImageButton[2];
         for (int i = 0; i < 2; i++) {
             taskbutton[i] = new ImageButton(getContext());
-            if (i == 0) taskbutton[i].setImageResource(R.drawable.rain);
-            if (i == 1) taskbutton[i].setImageResource(R.drawable.snow);
+            String image = "";
+            if (i == 0) image = "rain";
+            if (i == 1) image = "snow";
+            // gets image resource from drawable folder:
+            int resID = getResources().getIdentifier(image, "drawable", getActivity().getApplicationContext().getPackageName());
+            taskbutton[i].setImageResource(resID);
             taskbutton[i].setLayoutParams(lp);
             taskbutton[i].setScaleType(ImageView.ScaleType.FIT_CENTER);
             taskbutton[i].setOnClickListener(this);

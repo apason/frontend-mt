@@ -7,6 +7,7 @@ import android.graphics.Point;
 import android.media.Image;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View.OnClickListener;
@@ -45,8 +46,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 
     // When loginButton is pressed call method openLoginDialog
     @Override
-    public void onClick(View v) {
-        openLoginDialog();
+    public void onClick(View v) { openLoginDialog();
     }
 
     private void openLoginDialog() {
