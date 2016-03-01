@@ -17,6 +17,16 @@ import java.io.IOException;
  */
 protected class HTTPSRequester extends AsyncTask<String, void, String> {
 
+    private TaskCompleted act;
+
+    /**
+    * Constructor for HTTPSRequester.
+    * @param act a interface for being able to pass the response for the calling ativity.
+    */
+    public YourTask(TaskCompleted act){
+        this.act = act;
+    }
+
     //TODO: Problem handling.
     protected void doInBackground(String urli) {
         try {
@@ -51,7 +61,7 @@ protected class HTTPSRequester extends AsyncTask<String, void, String> {
     
     
     protected void onPostExecute(String result) {
-        //
+        act.taskCompleted(result);
     }
 
 }
