@@ -3,6 +3,7 @@ package helsinki.cs.mobiilitiedekerho.mobiilitiedekerho;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -13,18 +14,50 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import java.util.HashMap;
+
 public class TasksFragment extends Fragment implements View.OnClickListener {
 
+    public class listener implements TaskCompleted {
+        @Override
+        public void taskCompleted(String response) {
+            tasks(response);
+        }
+    }
+
     View view;
+    AsyncTask hp = null;
+
+    public void tasks(String response) {
+        LinearLayout ll = (LinearLayout) view.findViewById(R.id.tasks);
+        ll.setOrientation(LinearLayout.HORIZONTAL);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+        StatusService.StaticStatusService.jc.newJson(response);
+        HashMap<String, String> tasks = StatusService.StaticStatusService.jc.getObject(); //TODO nulling stuff
+        ImageButton [] taskbutton = new ImageButton[tasks.size()];
+        for (int i = 0; i < tasks.size()-1; i++) {
+            /*
+            String id = tasks.get("id");
+            Log.i("kuva", id);
+
+            int imageID = getResources().getIdentifier(id, "drawable", getActivity().getApplicationContext().getPackageName());
+            taskbutton[i] = new ImageButton(getContext());
+            taskbutton[i].setImageResource(imageID);
+            taskbutton[i].setLayoutParams(lp);
+            taskbutton[i].setOnClickListener(this);
+            taskbutton[i].setBackgroundColor(Color.TRANSPARENT);
+            taskbutton[i].setId(Integer.parseInt(tasks.get(i)));
+            ll.addView(taskbutton[i], lp);
+            */
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.tasks_fragment, container, false);
-
-        LinearLayout ll = (LinearLayout) view.findViewById(R.id.tasks);
-        ll.setOrientation(LinearLayout.HORIZONTAL);
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+/*
 
         ImageButton[] taskbutton = new ImageButton[2];
         for (int i = 0; i < 2; i++) {
@@ -46,23 +79,9 @@ public class TasksFragment extends Fragment implements View.OnClickListener {
         }
 
         //THIS CODE WHEN SERVERCOMMUNICATION CAN BE USED:
-/*
-        sc = new ServerCommunication();
-
-        // only one category in this sprint: category_id = String "0" ?
-        // HashMap<String, String> task: Key = task_id &  Value = name ???
-        HashMap<String, String> tasks = sc.DescribeCategory("0");
-        ImageButton [] taskbutton = new ImageButton[tasks.size()];
-        for (int i = 0; i < tasks.size()-1; i++) {
-            taskbutton[i] = new ImageButton(this);
-            taskbutton[i].setImageResource(R.drawable.rain);
-            taskbutton[i].setLayoutParams(lp);
-            taskbutton[i].setOnClickListener(this);
-            taskbutton[i].setBackgroundColor(Color.TRANSPARENT);
-            taskbutton[i].setId(Integer.parseInt(tasks.get(i)));
-            ll.addView(taskbutton[i], lp);
-        }
-        */
+*/
+        String url = StatusService.StaticStatusService.sc.DescribeCategory("1");
+        hp = new HTTPSRequester(new listener()).execute(url);
 
         return view;
     }

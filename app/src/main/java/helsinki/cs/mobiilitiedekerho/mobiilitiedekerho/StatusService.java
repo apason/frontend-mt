@@ -1,6 +1,7 @@
 package helsinki.cs.mobiilitiedekerho.mobiilitiedekerho;
 
 
+
 public class StatusService {
 
     public static class StaticStatusService {

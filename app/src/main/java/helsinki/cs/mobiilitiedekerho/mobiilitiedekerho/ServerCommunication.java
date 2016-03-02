@@ -1,13 +1,15 @@
 package helsinki.cs.mobiilitiedekerho.mobiilitiedekerho;
 
 
+import android.app.Service;
+
 /**
  * A class for making urls for communicating with the back-end server via HTTPS.
  * Use the public methods for creating API-call urls to the server.
  * Also has checkStatus() for checking if response is allright.
  * Please note: Method descriptions are the descriptions of what the HTTP call will do, NOT what this actual method does.
  */
-public class ServerCommunication{
+public class ServerCommunication  {
     
     
     /**

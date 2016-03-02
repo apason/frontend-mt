@@ -68,7 +68,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                 // TODO On click of login button get content from TextViews and check if they match a valid user using ServerCommunication.
                     email = emailTV.getText().toString();
                     password = passwordTV.getText().toString();
-
+/*
                 ServerCommunication servcom = new ServerCommunication();
                 if (servcom.AuthenticateUser(email, password)) {
                     Toast.makeText(LoginFragment.this.getActivity(), "Kirjautuminen onnistui!",
@@ -81,6 +81,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                     Toast.makeText(LoginFragment.this.getActivity(), "Sähköpostiosoite tai salasana väärin!",
                             Toast.LENGTH_LONG).show();
             }
+            */
         }});
 
         // On click of cancel button close the dialog

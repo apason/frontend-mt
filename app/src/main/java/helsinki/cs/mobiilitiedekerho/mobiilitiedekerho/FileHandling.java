@@ -2,19 +2,23 @@ package helsinki.cs.mobiilitiedekerho.mobiilitiedekerho;
 
 import android.os.Environment;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.IOException;
 
 /**
  * Class for managing all kind of file saving and loading. WIP
  */
 public class FileHandling {
-    
+
     /**
     * If there is saved the data of a user, it does return the url of AuthenticateUser if not then YOUR PROBLEM.
     * (TODO: Encrypted/etc file loading.)
     */
+
+
     public String CheckIfSavedUser() {
         File path = Environment.getDataDirectory(); //The data directory of the application.
         File file = new File(path, "user.txt");
@@ -32,13 +36,14 @@ public class FileHandling {
                 e.printStackTrace();
             }
         }
-        else return "YOUR PROBLEM";
+        return "YOUR PROBLEM";
     }
 
     /**
     * Save the needed data into a text file for future auto-login.
     * (TODO:  Encryption / better way to save data.)
     */
+
     public void saveUser(String email, String password) {
         FileOutputStream stream = null;
         try {
@@ -62,5 +67,5 @@ public class FileHandling {
             }
         }
     }
-    
+
 }

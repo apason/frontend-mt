@@ -146,6 +146,7 @@ public class JsonConverter {
      * Note that return value can be null.
      */
     public HashMap<String, String> getObject(){
-        return objects.get(0);
+        if (objects.size() != 0) return objects.get(0);
+        else return null;
     }
 }

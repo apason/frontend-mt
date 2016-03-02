@@ -15,7 +15,7 @@ import java.io.IOException;
  * A class for communicating with the back-end server via HTTPS.
  * Give the wanted url(parameters included) for making API calls to the server.
  */
-protected class HTTPSRequester extends AsyncTask<String, void, String> {
+public class HTTPSRequester extends AsyncTask<String, String, String> {
 
     private TaskCompleted act;
 
@@ -27,11 +27,13 @@ protected class HTTPSRequester extends AsyncTask<String, void, String> {
         this.act = act;
     }
 
+    HttpURLConnection urlConnection = null;
+
     //TODO: Problem handling.
-    protected void doInBackground(String urli) {
+    protected String doInBackground(String... urli) {
         try {
-            HttpURLConnection urlConnection = null;
-            Url url = urli;
+
+            URL url = new URL(urli[0]);
         
             urlConnection = (HttpURLConnection) url.openConnection();
         
@@ -47,10 +49,10 @@ protected class HTTPSRequester extends AsyncTask<String, void, String> {
         
         
         } catch (MalformedURLException e) {
-            Log.i("MalformedURLException", url);
+            Log.i("MalformedURLException", urli.toString());
             e.printStackTrace();
         } catch (IOException e) {
-            Log.i("IOException", url);
+            Log.i("IOException", urli.toString());
             e.printStackTrace();
         } finally {
             urlConnection.disconnect();
@@ -65,4 +67,3 @@ protected class HTTPSRequester extends AsyncTask<String, void, String> {
     }
 
 }
- 

@@ -30,21 +30,20 @@ public class CategoryActivity extends AppCompatActivity {
     // task_id viestinä (MESSAGE) TaskActivity.javalle:
     public final static String EXTRA_MESSAGE = "helsinki.cs.mobiilitiedekerho.mobiilitiedekerho.MESSAGE";
     LinearLayout ll;
-    ServerCommunication commService;
     boolean CommunicationBound = false; //false at the beggining
 
     //Creates dynamically imagebuttons for each task in a category
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-
+        StatusService ss = new StatusService();
         //All activities must have these variables
 
-
+/*
         //On onStart() there must be added (after super calling):
         Intent intent = new Intent(this, ServerCommunication.class);
         bindService(intent, CommunicationConnection, Context.BIND_AUTO_CREATE); //CommunicationConnection told in this file
-
+*/
         super.onCreate(savedInstanceState);
         setContentView(R.layout.clouds_layout);
 
@@ -74,6 +73,7 @@ public class CategoryActivity extends AppCompatActivity {
     }
 
 */
+    /*
    //** Defines callbacks for service binding, passed to bindService() *//*
     private ServiceConnection CommunicationConnection = new ServiceConnection() {
 
@@ -90,5 +90,6 @@ public class CategoryActivity extends AppCompatActivity {
             CommunicationBound  = false;
         }
     };
+    */
 }
 
