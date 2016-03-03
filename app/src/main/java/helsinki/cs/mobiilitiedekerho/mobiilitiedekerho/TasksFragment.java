@@ -14,6 +14,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class TasksFragment extends Fragment implements View.OnClickListener {
@@ -34,23 +35,23 @@ public class TasksFragment extends Fragment implements View.OnClickListener {
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 
         StatusService.StaticStatusService.jc.newJson(response);
-        HashMap<String, String> tasks = StatusService.StaticStatusService.jc.getObject(); //TODO nulling stuff
-        ImageButton [] taskbutton = new ImageButton[tasks.size()];
-        for (int i = 0; i < tasks.size()-1; i++) {
-            /*
-            String id = tasks.get("id");
-            Log.i("kuva", id);
-
-            int imageID = getResources().getIdentifier(id, "drawable", getActivity().getApplicationContext().getPackageName());
-            taskbutton[i] = new ImageButton(getContext());
-            taskbutton[i].setImageResource(imageID);
-            taskbutton[i].setLayoutParams(lp);
-            taskbutton[i].setOnClickListener(this);
-            taskbutton[i].setBackgroundColor(Color.TRANSPARENT);
-            taskbutton[i].setId(Integer.parseInt(tasks.get(i)));
-            ll.addView(taskbutton[i], lp);
-            */
+        ArrayList<HashMap<String, String>> tasks = StatusService.StaticStatusService.jc.getObjects();
+        if (!tasks.isEmpty()) {
+            ImageButton[] taskbutton = new ImageButton[tasks.size()];
+            for (int i = 0; i < tasks.size() - 1; i++) {
+                String id = tasks.get(i).get("id");
+                Log.i("kuva", id);
+                int imageID = getResources().getIdentifier(id, "drawable", getActivity().getApplicationContext().getPackageName());
+                taskbutton[i] = new ImageButton(getContext());
+                taskbutton[i].setImageResource(imageID);
+                taskbutton[i].setLayoutParams(lp);
+                taskbutton[i].setOnClickListener(this);
+                taskbutton[i].setBackgroundColor(Color.TRANSPARENT);
+                taskbutton[i].setId(Integer.parseInt(tasks.get(i).get("id")));
+                ll.addView(taskbutton[i], lp);
+            }
         }
+
     }
 
     @Override
@@ -58,6 +59,10 @@ public class TasksFragment extends Fragment implements View.OnClickListener {
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.tasks_fragment, container, false);
 /*
+  LISTA STAATTISIA LUOTUJA KUVAKKEITA GUI:n TESTAUSTA VARTEN:
+        LinearLayout ll = (LinearLayout) view.findViewById(R.id.tasks);
+        ll.setOrientation(LinearLayout.HORIZONTAL);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 
         ImageButton[] taskbutton = new ImageButton[2];
         for (int i = 0; i < 2; i++) {
@@ -77,10 +82,9 @@ public class TasksFragment extends Fragment implements View.OnClickListener {
             // lopulliseen versioon ServerCommunicationista getID:llä tai vastaavalla metodilla: taskbutton[i].setId(tasks.getId())
             ll.addView(taskbutton[i], lp);
         }
+    */
 
-        //THIS CODE WHEN SERVERCOMMUNICATION CAN BE USED:
-*/
-        String url = StatusService.StaticStatusService.sc.DescribeCategory("1");
+        String url = StatusService.StaticStatusService.sc.ListTasksForCategory("1");
         hp = new HTTPSRequester(new listener()).execute(url);
 
         return view;

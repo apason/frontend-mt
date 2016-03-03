@@ -11,7 +11,8 @@
         android:orientation="horizontal"
         android:clickable="true"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:layout_right="@+id/login_button_fragment" />
 
     // Fragment responsible for login
     <FrameLayout
