@@ -131,7 +131,8 @@ public class ServerCommunication  {
    /**
      * Get all the ids from all the categories. Note: This method is supposed to be used at Main Menu.
      */
-    public String ListGategories() {
+
+    public String ListCategories() {
         return getResponse("ListCategories");
     }
     
@@ -141,6 +142,7 @@ public class ServerCommunication  {
     */
     public String ListTasksForCategory(String categoryId) {
         return getResponse("ListTasksForCategory", "category_id", categoryId);
+
     }
 
 }

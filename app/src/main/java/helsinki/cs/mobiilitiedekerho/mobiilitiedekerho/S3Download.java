@@ -14,7 +14,7 @@ import android.os.AsyncTask;
 /**
  * A class for downloading (streaming down) videos from S3.
  */
-protected class S3Download extends AsyncTask<String, void, String> {
+public class S3Download extends AsyncTask<String, Void, String> {
 //TODO: No idea yet of what to do!
     private TaskCompleted act;
 
@@ -27,8 +27,8 @@ protected class S3Download extends AsyncTask<String, void, String> {
     }
     
     
-    protected void doInBackground(String urli) {
-        
+    protected String doInBackground(String... urli) {
+        return "success";
     }
     
     protected void onPostExecute(String result) {

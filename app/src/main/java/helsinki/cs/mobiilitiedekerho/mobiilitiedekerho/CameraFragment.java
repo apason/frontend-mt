@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -15,14 +16,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
-
-import com.amazonaws.auth.CognitoCachingCredentialsProvider;
-import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
-import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
-import com.amazonaws.regions.Region;
-import com.amazonaws.regions.Regions;
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3Client;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -138,7 +131,7 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
 
                 // Initialize the Amazon Cognito credentials provider
                 if(selectedFile.exists()) {
-                    hp = new S3Upload(new listener(), selectedFile).execute(selectedFileName);
+                    hp = new S3Upload(new listener(), getContext(), selectedFile).execute(selectedFileName);
                 }
             }
         }
@@ -151,7 +144,7 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
                 // Initialize the Amazon Cognito credentials provider
 
                 if(selectedFile.exists()) {
-                    hp = new S3Upload(new listener(), selectedFile).execute(selectedFileName);
+                    hp = new S3Upload(new listener(), getContext(), selectedFile).execute(selectedFileName);
                 }
 
             } else if (resultCode == TaskActivity.RESULT_CANCELED) {
