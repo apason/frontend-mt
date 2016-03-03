@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Point;
 import android.media.Image;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -23,13 +24,43 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 public class LoginFragment extends Fragment implements View.OnClickListener {
+
+    private Dialog login = null;
+
+    public class listener implements TaskCompleted {
+        @Override
+        public void taskCompleted(String response) {
+            authenticated(response);
+        }
+    }
 
     View view;
     TextView emailTV;
     TextView passwordTV;
     String email;
     String password;
+    AsyncTask hp = null;
+
+    public void authenticated(String response) {
+        StatusService.StaticStatusService.jc.newJson(response);
+        ArrayList<HashMap<String, String>> tasks = StatusService.StaticStatusService.jc.getObjects();
+
+        if (StatusService.StaticStatusService.sc.checkStatus()) {
+            Toast.makeText(LoginFragment.this.getActivity(), "Kirjautuminen onnistui!",
+                    Toast.LENGTH_LONG).show();
+            login.dismiss();
+        } else {
+            // TODO If username or password is incorrect empty TextViews and notify user.
+            emailTV.setText("");
+            passwordTV.setText("");
+            Toast.makeText(LoginFragment.this.getActivity(), "Sähköpostiosoite tai salasana väärin!",
+                    Toast.LENGTH_LONG).show();
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -50,7 +81,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     }
 
     private void openLoginDialog() {
-        final Dialog login = new Dialog(LoginFragment.this.getActivity());
+        login = new Dialog(LoginFragment.this.getActivity());
         // Set GUI of login screen
         login.setContentView(R.layout.login_fragment);
         login.setTitle("Kirjaudu mobiilitiedekerhoon");
@@ -65,23 +96,15 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         loginButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO On click of login button get content from TextViews and check if they match a valid user using ServerCommunication.
+                // On click of login button get content from TextViews and check if they match a valid user using ServerCommunication.
                     email = emailTV.getText().toString();
                     password = passwordTV.getText().toString();
-/*
-                ServerCommunication servcom = new ServerCommunication();
-                if (servcom.AuthenticateUser(email, password)) {
-                    Toast.makeText(LoginFragment.this.getActivity(), "Kirjautuminen onnistui!",
-                            Toast.LENGTH_LONG).show();
-                    login.dismiss();
-                } else {
-                    // TODO If username or password is incorrect empty TextViews and notify user.
-                    emailTV.setText("");
-                    passwordTV.setText("");
-                    Toast.makeText(LoginFragment.this.getActivity(), "Sähköpostiosoite tai salasana väärin!",
-                            Toast.LENGTH_LONG).show();
-            }
-            */
+
+                String url = StatusService.StaticStatusService.sc.AuthenticateUser(email, password);
+                hp = new HTTPSRequester(new listener()).execute(url);
+
+                AsyncTask hp = null;
+
         }});
 
         // On click of cancel button close the dialog

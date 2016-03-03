@@ -2,6 +2,9 @@ package helsinki.cs.mobiilitiedekerho.mobiilitiedekerho;
 
 
 import android.app.Service;
+import android.os.AsyncTask;
+import android.util.Log;
+import android.view.View;
 
 /**
  * A class for making urls for communicating with the back-end server via HTTPS.
@@ -10,8 +13,31 @@ import android.app.Service;
  * Please note: Method descriptions are the descriptions of what the HTTP call will do, NOT what this actual method does.
  */
 public class ServerCommunication  {
-    
-    
+
+    public class anonymous implements TaskCompleted {
+        @Override
+        public void taskCompleted(String response) {
+            StatusService.StaticStatusService.jc.newJson(response);
+
+            //this.checkStatus();
+
+            StatusService.StaticStatusService.authToken = StatusService.StaticStatusService.jc.getProperty("auth_token");
+        }
+    }
+
+    AsyncTask hp = null;
+
+    /**
+     * Creates a new HttPService class and gets a new anonymous token for use in API calls.
+     */
+    public ServerCommunication() {
+        //TODO: Task must be done before doing anything else in the app!
+        String url = StartSession();
+        hp = new HTTPSRequester(new anonymous()).execute(url);
+        //CheckIfSavedUser(); //Important note: The protected 'global' variable loggedIn will be changed to true if there is a saved user.
+    }
+
+
     /**
      * private
      * This method returns the url to be used to communicate with the server.
@@ -33,6 +59,7 @@ public class ServerCommunication  {
             //Creates the textual representation of the url.
             StringBuilder sb = new StringBuilder();
             if (API_call == "GetAuthToken" && paramsAndValues.length == 0) sb.append(StatusService.StaticStatusService.urli + API_call);
+            else if (API_call == "GetAuthToken") sb.append(StatusService.StaticStatusService.urli + API_call + "?" + query);
             else sb.append(StatusService.StaticStatusService.urli + API_call + "?" + StatusService.StaticStatusService.authToken + query);
             
             return sb.toString();
@@ -47,7 +74,7 @@ public class ServerCommunication  {
     */
     public boolean checkStatus() {
         String state = StatusService.StaticStatusService.jc.getProperty("status");
-        return state == "success";
+        return state == "Success";
     }
     
     

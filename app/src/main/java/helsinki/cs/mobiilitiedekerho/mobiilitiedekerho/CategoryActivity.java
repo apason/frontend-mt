@@ -35,6 +35,8 @@ public class CategoryActivity extends AppCompatActivity {
     //Creates dynamically imagebuttons for each task in a category
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         StatusService ss = new StatusService();
         //All activities must have these variables
