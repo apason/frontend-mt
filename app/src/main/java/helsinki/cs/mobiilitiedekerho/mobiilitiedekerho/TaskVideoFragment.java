@@ -3,6 +3,7 @@ package helsinki.cs.mobiilitiedekerho.mobiilitiedekerho;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -14,11 +15,22 @@ import android.widget.MediaController;
 import android.widget.Toast;
 import android.widget.VideoView;
 
+import java.util.HashMap;
+
 
 public class TaskVideoFragment extends Fragment implements View.OnClickListener {
 
+    public class Listener implements TaskCompleted {
+        @Override
+        public void taskCompleted(String response) {
+            task(response);
+        }
+    }
+
     View view;
     VideoView videoView;
+    AsyncTask hp;
+    String taskURL;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -37,8 +49,15 @@ public class TaskVideoFragment extends Fragment implements View.OnClickListener 
         //task_id from TaskActivity.java:
         String id = getArguments().getString("task");
         // String taskVideo = ServiceCommunication.DescribeTask(id);
-        String taskVideo = "http://download.wavetlan.com/SVV/Media/HTTP/H264/Talkinghead_Media/H264_test1_Talkinghead_mp4_480x360.mp4";
-        ((TaskActivity) getActivity()).playback(taskVideo);
+        String url = StatusService.StaticStatusService.sc.DescribeTask(id);
+        hp = new HTTPSRequester(new Listener()).execute(url);
+        //String taskURL = "http://download.wavetlan.com/SVV/Media/HTTP/H264/Talkinghead_Media/H264_test1_Talkinghead_mp4_480x360.mp4";
+        ((TaskActivity) getActivity()).playback(taskURL);
     }
 
+    private void task(String response) {
+        StatusService.StaticStatusService.jc.newJson(response);
+        HashMap<String, String> answer = StatusService.StaticStatusService.jc.getObject();
+        taskURL = answer.get("id");
+    }
 }

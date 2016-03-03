@@ -23,10 +23,11 @@
 
 
     <LinearLayout
+        android:id="@+id/answers"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
-
+<!--
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -251,7 +252,7 @@
             android:minWidth="100dp"
             android:background="#e801fd"
             android:layout_margin="7dp"/>
-
+-->
     </LinearLayout>
     </HorizontalScrollView>
 
