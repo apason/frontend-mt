@@ -31,11 +31,21 @@ import java.util.Date;
 
 public class CameraFragment extends Fragment implements View.OnClickListener {
 
+
+    public class listener implements TaskCompleted {
+        @Override
+        public void taskCompleted(String response) {
+            //TODO
+        }
+    }
+
     View view;
     private static final int VIDEO_CAPTURE = 101;
     private Uri fileUri;
-    private File mediaFile;
-    private String mediaFileName;
+    private File selectedFile;
+    private String selectedFileName;
+    
+    AsyncTask hp = null;
 
 
 
@@ -82,12 +92,12 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
 
                                 // Create a file for saving the shot video VID + timestamp + .mp4
                                 String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-                                mediaFile = new File(mediaStorageDirectory.getPath() + File.separator +
+                                selectedFile = new File(mediaStorageDirectory.getPath() + File.separator +
                                         "VID_" + timeStamp + ".mp4");
-                                mediaFileName = mediaFile.getName();
+                                selectedFileName = selectedFile.getName();
                                 // Create a new Intent to shoot video and save the result to the file specified earlier
                                 Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-                                fileUri = Uri.fromFile(mediaFile);
+                                fileUri = Uri.fromFile(selectedFile);
 
                                 // Start the intent using the device's own camera software
                                 intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
@@ -128,24 +138,7 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
 
                 // Initialize the Amazon Cognito credentials provider
                 if(selectedFile.exists()) {
-                    CognitoCachingCredentialsProvider credentialsProvider = new CognitoCachingCredentialsProvider(
-                            getContext(),
-                            "HIDDEN", // Identity Pool ID
-                            Regions.EU_WEST_1 // Region
-                    );
-                    // Create an S3 client
-                    AmazonS3 s3 = new AmazonS3Client(credentialsProvider);
-
-                    // Set the region of your S3 bucket
-                    s3.setRegion(Region.getRegion(Regions.EU_WEST_1));
-
-                    TransferUtility transferUtility = new TransferUtility(s3, getContext());
-
-                    TransferObserver observer = transferUtility.upload(
-                            "p60v4ow30312-answers",     /* The bucket to upload to */
-                            selectedFileName,    /* The key for the uploaded object */
-                            selectedFile        /* The file where the data to upload exists */
-                    );
+                    hp = new S3Upload(new listener(), selectedFile).execute(selectedFileName);
                 }
             }
         }
@@ -157,26 +150,8 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
                 //t.show();-->
                 // Initialize the Amazon Cognito credentials provider
 
-                if(mediaFile.exists()) {
-
-                    CognitoCachingCredentialsProvider credentialsProvider = new CognitoCachingCredentialsProvider(
-                            getContext(),
-                            "eu-west-1:c509c687-f021-46e0-841e-2c988f2add59", // Identity Pool ID
-                            Regions.EU_WEST_1 // Region
-                    );
-                    // Create an S3 client
-                    AmazonS3 s3 = new AmazonS3Client(credentialsProvider);
-
-                    // Set the region of your S3 bucket
-                    s3.setRegion(Region.getRegion(Regions.EU_WEST_1));
-
-                    TransferUtility transferUtility = new TransferUtility(s3, getContext());
-
-                    TransferObserver observer = transferUtility.upload(
-                            "p60v4ow30312-answers",     /* The bucket to upload to */
-                            mediaFileName,    /* The key for the uploaded object */
-                            mediaFile        /* The file where the data to upload exists */
-                    );
+                if(selectedFile.exists()) {
+                    hp = new S3Upload(new listener(), selectedFile).execute(selectedFileName);
                 }
 
             } else if (resultCode == TaskActivity.RESULT_CANCELED) {
