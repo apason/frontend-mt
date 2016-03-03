@@ -128,11 +128,19 @@ public class ServerCommunication  {
         return getResponse("DescribeCategory", "category_id", categoryId);
     }
 
-    /**
-     * Get all the info from all categories. Note: This method is supposed to be used in Main Menu.
+   /**
+     * Get all the ids from all the categories. Note: This method is supposed to be used at Main Menu.
      */
-    public String GetAllCategories() {
-        return getResponse("GetAllCategories");
+    public String ListGategories() {
+        return getResponse("ListGategories");
+    }
+    
+    /**
+    * Get all tasks that are part to the category.
+    * @param categoryId the id of the category which info is wanted to be retrieved.
+    */
+    public String ListTasksForGategory(String gategoryId) {
+        return getResponse("ListTasksForGategory", "category_id", categoryId);
     }
 
 }
