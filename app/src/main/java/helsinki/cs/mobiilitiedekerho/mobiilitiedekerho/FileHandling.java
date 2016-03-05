@@ -14,7 +14,7 @@ import java.io.IOException;
 public class FileHandling {
 
     /**
-    * If there is saved the data of a user, it does return the url of AuthenticateUser if not then YOUR PROBLEM.
+    * If there is saved the data of a user, it does return the url of AuthenticateUser if not then "NoDataFound".
     * (TODO: Encrypted/etc file loading.)
     */
 
@@ -36,7 +36,7 @@ public class FileHandling {
                 e.printStackTrace();
             }
         }
-        return "YOUR PROBLEM";
+        return "NoDataFound";
     }
 
     /**
