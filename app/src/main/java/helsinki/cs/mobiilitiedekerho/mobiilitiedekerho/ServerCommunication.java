@@ -60,7 +60,7 @@ public class ServerCommunication  {
             StringBuilder sb = new StringBuilder();
             if (API_call == "GetAuthToken" && paramsAndValues.length == 0) sb.append(StatusService.StaticStatusService.urli + API_call);
             else if (API_call == "GetAuthToken") sb.append(StatusService.StaticStatusService.urli + API_call + "?" + query);
-            else sb.append(StatusService.StaticStatusService.urli + API_call + "?" + StatusService.StaticStatusService.authToken + query);
+            else sb.append(StatusService.StaticStatusService.urli + API_call + "?" + "auth_token=" + StatusService.StaticStatusService.authToken + "&" + query);
             
             return sb.toString();
     }
