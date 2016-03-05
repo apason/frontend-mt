@@ -8,13 +8,15 @@ import android.view.View;
 
 /**
  * A class for making urls for communicating with the back-end server via HTTPS.
+ * All classes returns String contained the formed url corresponding to the API call + query.
  * Use the public methods for creating API-call urls to the server.
  * Also has checkStatus() for checking if response is allright.
  * Please note: Method descriptions are the descriptions of what the HTTP call will do, NOT what this actual method does.
  */
 public class ServerCommunication  {
 
-    public class anonymous implements TaskCompleted {
+//TÄMÄ
+    public class GotToken implements TaskCompleted {
         @Override
         public void taskCompleted(String response) {
             StatusService.StaticStatusService.jc.newJson(response);
@@ -22,21 +24,12 @@ public class ServerCommunication  {
             //this.checkStatus();
 
             StatusService.StaticStatusService.authToken = StatusService.StaticStatusService.jc.getProperty("auth_token");
+            StatusService.StaticStatusService.loggedIn = true;
         }
     }
 
     AsyncTask hp = null;
-
-    /**
-     * Creates a new HttPService class and gets a new anonymous token for use in API calls.
-     */
-    public ServerCommunication() {
-        //TODO: Task must be done before doing anything else in the app!
-        String url = StartSession();
-        hp = new HTTPSRequester(new anonymous()).execute(url);
-        //CheckIfSavedUser(); //Important note: The protected 'global' variable loggedIn will be changed to true if there is a saved user.
-    }
-
+//TÄMÄ
 
     /**
      * private
@@ -81,7 +74,7 @@ public class ServerCommunication  {
     /**
      * Notices the server so that a anonymous token would be linked to this client.
      */
-    public String StartSession() {
+    public String AnonymousSession() {
         return getResponse("GetAuthToken");
     }
 
