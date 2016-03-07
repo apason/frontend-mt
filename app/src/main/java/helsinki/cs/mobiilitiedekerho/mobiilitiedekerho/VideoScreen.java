@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView;
 import android.widget.MediaController;
 import android.widget.VideoView;
 
@@ -16,6 +17,7 @@ public class VideoScreen extends Fragment {
 
     View view;
     VideoView videoView;
+    WebView webview;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -33,12 +35,9 @@ public class VideoScreen extends Fragment {
     }
 
     public void playVideo(String uri) {
-
         Intent intent = new Intent(android.content.Intent.ACTION_VIEW);
         Uri data = Uri.parse(uri);
         intent.setDataAndType(data, "video/mp4");
         startActivity(intent);
-
-
     }
 }
