@@ -5,6 +5,15 @@
                 android:layout_height="fill_parent"
                 android:background="@drawable/landscape" >
 
+
+
+    // Fragment responsible for login
+    <FrameLayout
+        android:id="@+id/login_button_fragment"
+        android:clickable="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
     //Fragment responsible for showing task icons
     <FrameLayout
         android:id="@+id/tasks_fragment"
@@ -13,13 +22,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignRight="@+id/login_button_fragment" />
-
-    // Fragment responsible for login
-    <FrameLayout
-        android:id="@+id/login_button_fragment"
-        android:clickable="true"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
 
 </RelativeLayout>
 

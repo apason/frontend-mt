@@ -32,9 +32,6 @@ public class CategoryActivity extends AppCompatActivity {
     public final static String EXTRA_MESSAGE = "helsinki.cs.mobiilitiedekerho.mobiilitiedekerho.MESSAGE";
     LinearLayout ll;
     AsyncTask hp = null;
-    boolean CommunicationBound = false; //false at the beggining
-
-
 
     public void start(String response) {
         StatusService.StaticStatusService.jc.newJson(response);
@@ -43,10 +40,6 @@ public class CategoryActivity extends AppCompatActivity {
     //Creates dynamically imagebuttons for each task in a category
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
-        String url = StatusService.StaticStatusService.sc.DescribeTask("1");
-
-        hp = new HTTPSRequester(new start()).execute(url);
 
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 

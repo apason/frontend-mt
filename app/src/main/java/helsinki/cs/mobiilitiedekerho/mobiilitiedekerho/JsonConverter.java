@@ -1,5 +1,7 @@
 package helsinki.cs.mobiilitiedekerho.mobiilitiedekerho;
 
+import android.util.Log;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -31,6 +33,7 @@ public class JsonConverter {
      * @param json: JSON String to be parsed.
      */
     public void newJson(String json) {
+        Log.i("json", json);
         try {
             properties = new HashMap<String, String>();
 

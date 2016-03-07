@@ -8,36 +8,18 @@ import android.view.View;
 
 /**
  * A class for making urls for communicating with the back-end server via HTTPS.
+ * All classes returns String contained the formed url corresponding to the API call + query.
  * Use the public methods for creating API-call urls to the server.
  * Also has checkStatus() for checking if response is allright.
  * Please note: Method descriptions are the descriptions of what the HTTP call will do, NOT what this actual method does.
  */
 public class ServerCommunication  {
 
-    public class anonymous implements TaskCompleted {
-        @Override
-        public void taskCompleted(String response) {
-            StatusService.StaticStatusService.jc.newJson(response);
+//TÄMÄ
 
-            //this.checkStatus();
-            StatusService.StaticStatusService.setAuthToken(StatusService.StaticStatusService.jc.getProperty("auth_token"));
-            //StatusService.StaticStatusService.authToken = StatusService.StaticStatusService.jc.getProperty("auth_token");
-            Log.i("autentikointi", StatusService.StaticStatusService.getAuthToken());
-        }
-    }
 
     AsyncTask hp = null;
-
-    /**
-     * Creates a new HttPService class and gets a new anonymous token for use in API calls.
-     */
-    public ServerCommunication() {
-        //TODO: Task must be done before doing anything else in the app!
-        String url = StartSession();
-        hp = new HTTPSRequester(new anonymous()).execute(url);
-        //CheckIfSavedUser(); //Important note: The protected 'global' variable loggedIn will be changed to true if there is a saved user.
-    }
-
+//TÄMÄ
 
     /**
      * private
@@ -62,7 +44,6 @@ public class ServerCommunication  {
             if (API_call == "GetAuthToken" && paramsAndValues.length == 0) sb.append(StatusService.StaticStatusService.urli + API_call);
             else if (API_call == "GetAuthToken") sb.append(StatusService.StaticStatusService.urli + API_call + "?" + query);
             else sb.append(StatusService.StaticStatusService.urli + API_call + "?" + "auth_token=" + StatusService.StaticStatusService.authToken + "&" + query);
-
             return sb.toString();
     }
 
@@ -75,15 +56,14 @@ public class ServerCommunication  {
     */
     public boolean checkStatus() {
         String state = StatusService.StaticStatusService.jc.getProperty("status");
-        return state == "Success";
+        return state.equals("Success");
     }
     
     
     /**
      * Notices the server so that a anonymous token would be linked to this client.
      */
-    public String StartSession() {
-        Log.i("autorisointi", getResponse("GetAuthToken"));
+    public String AnonymousSession() {
         return getResponse("GetAuthToken");
     }
 
@@ -160,17 +140,16 @@ public class ServerCommunication  {
      * Get all the ids from all the categories. Note: This method is supposed to be used at Main Menu.
      */
 
-    public String ListCategories() {
-        return getResponse("ListCategories");
+    public String DescribeCategories() {
+        return getResponse("DescribeCategories");
     }
     
     /**
-    * Get all tasks that are part to the category.
-    * @param categoryId the id of the category which info is wanted to be retrieved.
+    * Get all tasks that are part of to the category.
+    * @param categoryId the id of the category which task belonging to it are wanted to be retrieved.
     */
-    public String GetTasksByCategory(String categoryId) {
-        return getResponse("GetTasksByCategory", "category_id", categoryId);
-
+    public String DescribeCategoryTasks(String categoryId) {
+        return getResponse("DescribeCategoryTasks", "category_id", categoryId);
     }
 
 }

@@ -37,7 +37,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
             authenticated(response);
         }
     }
-
+    String url;
     View view;
     TextView emailTV;
     TextView passwordTV;
@@ -47,8 +47,10 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 
     public void authenticated(String response) {
         StatusService.StaticStatusService.jc.newJson(response);
-        ArrayList<HashMap<String, String>> tasks = StatusService.StaticStatusService.jc.getObjects();
-
+        //ArrayList<HashMap<String, String>> tasks = StatusService.StaticStatusService.jc.getObjects();
+        Log.i("urli", url);
+        Log.i("markkeri", "");
+        Log.i("status",  StatusService.StaticStatusService.jc.getProperty("status"));
         if (StatusService.StaticStatusService.sc.checkStatus()) {
             Toast.makeText(LoginFragment.this.getActivity(), "Kirjautuminen onnistui!",
                     Toast.LENGTH_LONG).show();
@@ -99,8 +101,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                 // On click of login button get content from TextViews and check if they match a valid user using ServerCommunication.
                     email = emailTV.getText().toString();
                     password = passwordTV.getText().toString();
-
-                String url = StatusService.StaticStatusService.sc.AuthenticateUser(email, password);
+                url = StatusService.StaticStatusService.sc.AuthenticateUser(email, password);
                 hp = new HTTPSRequester(new listener()).execute(url);
 
                 AsyncTask hp = null;

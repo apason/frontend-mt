@@ -32,6 +32,7 @@ public class TasksFragment extends Fragment implements View.OnClickListener {
     AsyncTask hp = null;
 
     public void tasks(String response) {
+
         LinearLayout ll = (LinearLayout) view.findViewById(R.id.tasks);
         ll.setOrientation(LinearLayout.HORIZONTAL);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -39,21 +40,22 @@ public class TasksFragment extends Fragment implements View.OnClickListener {
         StatusService.StaticStatusService.jc.newJson(response);
         ArrayList<HashMap<String, String>> tasks = StatusService.StaticStatusService.jc.getObjects();
 
-        //Log.i("taski", tasks.get(0).get("id"));
-        Log.i("taskit", Integer.toString(tasks.size()));
         if (!tasks.isEmpty()) {
             ImageButton[] taskbutton = new ImageButton[tasks.size()];
-            for (int i = 0; i < tasks.size() - 1; i++) {
-                String id = "task"+tasks.get(i).get("id");
+            for (int i = 0; i < tasks.size(); i++) {
+                //String id = "task"+(i+1);
+
                 try {
-                Log.i("kuva", id);
-                //int imageID = getResources().getIdentifier(id, "drawable", getActivity().getApplicationContext().getPackageName());
-                taskbutton[i] = new ImageButton(getContext());
-                //taskbutton[i].setImageResource(imageID);
+                    String id = "task"+tasks.get(i).get("id");
+                    int imageID = getResources().getIdentifier(id, "drawable", getActivity().getApplicationContext().getPackageName());
+                    taskbutton[i] = new ImageButton(getContext());
+                    taskbutton[i].setImageResource(imageID);
                 taskbutton[i].setLayoutParams(lp);
+                taskbutton[i].setScaleType(ImageView.ScaleType.FIT_CENTER);
                 taskbutton[i].setOnClickListener(this);
                 taskbutton[i].setBackgroundColor(Color.TRANSPARENT);
                 taskbutton[i].setId(Integer.parseInt(tasks.get(i).get("id")));
+                    //taskbutton[i].setId(i+1);
                 ll.addView(taskbutton[i], lp);}
                 catch (Exception e) {
                     Log.i("kuvavirhe", "");
@@ -61,14 +63,9 @@ public class TasksFragment extends Fragment implements View.OnClickListener {
             }
         }
 
-    }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.tasks_fragment, container, false);
-/*
-  LISTA STAATTISIA LUOTUJA KUVAKKEITA GUI:n TESTAUSTA VARTEN:
+
+/*  LISTA STAATTISIA LUOTUJA KUVAKKEITA GUI:n TESTAUSTA VARTEN:
         LinearLayout ll = (LinearLayout) view.findViewById(R.id.tasks);
         ll.setOrientation(LinearLayout.HORIZONTAL);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -77,8 +74,8 @@ public class TasksFragment extends Fragment implements View.OnClickListener {
         for (int i = 0; i < 2; i++) {
             taskbutton[i] = new ImageButton(getContext());
             String image = "";
-            if (i == 0) image = "1";
-            if (i == 1) image = "2";
+            if (i == 0) image = "task1";
+            if (i == 1) image = "task2";
             // gets image resource from drawable folder:
             int resID = getResources().getIdentifier(image, "drawable", getActivity().getApplicationContext().getPackageName());
             taskbutton[i].setImageResource(resID);
@@ -91,23 +88,26 @@ public class TasksFragment extends Fragment implements View.OnClickListener {
             // lopulliseen versioon ServerCommunicationista getID:llä tai vastaavalla metodilla: taskbutton[i].setId(tasks.getId())
             ll.addView(taskbutton[i], lp);
         }
-    */
-
-        String url = StatusService.StaticStatusService.sc.DescribeTask("1");
-
-        hp = new HTTPSRequester(new listener()).execute(url);
-        Log.i("urli2", url);
-        /*
-        url = StatusService.StaticStatusService.sc.GetTasksByCategory("1");
-        Log.i("urli2", url);
-        hp = new HTTPSRequester(new listener()).execute(url);
 */
+
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        view = inflater.inflate(R.layout.tasks_fragment, container, false);
+
+        String url = StatusService.StaticStatusService.sc.DescribeCategoryTasks("1");
+
+        hp = new HTTPSRequester(new listener()).execute(url);
+
         return view;
     }
 
     @Override
     public void onClick(View v) {
         String id = Integer.toString(v.getId());
+        Log.i("kuvaid", id);
         ((CategoryActivity) getActivity()).startTask(id);
     }
 }

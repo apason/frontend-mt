@@ -15,6 +15,7 @@ import android.widget.MediaController;
 import android.widget.Toast;
 import android.widget.VideoView;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 
@@ -48,16 +49,24 @@ public class TaskVideoFragment extends Fragment implements View.OnClickListener 
     public void onClick(View v){
         //task_id from TaskActivity.java:
         String id = getArguments().getString("task");
+
         // String taskVideo = ServiceCommunication.DescribeTask(id);
         String url = StatusService.StaticStatusService.sc.DescribeTask(id);
+
         hp = new HTTPSRequester(new Listener()).execute(url);
         //String taskURL = "http://download.wavetlan.com/SVV/Media/HTTP/H264/Talkinghead_Media/H264_test1_Talkinghead_mp4_480x360.mp4";
-        ((TaskActivity) getActivity()).playback(taskURL);
+
+
     }
 
     private void task(String response) {
+
         StatusService.StaticStatusService.jc.newJson(response);
-        HashMap<String, String> answer = StatusService.StaticStatusService.jc.getObject();
-        taskURL = answer.get("id");
+        ArrayList<HashMap<String, String>> answer = StatusService.StaticStatusService.jc.getObjects();
+        //HashMap<String, String> answer = StatusService.StaticStatusService.jc.getObjectS();
+        Log.i("answer", answer.get(0).get("uri"));
+        taskURL = "https://s3.eu-central-1.amazonaws.com/p60v4ow30312-tasks/"+answer.get(0).get("uri");
+        //Log.i("taskURL", taskURL);
+        ((TaskActivity) getActivity()).playback(taskURL);
     }
 }
