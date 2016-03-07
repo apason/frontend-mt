@@ -24,7 +24,6 @@ public class ServerCommunication  {
             //this.checkStatus();
 
             StatusService.StaticStatusService.authToken = StatusService.StaticStatusService.jc.getProperty("auth_token");
-            StatusService.StaticStatusService.loggedIn = true;
         }
     }
 
