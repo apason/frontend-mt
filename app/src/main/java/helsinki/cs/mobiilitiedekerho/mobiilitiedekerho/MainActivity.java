@@ -18,7 +18,6 @@ public class MainActivity extends AppCompatActivity {
             //this.checkStatus();
 
             StatusService.StaticStatusService.authToken = StatusService.StaticStatusService.jc.getProperty("auth_token");
-            Log.i("autentikointi", StatusService.StaticStatusService.authToken);
             start();
         }
     }

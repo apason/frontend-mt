@@ -1,5 +1,6 @@
 package helsinki.cs.mobiilitiedekerho.mobiilitiedekerho;
 
+import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
@@ -33,18 +34,11 @@ public class VideoScreen extends Fragment {
 
     public void playVideo(String uri) {
 
-        Uri videoUri = Uri.parse(uri);
-        Log.i ("videoosoite" , uri);
-        videoView.setVideoURI(videoUri);
-        videoView.start();
+        Intent intent = new Intent(android.content.Intent.ACTION_VIEW);
+        Uri data = Uri.parse(uri);
+        intent.setDataAndType(data, "video/mp4");
+        startActivity(intent);
 
-        // Empty VideoView after playback has finished
-        videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp) {
-                videoView.setVisibility(View.GONE);
-                videoView.setVisibility(View.VISIBLE);
-            }
-        });
+
     }
 }

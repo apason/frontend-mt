@@ -35,7 +35,7 @@ public class TaskActivity extends AppCompatActivity {
 
         transaction.add(R.id.task_video_fragment, tvf);
         transaction.add(R.id.camera_fragment, cf);
-        //transaction.add(R.id.answer_video_fragment, avf);
+        transaction.add(R.id.answer_video_fragment, avf);
         transaction.add(R.id.login_button_fragment, lf);
         transaction.add(R.id.video_view_fragment, vs);
 

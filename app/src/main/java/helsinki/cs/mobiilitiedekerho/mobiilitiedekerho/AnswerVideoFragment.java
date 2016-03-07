@@ -50,8 +50,10 @@ public class AnswerVideoFragment extends Fragment implements View.OnClickListene
 
         //task_id from TaskActivity.java:
         String id = getArguments().getString("task");
-
-        String url = StatusService.StaticStatusService.sc.DescribeTaskAnswers(id);
+        Log.i("tiedot", id);
+        //TESTIKOMENTO:
+        String url = StatusService.StaticStatusService.sc.DescribeCategoryTasks("1");
+        //TÄLLÄ KOMENNOLLA PITÄISI LOPULLISESSA VERSIOSSA TOIMIA: String url = StatusService.StaticStatusService.sc.DescribeTaskAnswers(id);
         hp = new HTTPSRequester(new AnswerListener()).execute(url);
 
         return view;
@@ -63,32 +65,35 @@ public class AnswerVideoFragment extends Fragment implements View.OnClickListene
         //String taskVideo ="https://d3kto7252bccha.cloudfront.net/" + a +".mp4";
         String url = StatusService.StaticStatusService.sc.DescribeAnswer(Integer.toString(button));
         hp = new HTTPSRequester(new URLListener()).execute(url);
-        ((TaskActivity) getActivity()).playback(answerURL);
     }
 
     private void answers(String response) {
-        LinearLayout ll = (LinearLayout) view.findViewById(R.id.tasks);
+        LinearLayout ll = (LinearLayout) view.findViewById(R.id.answers);
         ll.setOrientation(LinearLayout.HORIZONTAL);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-
+        lp.setMargins(0, 0, 0, 15);
         StatusService.StaticStatusService.jc.newJson(response);
         ArrayList<HashMap<String, String>> answers = StatusService.StaticStatusService.jc.getObjects();
-        
+
         //draws chosen number of taskvideobuttons:
-        ImageButton[] answerbutton = new ImageButton[10];
-        for (int i = 0; i < 10; i++) {
+        Button[] answerbutton = new Button[10];
+        for (int i = 0; i < answers.size(); i++) {
             if (!answers.get(i).isEmpty()) {
+
                 String id = answers.get(i).get("id");
                 Log.i("vastaus", id);
                 //int imageID = getResources().getIdentifier(id, "drawable", getActivity().getApplicationContext().getPackageName());
-                answerbutton[i] = new ImageButton(getContext());
+                answerbutton[i] = new Button(getContext());
                 //answerbutton[i].setImageResource(imageID);
                 //answerbutton[i].setScaleType(ImageView.ScaleType.FIT_CENTER); // skaalaa vastausvideon thumbnailin
                 answerbutton[i].setOnClickListener(this);
                 answerbutton[i].setLayoutParams(lp);
-                answerbutton[i].setBackgroundColor(Color.BLACK);
-                answerbutton[i].setMinimumHeight(50);
-                answerbutton[i].setMinimumWidth(100);
+                answerbutton[i].setBackgroundColor(Color.RED);
+                answerbutton[i].setText("VASTAUS "+id);
+                final float scale = getContext().getResources().getDisplayMetrics().density;
+                answerbutton[i].setMinimumHeight((int) (50 * scale + 0.5f));
+                answerbutton[i].setMinimumWidth((int) (100 * scale + 0.5f));
+
                 ((ViewGroup.MarginLayoutParams) answerbutton[i].getLayoutParams()).leftMargin = 7;
                 //TAI: ((MarginLayoutParams) answerbutton[i].getLayoutParams()).leftMargin = 7;
                 answerbutton[i].setId(Integer.parseInt(answers.get(i).get("id")));
@@ -117,7 +122,9 @@ public class AnswerVideoFragment extends Fragment implements View.OnClickListene
 
     private void answerURL (String response) {
         StatusService.StaticStatusService.jc.newJson(response);
-        HashMap<String, String> answer = StatusService.StaticStatusService.jc.getObject();
-        answerURL = answer.get("id");
+        ArrayList<HashMap<String, String>> answer = StatusService.StaticStatusService.jc.getObjects();
+        answerURL = "https://s3.eu-central-1.amazonaws.com/p60v4ow30312-answers/"+answer.get(0).get("uri");
+        Log.i("answerURL", answerURL);
+        ((TaskActivity) getActivity()).playback(answerURL);
     }
 }

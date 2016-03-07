@@ -24,15 +24,13 @@ public class TasksFragment extends Fragment implements View.OnClickListener {
         @Override
         public void taskCompleted(String response) {
             tasks(response);
-            Log.i("urli3", StatusService.StaticStatusService.authToken);
         }
     }
 
     View view;
     AsyncTask hp = null;
 
-    public void tasks(String response) {
-
+    private void tasks(String response) {
         LinearLayout ll = (LinearLayout) view.findViewById(R.id.tasks);
         ll.setOrientation(LinearLayout.HORIZONTAL);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -43,20 +41,18 @@ public class TasksFragment extends Fragment implements View.OnClickListener {
         if (!tasks.isEmpty()) {
             ImageButton[] taskbutton = new ImageButton[tasks.size()];
             for (int i = 0; i < tasks.size(); i++) {
-                //String id = "task"+(i+1);
-
                 try {
                     String id = "task"+tasks.get(i).get("id");
                     int imageID = getResources().getIdentifier(id, "drawable", getActivity().getApplicationContext().getPackageName());
                     taskbutton[i] = new ImageButton(getContext());
                     taskbutton[i].setImageResource(imageID);
-                taskbutton[i].setLayoutParams(lp);
-                taskbutton[i].setScaleType(ImageView.ScaleType.FIT_CENTER);
-                taskbutton[i].setOnClickListener(this);
-                taskbutton[i].setBackgroundColor(Color.TRANSPARENT);
-                taskbutton[i].setId(Integer.parseInt(tasks.get(i).get("id")));
+                    taskbutton[i].setLayoutParams(lp);
+                    taskbutton[i].setScaleType(ImageView.ScaleType.FIT_CENTER);
+                    taskbutton[i].setOnClickListener(this);
+                    taskbutton[i].setBackgroundColor(Color.TRANSPARENT);
+                    taskbutton[i].setId(Integer.parseInt(tasks.get(i).get("id")));
                     //taskbutton[i].setId(i+1);
-                ll.addView(taskbutton[i], lp);}
+                    ll.addView(taskbutton[i], lp);}
                 catch (Exception e) {
                     Log.i("kuvavirhe", "");
                 }
