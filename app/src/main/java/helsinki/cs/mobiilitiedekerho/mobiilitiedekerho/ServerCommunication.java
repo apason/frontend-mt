@@ -2,7 +2,6 @@ package helsinki.cs.mobiilitiedekerho.mobiilitiedekerho;
 
 
 import android.app.Service;
-import android.os.AsyncTask;
 import android.util.Log;
 import android.view.View;
 
@@ -15,11 +14,6 @@ import android.view.View;
  */
 public class ServerCommunication  {
 
-//TÄMÄ
-
-
-    AsyncTask hp = null;
-//TÄMÄ
 
     /**
      * private
@@ -137,7 +131,7 @@ public class ServerCommunication  {
     }
 
    /**
-     * Get all the ids from all the categories. Note: This method is supposed to be used at Main Menu.
+     * Get all the info of all the categories. Note: This method is supposed to be used at Main Menu.
      */
 
     public String DescribeCategories() {
