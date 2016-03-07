@@ -12,7 +12,8 @@ import android.os.AsyncTask;
 // import java.io.IOException;
 
 /**
- * A class for downloading (streaming down) videos from S3.
+ * A class for downloading the needed graphics from S3.
+ * Give as many urls (strings) pointing to pictures in S3 as you wish.
  */
 public class S3Download extends AsyncTask<String, Void, String> {
 //TODO: No idea yet of what to do!
@@ -28,6 +29,8 @@ public class S3Download extends AsyncTask<String, Void, String> {
     
     
     protected String doInBackground(String... urli) {
+        //Some way of loading data from S3.
+        //After that save the retrievded data to the APP's private storage-area, just a directory actually. (Internal Storage).
         return "success";
     }
     
