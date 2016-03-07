@@ -10,16 +10,16 @@ import java.io.IOException;
 
 /**
  * Class for managing all kind of file saving and loading. WIP
+ * TODO: Should this use SharedPreferences?. Many users supported.
  */
 public class FileHandling {
 
     /**
-    * If there is saved the data of a user, it does return the url of AuthenticateUser if not then "NoDataFound".
-    * (TODO: Encrypted/etc file loading.)
+    * If there is saved the data of a user, loggedIn will be true.
+    * Respectively nick will be the user's nick and authToken the user's auth_token.
+    * @return true if there is a saved user.
     */
-
-
-    public String CheckIfSavedUser() {
+    public boolean CheckIfSavedUser() {
         File path = Environment.getDataDirectory(); //The data directory of the application.
         File file = new File(path, "user.txt");
 
@@ -27,24 +27,31 @@ public class FileHandling {
             try {
                 BufferedReader br = new BufferedReader(new FileReader(file));
                 //Fort now:
-                String email = br.readLine();
-                String password = br.readLine();
+                String nick = br.readLine();
+                String token = br.readLine();
                 br.close();
+                
+                StatusService.StaticStatusService.nick = nick;
+                StatusService.StaticStatusService.authToken = token;
+                StatusService.StaticStatusService.loggedIn = true;
 
-                return StatusService.StaticStatusService.sc.AuthenticateUser(email, password);
+                return true;
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
-        return "NoDataFound";
+        return false;
     }
 
     /**
     * Save the needed data into a text file for future auto-login.
-    * (TODO:  Encryption / better way to save data.)
+    * @param nick the user's nick which auth_token is to be saved.
+    * @param token the auth_token to be saved.
     */
-
-    public void saveUser(String email, String password) {
+    public void saveUser(String nick, String token) {
+        //SharedPreferences.Editor editor = getSharedPreferences(nick, MODE_PRIVATE).edit(); //MODE_PRIVATE is just: 0
+        //editor.putString(nick, token).commit();
+    
         FileOutputStream stream = null;
         try {
             File path = Environment.getDataDirectory(); //The data directory of the application.
@@ -56,7 +63,7 @@ public class FileHandling {
 
             stream = new FileOutputStream(file);
 
-            stream.write((email + "\n" + password).getBytes());
+            stream.write((nick + "\n" + token).getBytes());
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
