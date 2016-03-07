@@ -20,8 +20,9 @@ public class ServerCommunication  {
             StatusService.StaticStatusService.jc.newJson(response);
 
             //this.checkStatus();
-
-            StatusService.StaticStatusService.authToken = StatusService.StaticStatusService.jc.getProperty("auth_token");
+            StatusService.StaticStatusService.setAuthToken(StatusService.StaticStatusService.jc.getProperty("auth_token"));
+            //StatusService.StaticStatusService.authToken = StatusService.StaticStatusService.jc.getProperty("auth_token");
+            Log.i("autentikointi", StatusService.StaticStatusService.getAuthToken());
         }
     }
 
@@ -55,13 +56,13 @@ public class ServerCommunication  {
                 query += paramsAndValues[i] + "=" + paramsAndValues[i+1];
                 if (i < paramsAndValues.length -2) query += "&";
             }
-
+        //Log.i("autentikointi", StatusService.StaticStatusService.getAuthToken());
             //Creates the textual representation of the url.
             StringBuilder sb = new StringBuilder();
             if (API_call == "GetAuthToken" && paramsAndValues.length == 0) sb.append(StatusService.StaticStatusService.urli + API_call);
             else if (API_call == "GetAuthToken") sb.append(StatusService.StaticStatusService.urli + API_call + "?" + query);
-            else sb.append(StatusService.StaticStatusService.urli + API_call + "?" + StatusService.StaticStatusService.authToken + query);
-            
+            else sb.append(StatusService.StaticStatusService.urli + API_call + "?" + "auth_token=" + StatusService.StaticStatusService.authToken + "&" + query);
+
             return sb.toString();
     }
 
@@ -82,9 +83,9 @@ public class ServerCommunication  {
      * Notices the server so that a anonymous token would be linked to this client.
      */
     public String StartSession() {
+        Log.i("autorisointi", getResponse("GetAuthToken"));
         return getResponse("GetAuthToken");
     }
-
 
     /**
      * This sign up to the server with the corresponding email and password.
@@ -167,8 +168,8 @@ public class ServerCommunication  {
     * Get all tasks that are part to the category.
     * @param categoryId the id of the category which info is wanted to be retrieved.
     */
-    public String ListTasksForCategory(String categoryId) {
-        return getResponse("ListTasksForCategory", "category_id", categoryId);
+    public String GetTasksByCategory(String categoryId) {
+        return getResponse("GetTasksByCategory", "category_id", categoryId);
 
     }
 

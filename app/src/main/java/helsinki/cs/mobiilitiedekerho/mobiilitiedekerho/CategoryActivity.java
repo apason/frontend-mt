@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.IBinder;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -30,15 +31,25 @@ public class CategoryActivity extends AppCompatActivity {
     // task_id viestinä (MESSAGE) TaskActivity.javalle:
     public final static String EXTRA_MESSAGE = "helsinki.cs.mobiilitiedekerho.mobiilitiedekerho.MESSAGE";
     LinearLayout ll;
+    AsyncTask hp = null;
     boolean CommunicationBound = false; //false at the beggining
+
+
+
+    public void start(String response) {
+        StatusService.StaticStatusService.jc.newJson(response);
+    }
 
     //Creates dynamically imagebuttons for each task in a category
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
+        String url = StatusService.StaticStatusService.sc.DescribeTask("1");
+
+        hp = new HTTPSRequester(new start()).execute(url);
 
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        StatusService ss = new StatusService();
+
         //All activities must have these variables
 
 /*

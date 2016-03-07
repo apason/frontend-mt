@@ -19,10 +19,12 @@ import java.util.HashMap;
 
 public class TasksFragment extends Fragment implements View.OnClickListener {
 
+
     public class listener implements TaskCompleted {
         @Override
         public void taskCompleted(String response) {
             tasks(response);
+            Log.i("urli3", StatusService.StaticStatusService.authToken);
         }
     }
 
@@ -36,19 +38,26 @@ public class TasksFragment extends Fragment implements View.OnClickListener {
 
         StatusService.StaticStatusService.jc.newJson(response);
         ArrayList<HashMap<String, String>> tasks = StatusService.StaticStatusService.jc.getObjects();
+
+        //Log.i("taski", tasks.get(0).get("id"));
+        Log.i("taskit", Integer.toString(tasks.size()));
         if (!tasks.isEmpty()) {
             ImageButton[] taskbutton = new ImageButton[tasks.size()];
             for (int i = 0; i < tasks.size() - 1; i++) {
-                String id = tasks.get(i).get("id");
+                String id = "task"+tasks.get(i).get("id");
+                try {
                 Log.i("kuva", id);
-                int imageID = getResources().getIdentifier(id, "drawable", getActivity().getApplicationContext().getPackageName());
+                //int imageID = getResources().getIdentifier(id, "drawable", getActivity().getApplicationContext().getPackageName());
                 taskbutton[i] = new ImageButton(getContext());
-                taskbutton[i].setImageResource(imageID);
+                //taskbutton[i].setImageResource(imageID);
                 taskbutton[i].setLayoutParams(lp);
                 taskbutton[i].setOnClickListener(this);
                 taskbutton[i].setBackgroundColor(Color.TRANSPARENT);
                 taskbutton[i].setId(Integer.parseInt(tasks.get(i).get("id")));
-                ll.addView(taskbutton[i], lp);
+                ll.addView(taskbutton[i], lp);}
+                catch (Exception e) {
+                    Log.i("kuvavirhe", "");
+                }
             }
         }
 
@@ -68,8 +77,8 @@ public class TasksFragment extends Fragment implements View.OnClickListener {
         for (int i = 0; i < 2; i++) {
             taskbutton[i] = new ImageButton(getContext());
             String image = "";
-            if (i == 0) image = "rain";
-            if (i == 1) image = "snow";
+            if (i == 0) image = "1";
+            if (i == 1) image = "2";
             // gets image resource from drawable folder:
             int resID = getResources().getIdentifier(image, "drawable", getActivity().getApplicationContext().getPackageName());
             taskbutton[i].setImageResource(resID);
@@ -84,9 +93,15 @@ public class TasksFragment extends Fragment implements View.OnClickListener {
         }
     */
 
-        String url = StatusService.StaticStatusService.sc.ListTasksForCategory("1");
-        hp = new HTTPSRequester(new listener()).execute(url);
+        String url = StatusService.StaticStatusService.sc.DescribeTask("1");
 
+        hp = new HTTPSRequester(new listener()).execute(url);
+        Log.i("urli2", url);
+        /*
+        url = StatusService.StaticStatusService.sc.GetTasksByCategory("1");
+        Log.i("urli2", url);
+        hp = new HTTPSRequester(new listener()).execute(url);
+*/
         return view;
     }
 
