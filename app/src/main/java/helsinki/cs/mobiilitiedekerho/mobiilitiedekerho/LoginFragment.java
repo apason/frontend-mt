@@ -44,6 +44,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     String email;
     String password;
     AsyncTask hp = null;
+    ImageButton loginIconButton;
 
     public void authenticated(String response) {
         StatusService.StaticStatusService.jc.newJson(response);
@@ -54,9 +55,11 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         if (StatusService.StaticStatusService.sc.checkStatus()) {
             Toast.makeText(LoginFragment.this.getActivity(), "Kirjautuminen onnistui!",
                     Toast.LENGTH_LONG).show();
+            StatusService.StaticStatusService.loggedIn = true;
+            loginIconButton.setBackgroundResource(R.drawable.logout_icon);
             login.dismiss();
         } else {
-            // TODO If username or password is incorrect empty TextViews and notify user.
+            // If username or password is incorrect empty TextViews and notify user.
             emailTV.setText("");
             passwordTV.setText("");
             Toast.makeText(LoginFragment.this.getActivity(), "Sähköpostiosoite tai salasana väärin!",
@@ -70,8 +73,13 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.login_button_fragment, null);
         // Add onClickListener to the login button
-        ImageButton loginIconButton =
+        loginIconButton =
                 (ImageButton) view.findViewById(R.id.login_icon_button);
+        if(StatusService.StaticStatusService.loggedIn) {
+            loginIconButton.setBackgroundResource(R.drawable.logout_icon);
+        }else {
+            loginIconButton.setBackgroundResource(R.drawable.login_icon);
+        }
         loginIconButton.setOnClickListener(this);
 
         return view;

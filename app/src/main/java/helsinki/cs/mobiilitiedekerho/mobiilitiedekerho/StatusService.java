@@ -15,6 +15,7 @@ public class StatusService {
         protected static final JsonConverter jc = new JsonConverter();
         protected static final ServerCommunication sc = new ServerCommunication();
         protected static final FileHandling fh = new FileHandling();
+
     }
 
 }
