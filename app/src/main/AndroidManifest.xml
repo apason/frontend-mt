@@ -14,7 +14,6 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <!--
         <activity android:name=".MainActivity"
                   android:screenOrientation="sensorLandscape">
             <intent-filter>
@@ -23,15 +22,20 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        -->
+        <activity
+            android:name=".CategoriesActivity"
+            android:screenOrientation="sensorLandscape"
+            android:parentActivityName=".MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
         <activity
             android:name=".CategoryActivity"
             android:screenOrientation="sensorLandscape">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".CategoriesActivity" />
         </activity>
         <activity
             android:name=".TaskActivity"
@@ -46,7 +50,7 @@
             android:enabled="true" />
     </application>
 
-        <uses-feature android:name="android.hardware.camera"
-            android:required="false" />
+    <uses-feature android:name="android.hardware.camera"
+                  android:required="false" />
 
 </manifest>

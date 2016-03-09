@@ -50,10 +50,9 @@ public class AnswerVideoFragment extends Fragment implements View.OnClickListene
 
         //task_id from TaskActivity.java:
         String id = getArguments().getString("task");
-        Log.i("tiedot", id);
         //TESTIKOMENTO:
-        String url = StatusService.StaticStatusService.sc.DescribeCategoryTasks("1");
-        //TÄLLÄ KOMENNOLLA PITÄISI LOPULLISESSA VERSIOSSA TOIMIA: String url = StatusService.StaticStatusService.sc.DescribeTaskAnswers(id);
+        //String url = StatusService.StaticStatusService.sc.DescribeCategoryTasks("1");
+        String url = StatusService.StaticStatusService.sc.DescribeTaskAnswers(id);
         hp = new HTTPSRequester(new AnswerListener()).execute(url);
 
         return view;
@@ -81,11 +80,10 @@ public class AnswerVideoFragment extends Fragment implements View.OnClickListene
             if (!answers.get(i).isEmpty()) {
 
                 String id = answers.get(i).get("id");
-                Log.i("vastaus", id);
                 //int imageID = getResources().getIdentifier(id, "drawable", getActivity().getApplicationContext().getPackageName());
                 answerbutton[i] = new Button(getContext());
                 //answerbutton[i].setImageResource(imageID);
-                //answerbutton[i].setScaleType(ImageView.ScaleType.FIT_CENTER); // skaalaa vastausvideon thumbnailin
+                //answerbutton[i].setScaleType(ImageView.ScaleType.FIT_CENTER); // skaalaa vastausvideon thumbnailin, jos erikokoisia
                 answerbutton[i].setOnClickListener(this);
                 answerbutton[i].setLayoutParams(lp);
                 answerbutton[i].setBackgroundColor(Color.RED);
@@ -98,33 +96,15 @@ public class AnswerVideoFragment extends Fragment implements View.OnClickListene
                 //TAI: ((MarginLayoutParams) answerbutton[i].getLayoutParams()).leftMargin = 7;
                 answerbutton[i].setId(Integer.parseInt(answers.get(i).get("id")));
                 ll.addView(answerbutton[i], lp);
-        }
-        
-
-        /* NÄMÄ OMINAISUUDET PITÄISI SIIRTÄÄ IMAGEBUTTONEIHIN YLLÄ:
-        <Button
-        ***android:layout_width="wrap_content"
-        ***android:layout_height="wrap_content"
-        ***android:id="@+id/button1"
-        android:text="PYSTYVIDEO"
-        android:adjustViewBounds="false"
-        android:baselineAlignBottom="false"
-        android:cropToPadding="false"
-        android:scrollIndicators="right"
-        android:visibility="visible"
-        ***android:minHeight="50dp"
-        ***android:minWidth="100dp"
-        ***android:background="#fd0101"
-        ***android:layout_margin="7dp" />
-*/
+            }
         }
     }
 
+    //Gets URL from database and calls activity's method to play video in VideoScreen object.
     private void answerURL (String response) {
         StatusService.StaticStatusService.jc.newJson(response);
         ArrayList<HashMap<String, String>> answer = StatusService.StaticStatusService.jc.getObjects();
         answerURL = "https://s3.eu-central-1.amazonaws.com/p60v4ow30312-answers/"+answer.get(0).get("uri");
-        Log.i("answerURL", answerURL);
         ((TaskActivity) getActivity()).playback(answerURL);
     }
 }
