@@ -1,273 +1,99 @@
 package helsinki.cs.mobiilitiedekerho.mobiilitiedekerho;
 
 
-import android.app.IntentService;
 import android.app.Service;
-import android.content.Intent;
-import android.os.Binder;
-import android.os.Environment;
-import android.os.IBinder;
 import android.util.Log;
-
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.MalformedURLException;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.IOException;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.util.HashMap;
-import java.util.ArrayList;
+import android.view.View;
 
 /**
- * A class for communicating with the back-end server via HTTP.
- * Use the public methods for making API calls to the server.
+ * A class for making urls for communicating with the back-end server via HTTPS.
+ * All classes returns String contained the formed url corresponding to the API call + query.
+ * Use the public methods for creating API-call urls to the server.
+ * Also has checkStatus() for checking if response is allright.
+ * Please note: Method descriptions are the descriptions of what the HTTP call will do, NOT what this actual method does.
  */
-public class ServerCommunication extends Service {
-
-    private final IBinder mBinder = new LocalBinder(); // Binder given to the activities.
-
-    
-    private String urli = "http://mobiilitiedekerho.duckdns.org"; //The IP of the back-end server, it is needed to add parameters to it to be able to comunivate with it. Hard-coded.
-    private String authToken;
-
-    private JsonConverter jc = new JsonConverter();
-
-
-    /**
-     * Class used for the client Binder.
-     * I believe that it is supposed to be called the getService() to be able to use the public methods.
-     */
-    public class LocalBinder extends Binder {
-
-        public ServerCommunication getService() {
-
-
-
-            // Return the instance of ServerCommunication so that the activities can call public methods.
-            return ServerCommunication.this;
-        }
-    }
-
-    @Override
-    public IBinder onBind(Intent intent) {
-        return mBinder;
-    }
-
-
-
-    /**
-     * Creates a new HttPService class and gets a new anonymous token for use in API calls.
-     */
-    public ServerCommunication() {
-
-        StartSession();
-        CheckIfSavedUser(); //Important note: The protected 'global' variable loggedIn will be changed to true if there is a saved user.
-    }
-
-
-    //Thanks to this the service will keep running even if all activityes pointing to this are destroyed/stoped/paused:
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        StartSession();
-        CheckIfSavedUser(); //Important note: The protected 'global' variable loggedIn will be changed to true if there is a saved user.
-        //See of this class cares!
-        return START_NOT_STICKY;
-    }
-    
-//     @Override
-//     protected void onHandleIntent(Intent intent) {
-//         //En vieläkään tiedä mitä tänne laittaa!
-            //Onneksi ei tarvinut mitään :D
-//     }
-
-//     @Override
-//     protected void onHandleIntent(Intent intent) {
-//         //En vieläkään tiedä mitä tänne laittaa!
-    //Onneksi ei tarvinut mitään :D
-//     }
-
-
-
-    //Notices the server so that a anonymous token would be linked to this client.
-    private void StartSession() {
-        jc.newJson(getResponse("StartSession"));
-
-        this.checkStatus();
-
-        authToken = jc.getProperty("auth_token");
-        Log.i("autorisointi ", authToken);
-    }
-
-
-    //If there is saved the data of a user, it does AuthenticateUser. (TODO: Encrypted/etc file loading.)
-    private void CheckIfSavedUser() {
-        File path = Environment.getDataDirectory(); //The data directory of the application.
-        File file = new File(path, "user.txt");
-
-        if (file.exists()) {
-            try {
-                BufferedReader br = new BufferedReader(new FileReader(file));
-                //Fort now:
-                String email = br.readLine();
-                String password = br.readLine();
-                br.close();
-
-                this.AuthenticateUser(email, password);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-    }
-
-
-    //Save the needed data into a text file for future auto-login. (TODO:  Encryption / better way to save data.)
-    private void saveUser(String email, String password) {
-        FileOutputStream stream = null;
-        try {
-            File path = Environment.getDataDirectory(); //The data directory of the application.
-            File file = new File(path, "user.txt");
-
-            if (!file.exists()) {
-                file.createNewFile();
-            }
-
-            stream = new FileOutputStream(file);
-
-            stream.write((email + "\n" + password).getBytes());
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                stream.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-
-    private boolean checkStatus() {
-        String state = jc.getProperty("status");
-        return state == "success";
-    }
+public class ServerCommunication  {
 
 
     /**
      * private
-     * This method returns the JSON response as String of the wanted API call.
+     * This method returns the url to be used to communicate with the server.
      * TODO: Problem handling.
      * @param API_call: That is the API call to be executed.
      * @param paramsAndValues: Parameter and value pair, odd ones are the parameters and even ones the values.
-     * Note: It does add automatically the user's hash except if API_call is getAnonymiousHash.
-     * @return the response from the API call as a JSON string.
+     * Note: It does add automatically the user's token except if API_call is getAnonymiousHash.
+     * @return the url which can be used to communicate with the server.
      */
     private String getResponse(String API_call, String... paramsAndValues) {
 
-        HttpURLConnection urlConnection = null;
-
-        try {
             //Creates the query to be added to the URL, that is the parameters of the API call.
             String query = "";
             for (int i = 0 ; i < paramsAndValues.length ; i+= 2) {
                 query += paramsAndValues[i] + "=" + paramsAndValues[i+1];
                 if (i < paramsAndValues.length -2) query += "&";
             }
-
-            //Creates a URL connection.
-            URL url;
-            if (API_call == "GetAuthToken" && paramsAndValues.length == 0) url = new URL(urli + API_call);
-                //replaced paramsAndValues.size() with paramsAndValues.length
-            else url = new URL(urli + API_call + "?" + authToken + query);
-            urlConnection = (HttpURLConnection) url.openConnection();
-            Log.i("osoite ", "url");
-            //Creates a string (for JsonConverter to be parsed) from the connection's inputStream.
-            BufferedReader br = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+        //Log.i("autentikointi", StatusService.StaticStatusService.getAuthToken());
+            //Creates the textual representation of the url.
             StringBuilder sb = new StringBuilder();
-            String line;
-            while ((line = br.readLine()) != null) {
-                sb.append(line + "\n");
-            }
-            br.close();
+            if (API_call == "GetAuthToken" && paramsAndValues.length == 0) sb.append(StatusService.StaticStatusService.urli + API_call);
+            else if (API_call == "GetAuthToken") sb.append(StatusService.StaticStatusService.urli + API_call + "?" + query);
+            else sb.append(StatusService.StaticStatusService.urli + API_call + "?" + "auth_token=" + StatusService.StaticStatusService.authToken + "&" + query);
             return sb.toString();
-
-        } catch (MalformedURLException e) {
-            Log.i("errori ", "url");
-            e.printStackTrace();
-        } catch (IOException e) {
-            Log.i("error2 ", "url");
-            e.printStackTrace();
-        } finally {
-            urlConnection.disconnect();
-        }
-
-        return "{\"status\":\"CommunicationWithServerError\"}"; //A problem has been encountered while either calling the API or the response its damaged in some way (strange if data checking...) => Some special precautions to take?
     }
 
-
-
+    
+    
+    /**
+    * Check if the status in response is success, that is if everything went allright.
+    * TODO: If not, then what?
+    * @return true if success is the status in the response. 
+    */
+    public boolean checkStatus() {
+        String state = StatusService.StaticStatusService.jc.getProperty("status");
+        return state.equals("Success");
+    }
+    
+    
+    /**
+     * Notices the server so that a anonymous token would be linked to this client.
+     */
+    public String AnonymousSession() {
+        return getResponse("GetAuthToken");
+    }
 
     /**
      * This sign up to the server with the corresponding email and password.
      * @param email: The user's email address.
      * @param password: The user's password.
      */
-    public void CreateUser(String email, String password) {
-        jc.newJson(getResponse("GetAuthToken", "email", email, "password", password));
-
-        this.checkStatus();
-
-        authToken = jc.getProperty("auth_token");
-
-        //save user data (if succeeded):
-        saveUser(email, password);
+    public String CreateUser(String email, String password) {
+        return getResponse("CreateUser", "email", email, "password", password);
     }
 
     /**
      * This does authenticate the user and get a hash for it.
      * @param email: The user's email address.
      * @param password: The user's password.
-     * @return Whether authentication succeeded or not.
      */
-    public boolean AuthenticateUser(String email, String password) {
-        jc.newJson(getResponse("GetAuthToken", "email", email, "password", password));
-
-        boolean fine = this.checkStatus();
-        if (fine) {
-            authToken = jc.getProperty("auth_token");
-            StatusService.StaticStatusService.loggedIn = true;
-            return true;
-        }
-        else return false;
+    public String AuthenticateUser(String email, String password) {
+        return getResponse("GetAuthToken", "email", email, "password", password);
     }
 
     /**
      * Gets the description of the desired task (a task video that is).
      * @param taskId: The task's id of which description is to be retrieved.
-     * @return String containing the uri of the task. TODO needs image too!
      */
     public String DescribeTask(String taskId) {
-        jc.newJson(getResponse("DescribeTask", "task_id", taskId)); //JSON string containing the description of the task. (Contains: "task_id", "uri", "loaded")
-
-        this.checkStatus();
-
-        return jc.getProperty("uri");
+        return getResponse("DescribeTask", "task_id", taskId);
     }
 
     /**
      * Gets the information necessary to start uploading a video to S3 and notices the back-end server about the uploading so that it would be possible.
      * @param taskId: All answers does link to a certain task -> taskId is the task's id of the task to be answered.
-     * @return A string containing the needed information for uploading a video to S3: the 'uri'' to upload in S3...That's all.
      */
     public String StartAnswerUpload(String taskId) {
-        jc.newJson(getResponse("StartAnswerUpload", "task_id", taskId)); //A JSON string containing needed information for uploading a video to S3: "task_id" (useless?), the video's id to be: "answer_id", the "uri" to upload in S3.
+        return getResponse("StartAnswerUpload", "task_id", taskId);
 
-        this.checkStatus();
-
-        return jc.getProperty("uri");
     }
 
     /**
@@ -275,71 +101,49 @@ public class ServerCommunication extends Service {
      * @param answerId: The id of the answer that has been uploading.
      * @param uploadStatus: Whether it succeeded or not, "success" if succeeded.
      */
-    public void EndAnswerUpload(String answerId, String uploadStatus) {
-        jc.newJson(getResponse("EndAnswerUpload", "answer_id", answerId, "upload_status", uploadStatus));
-
-        this.checkStatus();
+    public String EndAnswerUpload(String answerId, String uploadStatus) {
+        return getResponse("EndAnswerUpload", "answer_id", answerId, "upload_status", uploadStatus);
     }
-
 
     /**
      * Gets the description of the desired answer (that is a user-uploaded video).
      * @param answerId: The answer's id of which the description is to be retrieved.
-     * @return A HashMap<String, String> containing info about the answer, please do use as search key the parameter which value is to be retrived.
-     * (Note: Useful ones: "uri", "enabled"; "task_id", "user_id")
      */
-    public HashMap<String, String> DescribeAnswer(String answerId) {
-        jc.newJson(getResponse("DescribeAnswer", "answer_id", answerId));
-
-        this.checkStatus();
-
-        return jc.getObject();
+    public String DescribeAnswer(String answerId) {
+        return getResponse("DescribeAnswer", "answer_id", answerId);
     }
-
 
     /**
      * Gets all the info of all answers related to the task.
      * @param taskId: The task's id of which answers are to be retrieved.
-     * @return An ArrayList<HashMap<String, String>> containing info about all the answer related to the task, please do use as search key the parameter which value is to be retrived.
-     * Each HashMap entry is the info of a task.
-     * (Note: Useful ones: "uri", "enabled"; "user_id")
      */
-    public ArrayList<HashMap<String, String>> DescribeTaskAnswers(String taskId) {
+    public String DescribeTaskAnswers(String taskId) {
+       return getResponse("DescribeTaskAnswers", "task_id", taskId);
 
-        jc.newJson(getResponse("DescribeTaskAnswers", "task_id", taskId));
-
-        this.checkStatus();
-
-        return jc.getObjects();
     }
-
 
     /**
      * Get all the info of the wanted category.
      * @param categoryId the id of the category which info is wanted to be retrieved.
-     * @return A HashMap<String, String> containing info about the category, please do use as search key the parameter which value is to be retrived.
-     * (Note: Useful ones: "Name", "BGName", "IconName", "AnimatedIconName")
      */
-    public HashMap<String, String> DescribeCategory(String categoryId) {
-        Log.i("osoite1 ", "url");
-        jc.newJson(getResponse("DescribeCategory", "category_id", categoryId));
-
-        this.checkStatus();
-        return jc.getObject();
+    public String DescribeCategory(String categoryId) {
+        return getResponse("DescribeCategory", "category_id", categoryId);
     }
 
-
-    /**
-     * Get all the info from all categories. Note: This method is supposed to be used in Main Menu.
-     * @return A ArrayList<HashMap<String, String>> containing the info e from all categories, please do use as search key the parameter which value is to be retrived.
-     * (Note: Useful ones, at the Main Menu: "IconName", "AnimatedIconName")
+   /**
+     * Get all the info of all the categories. Note: This method is supposed to be used at Main Menu.
      */
-    public ArrayList<HashMap<String, String>> GetAllCategories() {
-        jc.newJson(getResponse("GetAllCategories"));
 
-        this.checkStatus();
-
-        return jc.getObjects();
+    public String DescribeCategories() {
+        return getResponse("DescribeCategories");
+    }
+    
+    /**
+    * Get all tasks that are part of to the category.
+    * @param categoryId the id of the category which task belonging to it are wanted to be retrieved.
+    */
+    public String DescribeCategoryTasks(String categoryId) {
+        return getResponse("DescribeCategoryTasks", "category_id", categoryId);
     }
 
 }

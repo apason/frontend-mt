@@ -5,6 +5,8 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+import android.net.wifi.WifiConfiguration;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -16,14 +18,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.amazonaws.auth.CognitoCachingCredentialsProvider;
-import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
-import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
-import com.amazonaws.regions.Region;
-import com.amazonaws.regions.Regions;
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3Client;
-
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -31,11 +25,21 @@ import java.util.Date;
 
 public class CameraFragment extends Fragment implements View.OnClickListener {
 
+
+    public class listener implements TaskCompleted {
+        @Override
+        public void taskCompleted(String response) {
+            //TODO
+        }
+    }
+
     View view;
     private static final int VIDEO_CAPTURE = 101;
     private Uri fileUri;
-    private File mediaFile;
-    private String mediaFileName;
+    private File selectedFile;
+    private String selectedFileName;
+    
+    AsyncTask hp = null;
 
 
 
@@ -52,7 +56,7 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
         recordButton.setOnClickListener(this);
 
         // If user hasn't logged in disable camera functionality.
-        if (StatusService.StaticStatusService.loggedIn = false) {
+        if(!StatusService.getLoggedIn()) {
             recordButton.setEnabled(false);
         }
 
@@ -82,12 +86,12 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
 
                                 // Create a file for saving the shot video VID + timestamp + .mp4
                                 String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-                                mediaFile = new File(mediaStorageDirectory.getPath() + File.separator +
+                                selectedFile = new File(mediaStorageDirectory.getPath() + File.separator +
                                         "VID_" + timeStamp + ".mp4");
-                                mediaFileName = mediaFile.getName();
+                                selectedFileName = selectedFile.getName();
                                 // Create a new Intent to shoot video and save the result to the file specified earlier
                                 Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-                                fileUri = Uri.fromFile(mediaFile);
+                                fileUri = Uri.fromFile(selectedFile);
 
                                 // Start the intent using the device's own camera software
                                 intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
@@ -128,24 +132,7 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
 
                 // Initialize the Amazon Cognito credentials provider
                 if(selectedFile.exists()) {
-                    CognitoCachingCredentialsProvider credentialsProvider = new CognitoCachingCredentialsProvider(
-                            getContext(),
-                            "HIDDEN", // Identity Pool ID
-                            Regions.EU_WEST_1 // Region
-                    );
-                    // Create an S3 client
-                    AmazonS3 s3 = new AmazonS3Client(credentialsProvider);
-
-                    // Set the region of your S3 bucket
-                    s3.setRegion(Region.getRegion(Regions.EU_WEST_1));
-
-                    TransferUtility transferUtility = new TransferUtility(s3, getContext());
-
-                    TransferObserver observer = transferUtility.upload(
-                            "p60v4ow30312-answers",     /* The bucket to upload to */
-                            selectedFileName,    /* The key for the uploaded object */
-                            selectedFile        /* The file where the data to upload exists */
-                    );
+                    hp = new S3Upload(new listener(), getContext(), selectedFile).execute(selectedFileName);
                 }
             }
         }
@@ -157,26 +144,8 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
                 //t.show();-->
                 // Initialize the Amazon Cognito credentials provider
 
-                if(mediaFile.exists()) {
-
-                    CognitoCachingCredentialsProvider credentialsProvider = new CognitoCachingCredentialsProvider(
-                            getContext(),
-                            "eu-west-1:c509c687-f021-46e0-841e-2c988f2add59", // Identity Pool ID
-                            Regions.EU_WEST_1 // Region
-                    );
-                    // Create an S3 client
-                    AmazonS3 s3 = new AmazonS3Client(credentialsProvider);
-
-                    // Set the region of your S3 bucket
-                    s3.setRegion(Region.getRegion(Regions.EU_WEST_1));
-
-                    TransferUtility transferUtility = new TransferUtility(s3, getContext());
-
-                    TransferObserver observer = transferUtility.upload(
-                            "p60v4ow30312-answers",     /* The bucket to upload to */
-                            mediaFileName,    /* The key for the uploaded object */
-                            mediaFile        /* The file where the data to upload exists */
-                    );
+                if(selectedFile.exists()) {
+                    hp = new S3Upload(new listener(), getContext(), selectedFile).execute(selectedFileName);
                 }
 
             } else if (resultCode == TaskActivity.RESULT_CANCELED) {
@@ -188,7 +157,4 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
             }
         }
     }
-
-
-
 }

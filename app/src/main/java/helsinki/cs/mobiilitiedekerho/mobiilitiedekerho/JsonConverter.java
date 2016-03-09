@@ -1,5 +1,7 @@
 package helsinki.cs.mobiilitiedekerho.mobiilitiedekerho;
 
+import android.util.Log;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -24,18 +26,14 @@ public class JsonConverter {
     //this is for first level properties and object list names only!
     private String key;
 
-    /**
-     * Creates new JsonConverter.
-     * Call newJson for start with new JSON.
-     */
-    public JsonConverter() {}
-
+    
     /**
      * Parses the wanted JSON string and stores the retrieved data for later use.
      * Note: Cleares old data if exists.
      * @param json: JSON String to be parsed.
      */
     public void newJson(String json) {
+        Log.i("json", json);
         try {
             properties = new HashMap<String, String>();
 
@@ -151,6 +149,7 @@ public class JsonConverter {
      * Note that return value can be null.
      */
     public HashMap<String, String> getObject(){
-        return objects.get(0);
+        if (objects.size() != 0) return objects.get(0);
+        else return null;
     }
 }

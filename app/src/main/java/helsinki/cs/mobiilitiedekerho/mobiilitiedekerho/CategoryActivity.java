@@ -1,59 +1,60 @@
 package helsinki.cs.mobiilitiedekerho.mobiilitiedekerho;
 
-import android.app.AlertDialog;
-import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
-import android.content.ServiceConnection;
-import android.graphics.Color;
-import android.os.IBinder;
+import android.os.AsyncTask;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.Window;
-import android.widget.FrameLayout;
-import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 public class CategoryActivity extends AppCompatActivity {
 
     // task_id viestinä (MESSAGE) TaskActivity.javalle:
     public final static String EXTRA_MESSAGE = "helsinki.cs.mobiilitiedekerho.mobiilitiedekerho.MESSAGE";
     LinearLayout ll;
-    ServerCommunication commService;
-    boolean CommunicationBound = false; //false at the beggining
+
+    AsyncTask hp = null;
+
+    public class GotToken implements TaskCompleted {
+        @Override
+        public void taskCompleted(String response) {
+            StatusService.StaticStatusService.jc.newJson(response);
+
+            //this.checkStatus();
+
+            StatusService.StaticStatusService.authToken = StatusService.StaticStatusService.jc.getProperty("auth_token");
+            start();
+        }
+    }
+
+    public void start(String response) {
+        StatusService.StaticStatusService.jc.newJson(response);
+    }
 
     //Creates dynamically imagebuttons for each task in a category
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
         //All activities must have these variables
 
-
+/*
         //On onStart() there must be added (after super calling):
         Intent intent = new Intent(this, ServerCommunication.class);
         bindService(intent, CommunicationConnection, Context.BIND_AUTO_CREATE); //CommunicationConnection told in this file
-
+*/
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.clouds_layout);
+        StatusService ss = new StatusService();
+        /*
+        if (StatusService.StaticStatusService.fh.CheckIfSavedUser()) {
+            String urli = StatusService.StaticStatusService.sc.GetNewTokenIfOld(tokeni, ID);
+            hp = new HTTPSRequester(new GotToken()).execute(url);
+        } else {
+        */
+        String urli = StatusService.StaticStatusService.sc.AnonymousSession();
 
-        LoginFragment lf = new LoginFragment();
-        TasksFragment tf = new TasksFragment();
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.add(R.id.tasks_fragment, tf);
-        transaction.add(R.id.login_button_fragment, lf);
-        transaction.commit();
+        hp = new HTTPSRequester(new GotToken()).execute(urli);
+
+
     }
 
     //Starts TaskActivity with a particular task chosen
@@ -61,6 +62,20 @@ public class CategoryActivity extends AppCompatActivity {
         Intent intent = new Intent(this, TaskActivity.class);
         intent.putExtra(EXTRA_MESSAGE, id); // s = task_id
         startActivity(intent);
+    }
+
+    public void start() {
+        //this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        setContentView(R.layout.category_layout);
+
+
+
+        LoginFragment lf = new LoginFragment();
+        TasksFragment tf = new TasksFragment();
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.add(R.id.tasks_fragment, tf);
+        transaction.add(R.id.login_button_fragment, lf);
+        transaction.commit();
     }
 
 /*
@@ -74,6 +89,7 @@ public class CategoryActivity extends AppCompatActivity {
     }
 
 */
+    /*
    //** Defines callbacks for service binding, passed to bindService() *//*
     private ServiceConnection CommunicationConnection = new ServiceConnection() {
 
@@ -90,5 +106,5 @@ public class CategoryActivity extends AppCompatActivity {
             CommunicationBound  = false;
         }
     };
+    */
 }
-

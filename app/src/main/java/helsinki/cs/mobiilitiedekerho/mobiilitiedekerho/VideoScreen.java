@@ -1,5 +1,6 @@
 package helsinki.cs.mobiilitiedekerho.mobiilitiedekerho;
 
+import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
@@ -8,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView;
 import android.widget.MediaController;
 import android.widget.VideoView;
 
@@ -15,6 +17,7 @@ public class VideoScreen extends Fragment {
 
     View view;
     VideoView videoView;
+    WebView webview;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -32,19 +35,9 @@ public class VideoScreen extends Fragment {
     }
 
     public void playVideo(String uri) {
-
-        Uri videoUri = Uri.parse(uri);
-        Log.i ("videoosoite" , uri);
-        videoView.setVideoURI(videoUri);
-        videoView.start();
-
-        // Empty VideoView after playback has finished
-        videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp) {
-                videoView.setVisibility(View.GONE);
-                videoView.setVisibility(View.VISIBLE);
-            }
-        });
+        Intent intent = new Intent(android.content.Intent.ACTION_VIEW);
+        Uri data = Uri.parse(uri);
+        intent.setDataAndType(data, "video/mp4");
+        startActivity(intent);
     }
 }
