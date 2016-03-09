@@ -45,9 +45,8 @@ public class FileHandling {
     */
     public void saveToken() {
         //SharedPreferences.Editor editor = getSharedPreferences(nick, MODE_PRIVATE).edit(); //MODE_PRIVATE is just: 0
-        //editor.putString(nick, token).commit();
+        //editor.putString("token", token).commit();
 
-        /*BUGI: StatusService.StaticStatusService.authToken ei käy
         FileOutputStream stream = null;
         try {
             File path = Environment.getDataDirectory(); //The data directory of the application.
@@ -58,8 +57,7 @@ public class FileHandling {
             }
 
             stream = new FileOutputStream(file);
-            //BUGI: StatusService.StaticStatusService.authToken ei käy
-            //stream.write(StatusService.StaticStatusService.authToken).getBytes();
+            stream.write((StatusService.StaticStatusService.authToken).getBytes());
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -69,7 +67,6 @@ public class FileHandling {
                 e.printStackTrace();
             }
         }
-        */
     }
 
 }

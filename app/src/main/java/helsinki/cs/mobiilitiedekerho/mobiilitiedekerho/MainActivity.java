@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        StatusService ss = new StatusService();
+        new StatusService();
 
         //Either saved token will be used (user auto-login) or an 'anonymous' one is retrieved for use.
         if (StatusService.StaticStatusService.fh.CheckIfSavedToken()) {
