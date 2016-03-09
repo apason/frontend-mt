@@ -67,7 +67,7 @@ public class ServerCommunication  {
      * @param password: The user's password.
      */
     public String CreateUser(String email, String password) {
-        return getResponse("GetAuthToken", "email", email, "password", password);
+        return getResponse("CreateUser", "email", email, "password", password);
     }
 
     /**
