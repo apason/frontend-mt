@@ -90,9 +90,10 @@ public class ServerCommunication  {
     /**
      * Gets the information necessary to start uploading a video to S3 and notices the back-end server about the uploading so that it would be possible.
      * @param taskId: All answers does link to a certain task -> taskId is the task's id of the task to be answered.
+     * @param subUserID: The subUser's id whick answer is to be uploaded.
      */
-    public String StartAnswerUpload(String taskId) {
-        return getResponse("StartAnswerUpload", "task_id", taskId);
+    public String StartAnswerUpload(String taskId, String subUserID) {
+        return getResponse("StartAnswerUpload", "task_id", taskId, "subuser_id", subUserID);
 
     }
 

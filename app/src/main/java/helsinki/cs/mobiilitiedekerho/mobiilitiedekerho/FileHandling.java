@@ -10,28 +10,25 @@ import java.io.IOException;
 
 /**
  * Class for managing all kind of file saving and loading. WIP
- * TODO: Should this use SharedPreferences?. Many users supported.
+ * TODO: Should this use SharedPreferences?. Many users supported? Specially many sub-users extra stuff?
  */
 public class FileHandling {
 
     /**
-    * If there is saved the data of a user, loggedIn will be true.
-    * Respectively nick will be the user's nick and authToken the user's auth_token.
+    * If there is saved the token for a user, loggedIn will be true.
+    * Respectively authToken will become the user's auth_token.
     * @return true if there is a saved user.
     */
-    public boolean CheckIfSavedUser() {
+    public boolean CheckIfSavedToken() {
         File path = Environment.getDataDirectory(); //The data directory of the application.
-        File file = new File(path, "user.txt");
+        File file = new File(path, "token.txt");
 
         if (file.exists()) {
             try {
                 BufferedReader br = new BufferedReader(new FileReader(file));
-                //Fort now:
-                String nick = br.readLine();
                 String token = br.readLine();
                 br.close();
                 
-                StatusService.StaticStatusService.nick = nick;
                 StatusService.StaticStatusService.authToken = token;
                 StatusService.StaticStatusService.loggedIn = true;
 
@@ -44,26 +41,25 @@ public class FileHandling {
     }
 
     /**
-    * Save the needed data into a text file for future auto-login.
-    * @param nick the user's nick which auth_token is to be saved.
-    * @param token the auth_token to be saved.
+    * Save the user's token into a text file for future auto-login.
     */
-    public void saveUser(String nick, String token) {
+    public void saveToken() {
         //SharedPreferences.Editor editor = getSharedPreferences(nick, MODE_PRIVATE).edit(); //MODE_PRIVATE is just: 0
         //editor.putString(nick, token).commit();
-    
+
+        /*BUGI: StatusService.StaticStatusService.authToken ei käy
         FileOutputStream stream = null;
         try {
             File path = Environment.getDataDirectory(); //The data directory of the application.
-            File file = new File(path, "user.txt");
+            File file = new File(path, "token.txt");
 
             if (!file.exists()) {
                 file.createNewFile();
             }
 
             stream = new FileOutputStream(file);
-
-            stream.write((nick + "\n" + token).getBytes());
+            //BUGI: StatusService.StaticStatusService.authToken ei käy
+            //stream.write(StatusService.StaticStatusService.authToken).getBytes();
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -73,6 +69,7 @@ public class FileHandling {
                 e.printStackTrace();
             }
         }
+        */
     }
 
 }
