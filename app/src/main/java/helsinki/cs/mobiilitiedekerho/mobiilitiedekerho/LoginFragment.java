@@ -97,7 +97,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         } else { openLoginDialog(); }
     }
 
-    private void openLoginDialog() {
+    public void openLoginDialog() {
         login = new Dialog(LoginFragment.this.getActivity());
         // Set GUI of login screen
         login.setContentView(R.layout.login_fragment);
@@ -116,12 +116,29 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                 // On click of login button get content from TextViews and check if they match a valid user using ServerCommunication.
                     email = emailTV.getText().toString();
                     password = passwordTV.getText().toString();
+                url = StatusService.StaticStatusService.sc.CreateUser(email, password);
+                hp = new HTTPSRequester(new listener()).execute(url);
+
+
+
+        }});
+
+        Button registerButton =
+                (Button) login.findViewById(R.id.register_button);
+        registerButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                email = emailTV.getText().toString();
+                password = passwordTV.getText().toString();
                 url = StatusService.StaticStatusService.sc.AuthenticateUser(email, password);
                 hp = new HTTPSRequester(new listener()).execute(url);
 
-                AsyncTask hp = null;
-
-        }});
+                Toast.makeText(LoginFragment.this.getActivity(), "Tunnuksesi on nyt rekisteröity ja voit kirjautua sillä sisään",
+                        Toast.LENGTH_LONG).show();
+                emailTV.setText("");
+                passwordTV.setText("");
+            }
+        });
 
         // On click of cancel button close the dialog
         Button closePopupButton =

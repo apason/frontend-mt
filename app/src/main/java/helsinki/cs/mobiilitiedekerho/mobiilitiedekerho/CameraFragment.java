@@ -56,7 +56,7 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
         recordButton.setOnClickListener(this);
 
         // If user hasn't logged in disable camera functionality.
-        if (!StatusService.getLoggedIn()) {
+        if(!StatusService.getLoggedIn()) {
             recordButton.setEnabled(false);
         }
 
@@ -157,7 +157,4 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
             }
         }
     }
-
-
-
 }

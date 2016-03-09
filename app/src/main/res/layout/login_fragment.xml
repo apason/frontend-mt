@@ -53,7 +53,7 @@
             android:textSize="18sp" />
 
         <Button
-            android:layout_width="176dp"
+            android:layout_width="150dp"
             android:layout_height="61dp"
             android:text="KIRJAUDU"
             android:id="@+id/login_button"
@@ -63,7 +63,16 @@
             android:clickable="true"/>
 
         <Button
-            android:layout_width="176dp"
+            android:layout_width="150dp"
+            android:layout_height="61dp"
+            android:text="Rekisteröidy"
+            android:id="@+id/register_button"
+            android:layout_margin="10dp"
+            android:layout_gravity="center_horizontal|bottom"
+            android:clickable="true" android:background="#81a4f4"/>
+
+        <Button
+            android:layout_width="150dp"
             android:layout_height="61dp"
             android:text="PERUUTA"
             android:id="@+id/cancel_button"
@@ -71,6 +80,7 @@
             android:layout_margin="10dp"
             android:background="#fc8b8b"
             android:clickable="true"/>
+
     </FrameLayout>
 
 </FrameLayout>
