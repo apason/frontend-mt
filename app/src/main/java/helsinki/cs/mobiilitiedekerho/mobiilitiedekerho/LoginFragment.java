@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Point;
 import android.media.Image;
+import android.net.wifi.WifiConfiguration;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -51,11 +52,11 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         //ArrayList<HashMap<String, String>> tasks = StatusService.StaticStatusService.jc.getObjects();
         Log.i("urli", url);
         Log.i("markkeri", "");
-        Log.i("status",  StatusService.StaticStatusService.jc.getProperty("status"));
+        Log.i("status", StatusService.StaticStatusService.jc.getProperty("status"));
         if (StatusService.StaticStatusService.sc.checkStatus()) {
             Toast.makeText(LoginFragment.this.getActivity(), "Kirjautuminen onnistui!",
                     Toast.LENGTH_LONG).show();
-            StatusService.StaticStatusService.loggedIn = true;
+            StatusService.setLoggedIn(true);
             loginIconButton.setBackgroundResource(R.drawable.logout_icon);
             login.dismiss();
         } else {
@@ -75,7 +76,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         // Add onClickListener to the login button
         loginIconButton =
                 (ImageButton) view.findViewById(R.id.login_icon_button);
-        if(StatusService.StaticStatusService.loggedIn) {
+        if(StatusService.getLoggedIn()) {
             loginIconButton.setBackgroundResource(R.drawable.logout_icon);
         }else {
             loginIconButton.setBackgroundResource(R.drawable.login_icon);
@@ -87,7 +88,13 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 
     // When loginButton is pressed call method openLoginDialog
     @Override
-    public void onClick(View v) { openLoginDialog();
+    public void onClick(View v) {
+        if(StatusService.getLoggedIn()) {
+            StatusService.setLoggedIn(false);
+            Toast.makeText(LoginFragment.this.getActivity(), "Olet nyt kirjautunut ulos Mobiilitiedekerhosta",
+                    Toast.LENGTH_LONG).show();
+            loginIconButton.setBackgroundResource(R.drawable.login_icon);
+        } else { openLoginDialog(); }
     }
 
     private void openLoginDialog() {

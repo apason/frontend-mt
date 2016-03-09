@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+import android.net.wifi.WifiConfiguration;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
@@ -55,7 +56,7 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
         recordButton.setOnClickListener(this);
 
         // If user hasn't logged in disable camera functionality.
-        if (StatusService.StaticStatusService.loggedIn = false) {
+        if (!StatusService.getLoggedIn()) {
             recordButton.setEnabled(false);
         }
 
