@@ -77,7 +77,7 @@ public class FileHandling {
     */
     public boolean checkIfImageExists(String name) {
         File path = Environment.getDataDirectory(); //The data directory of the application.
-        File file = new File(path, "token");
+        File file = new File(path, name);
 
         if (!file.exists()) {
             return true;
@@ -95,7 +95,7 @@ public class FileHandling {
         FileOutputStream stream = null;
         try {
             File path = Environment.getDataDirectory(); //The data directory of the application.
-            File file = new File(path, "name");
+            File file = new File(path, name);
 
             if (!file.exists()) {
                 file.createNewFile();
