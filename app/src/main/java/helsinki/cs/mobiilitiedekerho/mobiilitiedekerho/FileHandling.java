@@ -14,6 +14,7 @@ import java.io.IOException;
  */
 public class FileHandling {
 
+
     /**
     * If there is saved the token for a user, loggedIn will be true.
     * Respectively authToken will become the user's auth_token.
@@ -21,7 +22,7 @@ public class FileHandling {
     */
     public boolean CheckIfSavedToken() {
         File path = Environment.getDataDirectory(); //The data directory of the application.
-        File file = new File(path, "token.txt");
+        File file = new File(path, "token");
 
         if (file.exists()) {
             try {
@@ -50,7 +51,7 @@ public class FileHandling {
         FileOutputStream stream = null;
         try {
             File path = Environment.getDataDirectory(); //The data directory of the application.
-            File file = new File(path, "token.txt");
+            File file = new File(path, "token");
 
             if (!file.exists()) {
                 file.createNewFile();
@@ -68,5 +69,74 @@ public class FileHandling {
             }
         }
     }
+    
+    /**
+    * Checks whether the pointed image (or any file...) exist in Internal Storage.
+    * @param the file's' name to be checked.
+    * @return true if exists.
+    */
+    public boolean checkIfImageExists(String name) {
+        File path = Environment.getDataDirectory(); //The data directory of the application.
+        File file = new File(path, "token");
+
+        if (!file.exists()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    /**
+    * Saves the wanted image to the Applications data directory.
+    * @param name the file name.
+    * @param image the image to be saved.
+    */
+    public void saveImage(String name, Bitmap image) {
+        FileOutputStream stream = null;
+        try {
+            File path = Environment.getDataDirectory(); //The data directory of the application.
+            File file = new File(path, "name");
+
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+            
+            stream = new FileOutputStream(file);
+            
+            image.compress(Bitmap.CompressFormat.PNG, 100, stream); //Compress and save the image.
+            
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                stream.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    
+   
+//     public void saveImage(String name, Bitmap image) {
+//         FileOutputStream stream = null;
+//         try {
+//              stream = StatusService.StaticStatusService.context.openFileOutput(Name, Context.MODE_PRIVATE); 
+//              image.compress(Bitmap.CompressFormat.PNG, 100, stream); //Compress and save the image.
+// 
+//             /*if (!file.exists()) {
+//                 file.createNewFile();
+//             */
+//            
+//         } catch (IOException e) {
+//             e.printStackTrace();
+//         } finally {
+//             try {
+//                 stream.close();
+//             } catch (IOException e) {
+//                 e.printStackTrace();
+//             }
+//         }
+//     }
 
 }

@@ -28,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         new StatusService();
+        //StatusService.StaticStatusService.context = getApplicationContext(); //needed for saving files to internal memory. Maybe not, at least for now.
 
         //Either saved token will be used (user auto-login) or an 'anonymous' one is retrieved for use.
         if (StatusService.StaticStatusService.fh.CheckIfSavedToken()) {
