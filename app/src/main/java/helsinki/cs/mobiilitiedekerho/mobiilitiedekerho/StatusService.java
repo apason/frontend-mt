@@ -24,14 +24,6 @@ public class StatusService {
 
     }
 
-    public static void setLoggedIn(Boolean b) {
-        StaticStatusService.loggedIn = b;
-    }
-
-    public static boolean getLoggedIn() {
-        return StaticStatusService.loggedIn;
-    }
-
 }
 
 
