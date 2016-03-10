@@ -146,5 +146,36 @@ public class ServerCommunication  {
     public String DescribeCategoryTasks(String categoryId) {
         return getResponse("DescribeCategoryTasks", "category_id", categoryId);
     }
+    
+    /**
+     * Creates a new sub user for the current user.
+     * @param nick the nick of teh subUser to be created.
+     */
+    public String CreateSubUser(String nick) {
+        return getResponse("CreateSubUser", "nick", nick);
+    }
+    
+    /**
+     * Deletes a subuser pointing to the current user.
+     * @param subUserId the id of the subuser to be deleted.
+     */
+    public String DeleteSubUser(String subUserId) {
+        return getResponse("DeleteSubUser", "subuser_id", subUserID);
+    }
+    
+    /**
+     * Gets the info of all subusers of this current user.
+     */
+    public String DescribeSubUsers() {
+        return getResponse("DescribeSubUsers");
+    }
+    
+    /**
+    * Get all the answers info of the desired subuser.
+    * @param subUserId the id of the subuser which answers belonging to it are wanted to be retrieved.
+    */
+    public String DescribeSubUserAnswers(String subUserId) {
+        return getResponse("DescribeSubUserAnswers", "subuser_id", subUserId);
+    }
 
 }
