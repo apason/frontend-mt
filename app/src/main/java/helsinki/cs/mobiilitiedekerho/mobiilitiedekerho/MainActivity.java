@@ -41,9 +41,13 @@ public class MainActivity extends AppCompatActivity {
     public void start() {
         setContentView(R.layout.main_activity);
         LoginFragment lf = new LoginFragment();
+        UserVideosFragment uvf = new UserVideosFragment();
+        UserInfoFragment uif = new UserInfoFragment();
         NextPageFragment npf = new NextPageFragment();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.add(R.id.login_button_fragment, lf);
+        transaction.add(R.id.user_videos_button_fragment, uvf);
+        transaction.add(R.id.info_button_fragment, uif);
         transaction.add(R.id.next_button_fragment, npf);
         transaction.commit();
     }
