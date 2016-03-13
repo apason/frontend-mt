@@ -16,6 +16,10 @@ public class StatusService {
         protected static String currentSubUserID;
     
         protected static String[] aviableSubUsers; //The Ids of the aviable subusers for the current user. TODO ?: String[] -> ???
+        
+        //Note: These variables declare the resolution of the screen in pixels, in this APP is the landscape orientation (width is the larger).
+        protected static int screenWidth;
+        protected static int screenHeight;
     
     
         protected static final JsonConverter jc = new JsonConverter();

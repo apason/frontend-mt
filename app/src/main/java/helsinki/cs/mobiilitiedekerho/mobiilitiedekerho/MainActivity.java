@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.util.DisplayMetrics;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -29,6 +30,12 @@ public class MainActivity extends AppCompatActivity {
 
         new StatusService();
         //StatusService.StaticStatusService.context = getApplicationContext(); //needed for saving files to internal memory. Maybe not, at least for now.
+        
+        //Saves the screen resolution for being able to show correct sized images.
+        DisplayMetrics metrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        StatusService.StaticStatusService.screenWidth = metrics.widthPixels;
+        StatusService.StaticStatusService.screenHeight = metrics.heightPixels;
 
         //Either saved token will be used (user auto-login) or an 'anonymous' one is retrieved for use.
         if (StatusService.StaticStatusService.fh.CheckIfSavedToken()) {
