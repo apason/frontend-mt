@@ -90,7 +90,7 @@ public class ServerCommunication  {
     /**
      * Gets the information necessary to start uploading a video to S3 and notices the back-end server about the uploading so that it would be possible.
      * @param taskId: All answers does link to a certain task -> taskId is the task's id of the task to be answered.
-     * @param subUserID: The subUser's id whick answer is to be uploaded.
+     * @param subUserID: The subUser's id which answer is to be uploaded.
      */
     public String StartAnswerUpload(String taskId, String subUserID) {
         return getResponse("StartAnswerUpload", "task_id", taskId, "subuser_id", subUserID);
@@ -160,7 +160,7 @@ public class ServerCommunication  {
      * @param subUserId the id of the subuser to be deleted.
      */
     public String DeleteSubUser(String subUserId) {
-        return getResponse("DeleteSubUser", "subuser_id", subUserID);
+        return getResponse("DeleteSubUser", "subuser_id", subUserId);
     }
     
     /**

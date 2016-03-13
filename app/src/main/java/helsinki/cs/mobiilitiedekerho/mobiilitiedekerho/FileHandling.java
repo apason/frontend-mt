@@ -1,6 +1,7 @@
 package helsinki.cs.mobiilitiedekerho.mobiilitiedekerho;
 
 import android.os.Environment;
+import android.graphics.Bitmap;
 
 import java.io.BufferedReader;
 import java.io.File;
