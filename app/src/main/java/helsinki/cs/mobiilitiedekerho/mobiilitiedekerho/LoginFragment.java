@@ -76,7 +76,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         // Add onClickListener to the login button
         loginIconButton =
                 (ImageButton) view.findViewById(R.id.login_icon_button);
-        if(StatusService.getLoggedIn()) {
+        if(StatusService.loggedIn()) {
             loginIconButton.setBackgroundResource(R.drawable.logout_icon);
         }else {
             loginIconButton.setBackgroundResource(R.drawable.login_icon);
@@ -89,7 +89,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     // When loginButton is pressed call method openLoginDialog
     @Override
     public void onClick(View v) {
-        if(StatusService.getLoggedIn()) {
+        if(StatusService.loggedIn()) {
             StatusService.setLoggedIn(false);
             Toast.makeText(LoginFragment.this.getActivity(), "Olet nyt kirjautunut ulos Mobiilitiedekerhosta",
                     Toast.LENGTH_LONG).show();
@@ -116,7 +116,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                 // On click of login button get content from TextViews and check if they match a valid user using ServerCommunication.
                     email = emailTV.getText().toString();
                     password = passwordTV.getText().toString();
-                url = StatusService.StaticStatusService.sc.CreateUser(email, password);
+                url = StatusService.StaticStatusService.sc.AuthenticateUser(email, password);
                 hp = new HTTPSRequester(new listener()).execute(url);
 
 
@@ -130,7 +130,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
             public void onClick(View v) {
                 email = emailTV.getText().toString();
                 password = passwordTV.getText().toString();
-                url = StatusService.StaticStatusService.sc.AuthenticateUser(email, password);
+                url = StatusService.StaticStatusService.sc.CreateUser(email, password);
                 hp = new HTTPSRequester(new listener()).execute(url);
 
                 Toast.makeText(LoginFragment.this.getActivity(), "Tunnuksesi on nyt rekisteröity ja voit kirjautua sillä sisään",

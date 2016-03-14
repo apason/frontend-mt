@@ -49,7 +49,7 @@ public class FileHandling {
         //SharedPreferences.Editor editor = getSharedPreferences(nick, MODE_PRIVATE).edit(); //MODE_PRIVATE is just: 0
         //editor.putString("token", token).commit();
 
-        FileOutputStream stream = null;
+        FileOutputStream stream;
         try {
             File path = Environment.getDataDirectory(); //The data directory of the application.
             File file = new File(path, "token");
@@ -62,13 +62,13 @@ public class FileHandling {
             stream.write((StatusService.StaticStatusService.authToken).getBytes());
         } catch (IOException e) {
             e.printStackTrace();
-        } finally {
-            try {
-                stream.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+        }  //finally {
+            //try {
+            //    stream.close();
+            //} catch (IOException e) {
+            //    e.printStackTrace();
+           // }
+        //}
     }
     
     /**
