@@ -52,6 +52,7 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".TaskActivity" />
+        </activity>
         <activity
             android:name=".UserActivity"
             android:screenOrientation="sensorLandscape"
