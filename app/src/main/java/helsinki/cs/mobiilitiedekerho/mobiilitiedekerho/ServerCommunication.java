@@ -149,10 +149,10 @@ public class ServerCommunication  {
     
     /**
      * Creates a new sub user for the current user.
-     * @param nick the nick of teh subUser to be created.
+     * @param nick the nick of the subUser to be created.
      */
     public String CreateSubUser(String nick) {
-        return getResponse("CreateSubUser", "nick", nick);
+        return getResponse("CreateSubUser", "subuser_nick", nick);
     }
     
     /**
