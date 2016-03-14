@@ -8,19 +8,22 @@ import android.widget.Button;
 import android.widget.Toast;
 
 /**
- * Created by Henry on 14.3.2016.
+ * Activity responsible for the user info screen
  */
 public class UserActivity extends AppCompatActivity implements View.OnClickListener {
 
+    // Draw content of user_activity.xml to the screen
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.user_activity);
 
+        // Add OnClickListener to the logout button
         Button logoutButton = (Button) findViewById(R.id.logout_button);
         logoutButton.setOnClickListener(this);
     }
 
+    // On click of the logout_button log out the user and notify him about it. Return to MainActivity.
     @Override
     public void onClick(View v) {
         StatusService.setLoggedIn(false);

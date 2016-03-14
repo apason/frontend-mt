@@ -7,11 +7,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 
-//Fragment that creates an arrow button to screen, currently clicking changes view from front page to next page
+// Fragment that creates an arrow button to screen, currently clicking changes view from front page to next page
 public class NextPageFragment extends Fragment implements View.OnClickListener {
 
     View view;
 
+    // Draw the contents of next_button_fragment.xml to screen and add onclicklistener to next_button
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -24,6 +25,7 @@ public class NextPageFragment extends Fragment implements View.OnClickListener {
         return view;
     }
 
+    // On click of next_button start Categories fragment.
     @Override
     public void onClick(View v) {
         ((MainActivity) getActivity()).startCategories();
