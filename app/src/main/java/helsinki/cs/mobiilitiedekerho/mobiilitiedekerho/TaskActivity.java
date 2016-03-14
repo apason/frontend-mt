@@ -1,12 +1,9 @@
 package helsinki.cs.mobiilitiedekerho.mobiilitiedekerho;
 
-import android.app.FragmentManager;
 import android.content.Intent;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Window;
 
 //public class TaskActivity extends FragmentActivity {
@@ -29,16 +26,15 @@ public class TaskActivity extends AppCompatActivity {
         CameraFragment cf = new CameraFragment();
         AnswerVideoFragment avf = new AnswerVideoFragment();
         TaskVideoFragment tvf = new TaskVideoFragment();
-        LoginFragment lf = new LoginFragment();
-        //vs = new VideoScreen();
+        InfoTextFragment uif = new InfoTextFragment();
+        uif.setTitle("Tehtävän kuvaus tähän");
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
         transaction.add(R.id.task_video_fragment, tvf);
         transaction.add(R.id.camera_fragment, cf);
         transaction.add(R.id.answer_video_fragment, avf);
-        transaction.add(R.id.login_button_fragment, lf);
-        //transaction.add(R.id.video_screen_fragment, vs);
+        transaction.add(R.id.info_button_fragment, uif);
 
         Bundle bundle = new Bundle();
         bundle.putString("task", message);

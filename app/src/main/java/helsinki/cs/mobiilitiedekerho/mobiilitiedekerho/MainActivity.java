@@ -50,7 +50,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.main_activity);
         LoginFragment lf = new LoginFragment();
         UserVideosFragment uvf = new UserVideosFragment();
-        UserInfoFragment uif = new UserInfoFragment();
+        InfoTextFragment uif = new InfoTextFragment();
+        uif.setTitle("Käyttöehdot ja ohjeet tähän");
         NextPageFragment npf = new NextPageFragment();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.add(R.id.login_button_fragment, lf);
@@ -62,6 +63,11 @@ public class MainActivity extends AppCompatActivity {
 
     public void startCategories() {
         Intent intent = new Intent(this, CategoriesActivity.class);
+        startActivity(intent);
+    }
+
+    public void startUserActivity() {
+        Intent intent = new Intent(this, UserActivity.class);
         startActivity(intent);
     }
 }

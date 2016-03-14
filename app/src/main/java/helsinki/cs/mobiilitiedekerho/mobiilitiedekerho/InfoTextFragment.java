@@ -10,11 +10,12 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageButton;
 
-public class UserInfoFragment extends Fragment implements View.OnClickListener {
+public class InfoTextFragment extends Fragment implements View.OnClickListener {
 
     private Dialog info = null;
     ImageButton infoButton;
     View view;
+    String title;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -29,17 +30,20 @@ public class UserInfoFragment extends Fragment implements View.OnClickListener {
         return view;
     }
 
+    public void setTitle(String s) {
+        title = s;
+    }
+
     // When loginButton is pressed call method openLoginDialog
     @Override
-    public void onClick(View v) {
-        openLoginDialog();
+    public void onClick(View v) { openLoginDialog();
     }
 
     public void openLoginDialog() {
-        info = new Dialog(UserInfoFragment.this.getActivity());
+        info = new Dialog(InfoTextFragment.this.getActivity());
         // Set GUI of login screen
-        info.setContentView(R.layout.user_info_fragment);
-        info.setTitle("KÄYTTÖEHDOT JA OHJEET TÄHÄN");
+        info.setContentView(R.layout.info_text_fragment);
+        info.setTitle(title);
 
         // On click of cancel button close the dialog
         Button closePopupButton =

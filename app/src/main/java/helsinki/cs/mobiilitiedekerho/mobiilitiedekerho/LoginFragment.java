@@ -89,11 +89,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     // When loginButton is pressed call method openLoginDialog
     @Override
     public void onClick(View v) {
-        if(StatusService.loggedIn()) {
-            StatusService.setLoggedIn(false);
-            Toast.makeText(LoginFragment.this.getActivity(), "Olet nyt kirjautunut ulos Mobiilitiedekerhosta",
-                    Toast.LENGTH_LONG).show();
-            loginIconButton.setBackgroundResource(R.drawable.login_icon);
+        if(StatusService.loggedIn()) { ((MainActivity) getActivity()).startUserActivity();
         } else { openLoginDialog(); }
     }
 
