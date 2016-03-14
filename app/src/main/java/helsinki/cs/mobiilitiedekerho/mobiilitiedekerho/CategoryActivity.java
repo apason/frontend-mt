@@ -26,11 +26,9 @@ public class CategoryActivity extends AppCompatActivity {
         Intent intent = getIntent();
         String message = intent.getStringExtra(CategoriesActivity.EXTRA_MESSAGE_CATEGORY);
 
-        LoginFragment lf = new LoginFragment();
         TasksFragment tf = new TasksFragment();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.add(R.id.tasks_fragment, tf);
-        transaction.add(R.id.login_button_fragment, lf);
         transaction.commit();
     }
 
