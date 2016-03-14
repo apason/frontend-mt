@@ -53,6 +53,7 @@ public class AnswerVideoFragment extends Fragment implements View.OnClickListene
         //TESTIKOMENTO:
         //String url = StatusService.StaticStatusService.sc.DescribeCategoryTasks("1");
         String url = StatusService.StaticStatusService.sc.DescribeTaskAnswers(id);
+        Log.i("urlit ", url);
         hp = new HTTPSRequester(new AnswerListener()).execute(url);
 
         return view;

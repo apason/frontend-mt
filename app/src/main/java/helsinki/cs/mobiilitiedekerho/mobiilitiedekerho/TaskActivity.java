@@ -12,6 +12,7 @@ import android.view.Window;
 //public class TaskActivity extends FragmentActivity {
 public class TaskActivity extends AppCompatActivity {
 
+    public final static String EXTRA_MESSAGE_URL = "helsinki.cs.mobiilitiedekerho.mobiilitiedekerho.CATEGORY";
     VideoScreen vs;
 
     @Override
@@ -29,7 +30,7 @@ public class TaskActivity extends AppCompatActivity {
         AnswerVideoFragment avf = new AnswerVideoFragment();
         TaskVideoFragment tvf = new TaskVideoFragment();
         LoginFragment lf = new LoginFragment();
-        vs = new VideoScreen();
+        //vs = new VideoScreen();
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
@@ -37,7 +38,7 @@ public class TaskActivity extends AppCompatActivity {
         transaction.add(R.id.camera_fragment, cf);
         transaction.add(R.id.answer_video_fragment, avf);
         transaction.add(R.id.login_button_fragment, lf);
-        transaction.add(R.id.video_view_fragment, vs);
+        //transaction.add(R.id.video_screen_fragment, vs);
 
         Bundle bundle = new Bundle();
         bundle.putString("task", message);
@@ -48,6 +49,8 @@ public class TaskActivity extends AppCompatActivity {
     }
 
     public void playback (String uri) {
-        vs.playVideo(uri);
+        Intent intent = new Intent(this, VideoScreen.class);
+        intent.putExtra(EXTRA_MESSAGE_URL, uri);
+        startActivity(intent);
     }
 }
