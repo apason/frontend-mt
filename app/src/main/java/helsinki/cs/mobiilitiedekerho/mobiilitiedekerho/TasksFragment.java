@@ -94,7 +94,6 @@ public class TasksFragment extends Fragment implements View.OnClickListener {
         view = inflater.inflate(R.layout.tasks_fragment, container, false);
 
         String url = StatusService.StaticStatusService.sc.DescribeCategoryTasks("1");
-        Log.i("vikaurl ", url);
         hp = new HTTPSRequester(new listener()).execute(url);
 
         return view;
