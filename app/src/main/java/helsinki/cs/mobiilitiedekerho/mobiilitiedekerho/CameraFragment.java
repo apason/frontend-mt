@@ -38,10 +38,9 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
     private Uri fileUri;
     private File selectedFile;
     private String selectedFileName;
-    
+
+    LoginFragment lf;
     AsyncTask hp = null;
-
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -54,8 +53,6 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
         Button recordButton =
                 (Button) view.findViewById(R.id.recordButton);
         recordButton.setOnClickListener(this);
-
-
 
         return view;
     }
@@ -121,7 +118,6 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
 
     public void onActivityResult(int requestCode,
                                     int resultCode, Intent data) {
-
         // Result handler for videos from the gallery
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 12345) {
@@ -129,13 +125,21 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
 
                 // Get the selected file's Uri, name and the file itself
                 Uri selectedVideoLocation = data.getData();
-                File selectedFile = new File(selectedVideoLocation.getPath());
-                String selectedFileName = selectedVideoLocation.toString();
+
+                String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+                String selectedFileName = "VID_" + timeStamp + ".mp4";
+
+                File selectedFile = new File(selectedVideoLocation.getLastPathSegment(), selectedFileName);
+
+                Log.i("filename", selectedFileName);
+                Log.i("location", selectedVideoLocation.toString());
+                Log.i("file", selectedFile.getName());
 
                 // Initialize the Amazon Cognito credentials provider
-                if(selectedFile.exists()) {
+                //if(selectedFile.exists()) {
+                    Log.i("lataa", "lataa");
                     hp = new S3Upload(new listener(), getContext(), selectedFile).execute(selectedFileName);
-                }
+                //}
             }
         }
         // Result handler for videos from the camera
