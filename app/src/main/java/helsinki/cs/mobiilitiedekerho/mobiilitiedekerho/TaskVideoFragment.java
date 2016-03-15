@@ -47,6 +47,7 @@ public class TaskVideoFragment extends Fragment implements View.OnClickListener 
 
     @Override
     public void onClick(View v){
+
         //task_id from TaskActivity.java:
         String id = getArguments().getString("task");
 
