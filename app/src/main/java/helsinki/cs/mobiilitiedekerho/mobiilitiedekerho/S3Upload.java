@@ -14,6 +14,7 @@ import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.model.ObjectMetadata;
 
 import java.io.File;
 
@@ -48,13 +49,20 @@ public class S3Upload extends AsyncTask<String, Void, String> {
 
         // Set the region of your S3 bucket
         s3.setRegion(Region.getRegion(Regions.EU_CENTRAL_1));
+        
+        //Sets the metadata to the file to be uploaded.
+        ObjectMetadata metadata = new ObjectMetadata();
+        String videoType = "mp4"; //TODO: Check from file's name the ".type" which type of file it is actually. (Thought just the video part is the only one that matters almost always, second part is now hard-coded to "mp4").
+        metadata.setContentType("video/" + videoType);
+        metadata.setContentDisposition("inline");
 
         TransferUtility transferUtility = new TransferUtility(s3, context);
 
         TransferObserver observer = transferUtility.upload(
             "p60v4ow30312-answers",     /* The bucket to upload to */
-            selectedFileName[0],    /* The key for the uploaded object */
-            selectedFile        /* The file where the data to upload exists */
+            selectedFileName[0],        /* The key for the uploaded object */
+            selectedFile,               /* The file where the data to upload exists */
+            metadata                    /* The metdadata (HTTP-header stuff) for the file to be uploaded */
         );
 
         observer.setTransferListener(new TransferListener() {
