@@ -4,6 +4,7 @@ package helsinki.cs.mobiilitiedekerho.mobiilitiedekerho;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.webkit.MimeTypeMap;
 
 import com.amazonaws.auth.CognitoCachingCredentialsProvider;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener;
@@ -50,12 +51,21 @@ public class S3Upload extends AsyncTask<String, Void, String> {
         // Set the region of your S3 bucket
         s3.setRegion(Region.getRegion(Regions.EU_CENTRAL_1));
         
+        
         //Sets the metadata to the file to be uploaded.
         ObjectMetadata metadata = new ObjectMetadata();
-        String videoType = "mp4"; //TODO: Check from file's name the ".type" which type of file it is actually. (Thought just the video part is the only one that matters almost always, second part is now hard-coded to "mp4").
-        metadata.setContentType("video/" + videoType);
+        
+        MimeTypeMap mime = MimeTypeMap.getSingleton();
+        //TODO: There is no need for the extension part ".type" actually (except for Windows) so possibly there could be a viable file without its type written in the file's name.
+        //Also the extension may or may not tell the truth about the file's type. (No need to take into account?)
+        //In android it is possible to use "android.media.MediaMetadataRetriever" for reading the file's metadata and get the real type. TODO: Do this to the File selectedFile, Note: this is not very favored for some reason, why?
+        String ext = selectedFileName[0].substring(selectedFileName[0].lastIndexOf(".")).toLowerCase(); //toLowerCase in the (odd) case of the extension being in UpperCase, else MimeType may not recognize it.
+        String type = mime.getMimeTypeFromExtension(ext); //Gets the Mime type corresponding to the extension. E.G: mp4 -> video/mp4
+        
+        metadata.setContentType(type);
         metadata.setContentDisposition("inline");
 
+        
         TransferUtility transferUtility = new TransferUtility(s3, context);
 
         TransferObserver observer = transferUtility.upload(
