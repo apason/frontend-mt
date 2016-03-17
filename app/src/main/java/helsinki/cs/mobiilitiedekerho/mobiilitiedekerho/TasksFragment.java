@@ -1,6 +1,8 @@
 package helsinki.cs.mobiilitiedekerho.mobiilitiedekerho;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
@@ -39,25 +41,45 @@ public class TasksFragment extends Fragment implements View.OnClickListener {
         ArrayList<HashMap<String, String>> tasks = StatusService.StaticStatusService.jc.getObjects();
 
         if (!tasks.isEmpty()) {
-            ImageButton[] taskbutton = new ImageButton[tasks.size()];
+            ArrayList<String> names = new ArrayList<String>();
+            String imageName;
             for (int i = 0; i < tasks.size(); i++) {
+                imageName = "task" + tasks.get(i).get("id");
+                if(!StatusService.StaticStatusService.fh.checkIfImageExists(imageName)) {
+                    names.add(imagename);
+                }
+                    
+            }
+            
+            
+            //Either all images are in memory or some must be downloaded from S3.
+            if (!names.isEmpty()) {
+                //NOTE: The code works only as simple if S3 has saved the the needed images in a single bucket with the same naming convency.
+                //TODO: Which bucket name to use, hard-code it to S3Download?
+                new S3Download(listeneri, names).execute(kuvien_urlt_s3ssa_mitä_ei_löydy_kännykästä); //TODO: päätä asia!
+            } 
+            else {
                 try {
-                    String id = "task"+tasks.get(i).get("id");
-                    int imageID = getResources().getIdentifier(id, "drawable", getActivity().getApplicationContext().getPackageName());
+                    Bitmap bitmap = BitmapFactory.decodeFile(Environment.getDataDirectory() + "/" + imageName);
+                        
+                    ImageButton[] taskbutton = new ImageButton[tasks.size()];
+                        
                     taskbutton[i] = new ImageButton(getContext());
-                    taskbutton[i].setImageResource(imageID);
+                    taskbutton[i].setImageBitmap(bitmap);
                     taskbutton[i].setLayoutParams(lp);
                     taskbutton[i].setScaleType(ImageView.ScaleType.FIT_CENTER);
                     taskbutton[i].setOnClickListener(this);
                     taskbutton[i].setBackgroundColor(Color.TRANSPARENT);
                     taskbutton[i].setId(Integer.parseInt(tasks.get(i).get("id")));
                     //taskbutton[i].setId(i+1);
-                    ll.addView(taskbutton[i], lp);}
-                catch (Exception e) {
+                        
+                    ll.addView(taskbutton[i], lp);
+                } catch (Exception e) {
                     Log.i("kuvavirhe", "");
                 }
             }
         }
+    }
 
 
 
@@ -86,11 +108,8 @@ public class TasksFragment extends Fragment implements View.OnClickListener {
         }
 */
 
-    }
-
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.tasks_fragment, container, false);
 
         String url = StatusService.StaticStatusService.sc.DescribeCategoryTasks("1");
@@ -104,4 +123,5 @@ public class TasksFragment extends Fragment implements View.OnClickListener {
         String id = Integer.toString(v.getId());
         ((CategoryActivity) getActivity()).startTask(id);
     }
+    
 }
