@@ -46,6 +46,14 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+
+    @Override
+    public void onResume()
+    {  // Refreshes screen when returned to the front page, after eg. loggin in or out
+        super.onResume();
+        start();
+    }
+
     public void start() {
         setContentView(R.layout.main_activity);
         LoginFragment lf = new LoginFragment();

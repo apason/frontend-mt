@@ -74,12 +74,16 @@ public class VideoScreen extends Activity {
 //         startActivity(intent); //???
     }
 
+    // Stops showing and downloading of a video downloading if back button is pressed.
     @Override
-    public void onStop() {
-        super.onStop();
+    public void onPause() {
+        super.onPause();
         vView.stopLoading();
+        vView.destroy();
         //Or something else?
     }
+
+
 
 
 //Mitä tämä edes tekee? Näyttää lähtevän pois videonäkymästä ja piilottaa vaan sen.    
