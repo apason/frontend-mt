@@ -1,10 +1,9 @@
 package helsinki.cs.mobiilitiedekerho.mobiilitiedekerho;
 
-import android.content.Context;
+
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -93,7 +92,6 @@ public class TasksFragment extends Fragment implements View.OnClickListener {
         }
     }
     
-    
     private void tasks2(String response) {
         LinearLayout ll = (LinearLayout) view.findViewById(R.id.tasks);
         ll.setOrientation(LinearLayout.HORIZONTAL);
@@ -124,31 +122,6 @@ public class TasksFragment extends Fragment implements View.OnClickListener {
             
     }
 
-
-/*  LISTA STAATTISIA LUOTUJA KUVAKKEITA GUI:n TESTAUSTA VARTEN:
-        LinearLayout ll = (LinearLayout) view.findViewById(R.id.tasks);
-        ll.setOrientation(LinearLayout.HORIZONTAL);
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-
-        ImageButton[] taskbutton = new ImageButton[2];
-        for (int i = 0; i < 2; i++) {
-            taskbutton[i] = new ImageButton(getContext());
-            String image = "";
-            if (i == 0) image = "task1";
-            if (i == 1) image = "task2";
-            // gets image resource from drawable folder:
-            int resID = getResources().getIdentifier(image, "drawable", getActivity().getApplicationContext().getPackageName());
-            taskbutton[i].setImageResource(resID);
-            taskbutton[i].setLayoutParams(lp);
-            taskbutton[i].setScaleType(ImageView.ScaleType.FIT_CENTER);
-            taskbutton[i].setOnClickListener(this);
-            taskbutton[i].setBackgroundColor(Color.TRANSPARENT);
-            //taskbutton[i].setTag(i); = TURHA RIVI?
-            taskbutton[i].setId(i);
-            // lopulliseen versioon ServerCommunicationista getID:llä tai vastaavalla metodilla: taskbutton[i].setId(tasks.getId())
-            ll.addView(taskbutton[i], lp);
-        }
-*/
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
