@@ -23,14 +23,14 @@ public class S3Download extends AsyncTask<String, Void, String> {
 
     private TaskCompleted act;
     private ArrayList<Bitmap> bitmaps;
-    private String[] imageNames;
+    private ArrayList<String> imageNames;
 
     /**
     * Constructor for S3Download.
     * @param act a interface for being able to pass the response for the calling activity.
     * @param imageNames the names of the images to be downloaded, note that they are the names which how they are saved to memory and how saved to S3.
     */
-    public S3Download(TaskCompleted act){
+    public S3Download(TaskCompleted act, ArrayList<String> imageNames){
         this.act = act;
         this.imageNames = imageNames;
         bitmaps = new ArrayList<Bitmap>();
@@ -41,20 +41,20 @@ public class S3Download extends AsyncTask<String, Void, String> {
         HttpURLConnection urlConnection = null;
         
         try {
-            for (int i = 0 ; i < imageNames.length ; i++) {
-                URL url = new URL(StatusService.StaticStatusService.s3Location + StatusService.StaticStatusService.graphicsBucket + "/" + imageNames[i]);
+            for (int i = 0 ; i < imageNames.size() ; i++) {
+                URL url = new URL(StatusService.StaticStatusService.s3Location + StatusService.StaticStatusService.graphicsBucket + "/" + imageNames.get(i));
                 urlConnection = (HttpURLConnection) url.openConnection();
                 bitmaps.add(BitmapFactory.decodeStream(urlConnection.getInputStream()));
             }
             return "success";
         } catch (MalformedURLException e) {
-            Log.i("MalformedURLException", imageNames[i]);
+            Log.i("MalformedURLException", "");
             e.printStackTrace();
         } catch (IOException e) {
-            Log.i("IOException", imageNames[i]);
+            Log.i("IOException", "");
             e.printStackTrace();
         } catch (Exception e) {
-            Log.i("SomeError", imageNames[i]);
+            Log.i("SomeError", "");
             e.printStackTrace();
         } finally {
             urlConnection.disconnect();
@@ -68,8 +68,8 @@ public class S3Download extends AsyncTask<String, Void, String> {
     	if (!result.equals("success"))
     		act.taskCompleted(result);
     	
-        for (int i = 0 ; i < imageNames.length ; i++) {
-            StatusService.StaticStatusService.fh.saveImage(imageNames[i], bitmaps.get(i));
+        for (int i = 0 ; i < imageNames.size() ; i++) {
+            StatusService.StaticStatusService.fh.saveImage(imageNames.get(i), bitmaps.get(i));
         }
         
         act.taskCompleted(result);

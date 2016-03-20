@@ -1,10 +1,6 @@
 package helsinki.cs.mobiilitiedekerho.mobiilitiedekerho;
 
 
-import android.app.Service;
-import android.util.Log;
-import android.view.View;
-
 /**
  * A class for making urls for communicating with the back-end server via HTTPS.
  * All classes returns String contained the formed url corresponding to the API call + query.
@@ -32,7 +28,6 @@ public class ServerCommunication  {
                 query += paramsAndValues[i] + "=" + paramsAndValues[i+1];
                 if (i < paramsAndValues.length -2) query += "&";
             }
-        //Log.i("autentikointi", StatusService.StaticStatusService.getAuthToken());
             //Creates the textual representation of the url.
             StringBuilder sb = new StringBuilder();
             if (API_call == "GetAuthToken" && paramsAndValues.length == 0) sb.append(StatusService.StaticStatusService.urli + API_call);

@@ -72,7 +72,7 @@ public class S3Upload extends AsyncTask<String, Void, String> {
             StatusService.StaticStatusService.answerBucket,     /* The bucket to upload to */
             selectedFileName[0],                                /* The key for the uploaded object */
             selectedFile,                                       /* The file where the data to upload exists */
-            metadata                                            /* The metdadata (HTTP-header stuff) for the file to be uploaded */
+            metadata                                            /* The metadata (HTTP-header stuff) for the file to be uploaded */
         );
 
         observer.setTransferListener(new TransferListener() {

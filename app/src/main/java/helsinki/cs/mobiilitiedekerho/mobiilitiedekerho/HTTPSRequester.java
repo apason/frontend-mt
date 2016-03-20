@@ -6,6 +6,7 @@ import android.util.Log;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.net.MalformedURLException;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -21,7 +22,7 @@ public class HTTPSRequester extends AsyncTask<String, String, String> {
 
     /**
     * Constructor for HTTPSRequester.
-    * @param act a interface for being able to pass the response for the calling ativity.
+    * @param act a interface for being able to pass the response for the calling activity.
     */
     public HTTPSRequester(TaskCompleted act){
         this.act = act;
@@ -51,11 +52,11 @@ public class HTTPSRequester extends AsyncTask<String, String, String> {
         } catch (MalformedURLException e) {
             Log.i("MalformedURLException", urli.toString());
             e.printStackTrace();
+        }  catch (UnknownHostException e) {
+            Log.i("UnknownHostException", urli.toString()); //No connection to back-end server. (No Internet, etc)
+            e.printStackTrace();
         } catch (IOException e) {
             Log.i("IOException", urli.toString());
-            e.printStackTrace();
-        } catch (UnknownHostException e) {
-            Log.i("UnknownHostException", urli.toString()); //No connection to back-end server. (No internet, etc)
             e.printStackTrace();
         } catch (Exception e) {
             Log.i("SomeError", urli.toString());

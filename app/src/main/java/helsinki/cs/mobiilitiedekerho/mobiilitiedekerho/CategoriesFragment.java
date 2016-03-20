@@ -34,10 +34,11 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
         }
     }
 
-    View view;
-    AsyncTask hp = null;
+    private View view;
+    private AsyncTask hp = null;
 
     private void categories(String response) {
+    	//Tässä jo?, välttämättä ei laitteessa. -> else osaan.
         LinearLayout ll = (LinearLayout) view.findViewById(R.id.categories);
         ll.setOrientation(LinearLayout.HORIZONTAL);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -51,7 +52,7 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
             for (int i = 0; i < categories.size(); i++) {
                 imageName = "category-icon" + categories.get(i).get("id");
                 if(!StatusService.StaticStatusService.fh.checkIfImageExists(imageName)) {
-                    names.add(imagename);
+                    names.add(imageName);
                 }
                     
             }
@@ -60,7 +61,7 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
             //Either all images are in memory or some must be downloaded from S3.
             if (!names.isEmpty()) {
                 //NOTE: The code works only as simple if S3 has saved the the needed images in a single bucket with the same naming convency.
-                new S3Download(catImgsDownloaded, names).execute();
+                new S3Download(new catImgsDownloaded(), names).execute();
             } 
             else {
                 ImageButton[] categorybutton = new ImageButton[categories.size()];
