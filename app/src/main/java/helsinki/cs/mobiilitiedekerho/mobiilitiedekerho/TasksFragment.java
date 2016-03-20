@@ -52,7 +52,7 @@ public class TasksFragment extends Fragment implements View.OnClickListener {
             ArrayList<String> names = new ArrayList<String>();
             String imageName;
             for (int i = 0; i < tasks.size(); i++) {
-                imageName = "task" + tasks.get(i).get("id");
+                imageName = "task-icon" + tasks.get(i).get("id");
                 if(!StatusService.StaticStatusService.fh.checkIfImageExists(imageName)) {
                     names.add(imagename);
                 }
@@ -69,7 +69,7 @@ public class TasksFragment extends Fragment implements View.OnClickListener {
                 ImageButton[] taskbutton = new ImageButton[tasks.size()];
                 for (int i = 0; i < tasks.size(); i++) {
                     try {
-                        Bitmap bitmap = BitmapFactory.decodeFile(Environment.getDataDirectory() + "/" + "task" + tasks.get(i).get("id"));
+                        Bitmap bitmap = BitmapFactory.decodeFile(Environment.getDataDirectory() + "/" + "task-icon" + tasks.get(i).get("id"));
                         
                         taskbutton[i] = new ImageButton(getContext());
                         taskbutton[i].setImageBitmap(bitmap);
@@ -103,7 +103,7 @@ public class TasksFragment extends Fragment implements View.OnClickListener {
         ImageButton[] taskbutton = new ImageButton[tasks.size()];
         for (int i = 0; i < tasks.size(); i++) {
             try {
-                Bitmap bitmap = BitmapFactory.decodeFile(Environment.getDataDirectory() + "/" + "task" + tasks.get(i).get("id"));
+                Bitmap bitmap = BitmapFactory.decodeFile(Environment.getDataDirectory() + "/" + "task-icon" + tasks.get(i).get("id"));
                 
                 taskbutton[i] = new ImageButton(getContext());
                 taskbutton[i].setImageBitmap(bitmap);

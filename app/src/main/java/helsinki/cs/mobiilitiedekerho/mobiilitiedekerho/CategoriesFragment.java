@@ -49,7 +49,7 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
             ArrayList<String> names = new ArrayList<String>();
             String imageName;
             for (int i = 0; i < categories.size(); i++) {
-                imageName = "category" + categories.get(i).get("id");
+                imageName = "category-icon" + categories.get(i).get("id");
                 if(!StatusService.StaticStatusService.fh.checkIfImageExists(imageName)) {
                     names.add(imagename);
                 }
@@ -66,7 +66,7 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
                 ImageButton[] categorybutton = new ImageButton[categories.size()];
                 for (int i = 0; i < categories.size(); i++) {
                     try {
-                        Bitmap bitmap = BitmapFactory.decodeFile(Environment.getDataDirectory() + "/" + "category" + categories.get(i).get("id"));
+                        Bitmap bitmap = BitmapFactory.decodeFile(Environment.getDataDirectory() + "/" + "category-icon" + categories.get(i).get("id"));
                         
                         categorybutton[i] = new ImageButton(getContext());
                         categorybutton[i].setImageBitmap(bitmap);
@@ -101,7 +101,7 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
         ImageButton[] categorybutton = new ImageButton[categories.size()];
         for (int i = 0; i < categories.size(); i++) {
             try {
-                Bitmap bitmap = BitmapFactory.decodeFile(Environment.getDataDirectory() + "/" + "category" + categories.get(i).get("id"));
+                Bitmap bitmap = BitmapFactory.decodeFile(Environment.getDataDirectory() + "/" + "category-icon" + categories.get(i).get("id"));
                 
                 categorybutton[i] = new ImageButton(getContext());
                 categorybutton[i].setImageBitmap(bitmap);

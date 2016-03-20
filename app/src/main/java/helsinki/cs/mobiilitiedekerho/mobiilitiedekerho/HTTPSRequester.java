@@ -54,6 +54,12 @@ public class HTTPSRequester extends AsyncTask<String, String, String> {
         } catch (IOException e) {
             Log.i("IOException", urli.toString());
             e.printStackTrace();
+        } catch (UnknownHostException e) {
+            Log.i("UnknownHostException", urli.toString()); //No connection to back-end server. (No internet, etc)
+            e.printStackTrace();
+        } catch (Exception e) {
+            Log.i("SomeError", urli.toString());
+            e.printStackTrace();
         } finally {
             urlConnection.disconnect();
         }
