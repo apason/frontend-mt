@@ -132,6 +132,15 @@ public class VideoScreen extends Activity {
 //         //Or something else?
 //     }
 
+//     //HMMMMMMMMMM
+//     // Stops showing and downloading of a video downloading if back button is pressed.
+//     @Override
+//     public void onPause() {
+//         super.onPause();
+//         webView.stopLoading();
+//         webView.destroy();
+//     }
+
 
 //Mitä tämä edes tekee? Näyttää lähtevän pois videonäkymästä ja piilottaa vaan sen.    
 //     @Override
