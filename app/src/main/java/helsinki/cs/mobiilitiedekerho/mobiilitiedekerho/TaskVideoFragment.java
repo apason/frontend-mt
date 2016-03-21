@@ -62,7 +62,7 @@ public class TaskVideoFragment extends Fragment implements View.OnClickListener 
     private void task(String response) {
         StatusService.StaticStatusService.jc.newJson(response);
         ArrayList<HashMap<String, String>> task = StatusService.StaticStatusService.jc.getObjects();
-        taskURL = "https://s3.eu-central-1.amazonaws.com/p60v4ow30312-tasks/"+task.get(0).get("uri");
+        taskURL = StatusService.StaticStatusService.s3Location + StatusService.StaticStatusService.taskBucket + "/" + task.get(0).get("uri");
         Log.i("taskURL ", taskURL);
         ((TaskActivity) getActivity()).playback(taskURL);
     }

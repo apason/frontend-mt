@@ -6,19 +6,21 @@ public class StatusService {
 
     public static class StaticStatusService {
     
-        protected static final String urli = "https://mobiilitiedekerho.duckdns.org:27461/"; //The IP of the back-end server, it is needed to add parameters to it to be able to comunicate with it. Hard-coded.
-
-
+        protected static final String urli = "https://mobiilitiedekerho.duckdns.org:27461/"; //The DNS name of the back-end server. Hard-coded and will always be.
+        
+        protected static final String s3Location = "https://s3.eu-central-1.amazonaws.com/"; //TODO: Not hard-coded but from the back-end server.
+        protected static final String taskBucket = "p60v4ow30312-tasks"; //TODO: Not hard-coded but from the back-end server.
+        protected static final String answerBucket = "p60v4ow30312-answers"; //TODO: Not hard-coded but from the back-end server.
+        protected static final String graphicsBucket = "not used yet"; //TODO: Not hard-coded but from the back-end server.
+        
 
         protected static boolean loggedIn;
         protected static String authToken;
         
-        protected static String currentNick; //the not-unique name of the curent subuser.
+        protected static String currentNick; //the not-unique name of the current subuser.
         protected static String currentSubUserID;
     
-        protected static String[] aviableSubUsers; //The Ids of the aviable subusers for the current user. TODO ?: String[] -> ???
-
-
+        protected static String[] aviableSubUsers; //The IDs of the aviable subusers for the current user. TODO ?: String[] -> ???
 
         //Note: These variables declare the resolution of the screen in pixels, in this APP is the landscape orientation (width is the larger).
         protected static int screenWidth;
@@ -31,6 +33,7 @@ public class StatusService {
         
         //protected Context context;
     }
+    
 
     public static boolean loggedIn() {
         return StaticStatusService.loggedIn;

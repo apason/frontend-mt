@@ -16,51 +16,51 @@ import java.util.ArrayList;
 
 /**
  * A class for downloading the needed graphics from S3.
- * After downloading, the retrieved data will be saved to the APP's private storage-area. (Internal Storage).
- * Give as many urls (strings) pointing to pictures in S3 as you wish.
+ * After downloading, the retrieved images will be saved to the APP's private storage-area as PNG. (Internal Storage).
+ * Give as many imageNames (strings) pointing to pictures in S3 as you wish.
  */
 public class S3Download extends AsyncTask<String, Void, String> {
 
     private TaskCompleted act;
     private ArrayList<Bitmap> bitmaps;
-	private String[] imageNames;
+    private ArrayList<String> imageNames;
 
     /**
     * Constructor for S3Download.
     * @param act a interface for being able to pass the response for the calling activity.
-    * @param imageNames the names of the images to be downloaded, note that they are the names which how they are saved to memory.
-    * 		 They must match the order of "urls".
-    * 		 If their length doesn't match, async will stop and return "'Image names' and 'urls' don't match in size" (to avoid crashing)
+    * @param imageNames the names of the images to be downloaded, note that they are the names which how they are saved to memory and how saved to S3.
     */
-    public S3Download(TaskCompleted act, String... imageNames){
+    public S3Download(TaskCompleted act, ArrayList<String> imageNames){
         this.act = act;
         this.imageNames = imageNames;
         bitmaps = new ArrayList<Bitmap>();
     }
     
-    HttpURLConnection urlConnection = null;
     
     protected String doInBackground(String... urls) {
-    	if(urls.length != imageNames.length) 
-    		return "'Image names' and 'urls' don't match in size";
-    	
-        for (int i = 0 ; i < urls.length ; i++) {
-            try {
-                URL url = new URL(urls[i]);
+        HttpURLConnection urlConnection = null;
+        
+        try {
+            for (int i = 0 ; i < imageNames.size() ; i++) {
+                URL url = new URL(StatusService.StaticStatusService.s3Location + StatusService.StaticStatusService.graphicsBucket + "/" + imageNames.get(i));
                 urlConnection = (HttpURLConnection) url.openConnection();
                 bitmaps.add(BitmapFactory.decodeStream(urlConnection.getInputStream()));
-            } catch (MalformedURLException e) {
-                Log.i("MalformedURLException", urls[i].toString());
-                e.printStackTrace();
-            } catch (IOException e) {
-                Log.i("IOException", urls[i].toString());
-                e.printStackTrace();
-            } finally {
-                urlConnection.disconnect();
             }
+            return "success";
+        } catch (MalformedURLException e) {
+            Log.i("MalformedURLException", "");
+            e.printStackTrace();
+        } catch (IOException e) {
+            Log.i("IOException", "");
+            e.printStackTrace();
+        } catch (Exception e) {
+            Log.i("SomeError", "");
+            e.printStackTrace();
+        } finally {
+            urlConnection.disconnect();
         }
         
-        return "success";
+        return "failure";
     }
     
     
@@ -68,8 +68,8 @@ public class S3Download extends AsyncTask<String, Void, String> {
     	if (!result.equals("success"))
     		act.taskCompleted(result);
     	
-        for (int i = 0 ; i < imageNames.length ; i++) {
-            StatusService.StaticStatusService.fh.saveImage(imageNames[i], bitmaps.get(i));
+        for (int i = 0 ; i < imageNames.size() ; i++) {
+            StatusService.StaticStatusService.fh.saveImage(imageNames.get(i), bitmaps.get(i));
         }
         
         act.taskCompleted(result);
