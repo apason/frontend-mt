@@ -109,11 +109,10 @@ public class VideoScreen extends Activity {
         Intent intent = getIntent();
         String message = intent.getStringExtra(TaskActivity.EXTRA_MESSAGE_URL);
         
-        
         // Navigate anywhere you want, but consider that this classes have only been tested on YouTube's mobile site NO VOI VITSI!
         webView.loadUrl("https://s3.eu-central-1.amazonaws.com/p60v4ow30312-tasks/videotag.html");
         
-        //webView.loadUrl("message");
+        //webView.loadUrl(message);
     }
     
     
@@ -124,6 +123,8 @@ public class VideoScreen extends Activity {
 //         webView.stopLoading();
 //         //Or something else?
 //     }
+
+
 
 
 //Mitä tämä edes tekee? Näyttää lähtevän pois videonäkymästä ja piilottaa vaan sen.    
