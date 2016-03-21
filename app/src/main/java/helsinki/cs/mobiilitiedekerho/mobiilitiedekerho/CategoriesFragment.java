@@ -1,5 +1,8 @@
 package helsinki.cs.mobiilitiedekerho.mobiilitiedekerho;
 
+
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -23,58 +26,99 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
             categories(response);
         }
     }
+    
+    public class catImgsDownloaded implements TaskCompleted {
+        @Override
+        public void taskCompleted(String response) {
+            categories2(response);
+        }
+    }
 
-    View view;
-    AsyncTask hp = null;
+    private View view;
+    private AsyncTask hp = null;
 
     private void categories(String response) {
+    	//Tässä jo?, välttämättä ei laitteessa. -> else osaan.
         LinearLayout ll = (LinearLayout) view.findViewById(R.id.categories);
         ll.setOrientation(LinearLayout.HORIZONTAL);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 
         StatusService.StaticStatusService.jc.newJson(response);
         ArrayList<HashMap<String, String>> categories = StatusService.StaticStatusService.jc.getObjects();
-            /*
+        
         if (!categories.isEmpty()) {
-            ImageButton[] categorybutton = new ImageButton[categories.size()];
+            ArrayList<String> names = new ArrayList<String>();
+            String imageName;
             for (int i = 0; i < categories.size(); i++) {
-                try {
-                    String id = "category"+categories.get(i).get("id");
-                    int imageID = getResources().getIdentifier(id, "drawable", getActivity().getApplicationContext().getPackageName());
-                    categorybutton[i] = new ImageButton(getContext());
-                    categorybutton[i].setImageResource(imageID);
-                    categorybutton[i].setLayoutParams(lp);
-                    categorybutton[i].setScaleType(ImageView.ScaleType.FIT_CENTER);
-                    categorybutton[i].setOnClickListener(this);
-                    categorybutton[i].setBackgroundColor(Color.TRANSPARENT);
-                    categorybutton[i].setId(Integer.parseInt(categories.get(i).get("id")));
-                    //categorybutton[i].setId(i+1);
-                    ll.addView(categorybutton[i], lp);}
-                catch (Exception e) {
-                    Log.i("kuvavirhe", "");
+                imageName = "category-icon" + categories.get(i).get("id");
+                if(!StatusService.StaticStatusService.fh.checkIfImageExists(imageName)) {
+                    names.add(imageName);
+                }
+                    
+            }
+            
+            
+            //Either all images are in memory or some must be downloaded from S3.
+            if (!names.isEmpty()) {
+                //NOTE: The code works only as simple if S3 has saved the the needed images in a single bucket with the same naming convency.
+                new S3Download(new catImgsDownloaded(), names).execute();
+            } 
+            else {
+                ImageButton[] categorybutton = new ImageButton[categories.size()];
+                for (int i = 0; i < categories.size(); i++) {
+                    try {
+                        Bitmap bitmap = BitmapFactory.decodeFile(Environment.getDataDirectory() + "/" + "category-icon" + categories.get(i).get("id"));
+                        
+                        categorybutton[i] = new ImageButton(getContext());
+                        categorybutton[i].setImageBitmap(bitmap);
+                        categorybutton[i].setLayoutParams(lp);
+                        categorybutton[i].setScaleType(ImageView.ScaleType.FIT_CENTER);
+                        categorybutton[i].setOnClickListener(this);
+                        categorybutton[i].setBackgroundColor(Color.TRANSPARENT);
+                        categorybutton[i].setId(Integer.parseInt(categories.get(i).get("id")));
+                        
+                        //categorybutton[i].setId(i+1);
+                        ll.addView(categorybutton[i], lp);
+                    } catch (Exception e) {
+                        Log.i("kuvavirhe", "");
+                    }
                 }
             }
         }
-        */
+        else {
+            //TODO: Something showing that there are no categories??? Not gonna happen! (Except of because a problem.)
+        }
+    }
+    
+    
+    private void categories2(String response) {
+        LinearLayout ll = (LinearLayout) view.findViewById(R.id.categories);
+        ll.setOrientation(LinearLayout.HORIZONTAL);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 
-        ImageButton[] categorybutton = new ImageButton[20];
-        for (int i = 0; i < 20; i++) {
+        StatusService.StaticStatusService.jc.newJson(response);
+        ArrayList<HashMap<String, String>> categories = StatusService.StaticStatusService.jc.getObjects();
+        
+        ImageButton[] categorybutton = new ImageButton[categories.size()];
+        for (int i = 0; i < categories.size(); i++) {
             try {
-                String id = "category1";
-                int imageID = getResources().getIdentifier(id, "drawable", getActivity().getApplicationContext().getPackageName());
+                Bitmap bitmap = BitmapFactory.decodeFile(Environment.getDataDirectory() + "/" + "category-icon" + categories.get(i).get("id"));
+                
                 categorybutton[i] = new ImageButton(getContext());
-                categorybutton[i].setImageResource(imageID);
+                categorybutton[i].setImageBitmap(bitmap);
                 categorybutton[i].setLayoutParams(lp);
                 categorybutton[i].setScaleType(ImageView.ScaleType.FIT_CENTER);
                 categorybutton[i].setOnClickListener(this);
                 categorybutton[i].setBackgroundColor(Color.TRANSPARENT);
-                categorybutton[i].setId(i);
+                categorybutton[i].setId(Integer.parseInt(categories.get(i).get("id")));
+                
                 //categorybutton[i].setId(i+1);
                 ll.addView(categorybutton[i], lp);
             } catch (Exception e) {
                 Log.i("kuvavirhe", "");
             }
         }
+            
     }
 
     @Override

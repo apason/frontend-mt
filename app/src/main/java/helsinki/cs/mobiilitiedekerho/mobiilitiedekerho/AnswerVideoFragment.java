@@ -105,7 +105,7 @@ public class AnswerVideoFragment extends Fragment implements View.OnClickListene
     private void answerURL (String response) {
         StatusService.StaticStatusService.jc.newJson(response);
         ArrayList<HashMap<String, String>> answer = StatusService.StaticStatusService.jc.getObjects();
-        answerURL = "https://s3.eu-central-1.amazonaws.com/p60v4ow30312-answers/"+answer.get(0).get("uri");
+        answerURL = StatusService.StaticStatusService.s3Location + StatusService.StaticStatusService.answerBucket + "/" + answer.get(0).get("uri");
         ((TaskActivity) getActivity()).playback(answerURL);
     }
 }
