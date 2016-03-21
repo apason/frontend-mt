@@ -89,7 +89,6 @@ public class ServerCommunication  {
      */
     public String StartAnswerUpload(String taskId, String subUserID) {
         return getResponse("StartAnswerUpload", "task_id", taskId, "subuser_id", subUserID);
-
     }
 
     /**
