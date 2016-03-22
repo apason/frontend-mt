@@ -11,7 +11,7 @@ import java.io.IOException;
 
 /**
  * Class for managing all kind of file saving and loading. WIP
- * TODO: Should this use SharedPreferences?. Many users supported? Specially many sub-users extra stuff?
+ * TODO: Should token saving use SharedPreferences?. Many users supported? Specially many sub-users extra stuff?
  */
 public class FileHandling {
 
@@ -24,22 +24,32 @@ public class FileHandling {
     public boolean CheckIfSavedToken() {
         File path = Environment.getDataDirectory(); //The data directory of the application.
         File file = new File(path, "token");
+        
+        int length = (int) file.length();
+        byte[] bytes = new byte[length];
+        FileInputStream stream = new FileInputStream(file);
+        
+        boolean existed = false;
 
         if (file.exists()) {
             try {
-                BufferedReader br = new BufferedReader(new FileReader(file));
-                String token = br.readLine();
-                br.close();
+                stream.read(bytes);
                 
-                StatusService.StaticStatusService.authToken = token;
+                StatusService.StaticStatusService.authToken = new String(bytes);
                 StatusService.StaticStatusService.loggedIn = true;
 
-                return true;
+                existed = true;
             } catch (IOException e) {
                 e.printStackTrace();
+            } finally {
+                try {
+                    stream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
-        return false;
+        return existed;
     }
 
     /**
@@ -49,38 +59,32 @@ public class FileHandling {
         //SharedPreferences.Editor editor = getSharedPreferences(nick, MODE_PRIVATE).edit(); //MODE_PRIVATE is just: 0
         //editor.putString("token", token).commit();
 
-        FileOutputStream stream;
+        File path = Environment.getDataDirectory(); //The data directory of the application.
+        File file = new File(path, "token");
+        FileOutputStream stream = new FileOutputStream(file);
         try {
-            File path = Environment.getDataDirectory(); //The data directory of the application.
-            File file = new File(path, "token");
-
-            if (!file.exists()) {
-                file.createNewFile();
-            }
-
-            stream = new FileOutputStream(file);
-            stream.write((StatusService.StaticStatusService.authToken).getBytes());
+            stream.write((StatusService.StaticStatusService.authToken).getBytes()); //Created file if didn't existed before.
         } catch (IOException e) {
             e.printStackTrace();
-        }  //finally {
-            //try {
-            //    stream.close();
-            //} catch (IOException e) {
-            //    e.printStackTrace();
-           // }
-        //}
+        } finally {
+            try {
+                stream.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
     
     /**
-    * Checks whether the pointed image (or any file...) exist in Internal Storage.
-    * @param the file's' name to be checked.
+    * Checks whether the pointed image (or any file...) exist in applications allocated Internal Storage.
+    * @param name the file's' name to be checked if exists..
     * @return true if exists.
     */
     public boolean checkIfImageExists(String name) {
         File path = Environment.getDataDirectory(); //The data directory of the application.
         File file = new File(path, name);
 
-        if (!file.exists()) {
+        if (file.exists()) {
             return true;
         } else {
             return false;
@@ -93,20 +97,12 @@ public class FileHandling {
     * @param image the image to be saved.
     */
     public void saveImage(String name, Bitmap image) {
-        FileOutputStream stream = null;
+        File path = Environment.getDataDirectory(); //The data directory of the application.
+        File file = new File(path, name);
+        FileOutputStream stream = new FileOutputStream(file); //Created file if didn't existed before.
+        
         try {
-            File path = Environment.getDataDirectory(); //The data directory of the application.
-            File file = new File(path, name);
-
-            if (!file.exists()) {
-                file.createNewFile();
-            }
-            
-            stream = new FileOutputStream(file);
-            
-            image.compress(Bitmap.CompressFormat.PNG, 100, stream); //Compress and save the image.
-            
-
+            image.compress(Bitmap.CompressFormat.PNG, 100, stream); //Compress and save the image. TODO: Check if true?, that is if it worked out.
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
