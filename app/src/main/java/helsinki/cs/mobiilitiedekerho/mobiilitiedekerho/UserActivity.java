@@ -37,22 +37,26 @@ public class UserActivity extends AppCompatActivity {
         userAgreementButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog.Builder alert = new AlertDialog.Builder(UserActivity.this);
-                alert.setTitle("Mobiilitiedekerhon käyttöehdot");
-                alert.setMessage("Tähän voidaan kirjoittaa palvelun käyttöehdot");
-
-                final TextView input = new TextView(UserActivity.this);
-                alert.setView(input);
-
-                alert.setNegativeButton("Sulje", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        finish();
-                    }
-                });
-                alert.show();
+                showUserAgreement();
             }
 
         });
+    }
+
+    public void showUserAgreement() {
+        AlertDialog.Builder alert = new AlertDialog.Builder(UserActivity.this);
+        alert.setTitle("Mobiilitiedekerhon käyttöehdot");
+        alert.setMessage("Tähän voidaan kirjoittaa palvelun käyttöehdot");
+
+        final TextView input = new TextView(UserActivity.this);
+        alert.setView(input);
+
+        alert.setNegativeButton("Sulje", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                dialog.dismiss();
+            }
+        });
+        alert.show();
     }
 }
 
