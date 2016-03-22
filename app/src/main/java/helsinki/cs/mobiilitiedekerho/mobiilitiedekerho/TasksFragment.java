@@ -94,11 +94,15 @@ public class TasksFragment extends Fragment implements View.OnClickListener {
     }
     
     private void tasks2(String response) {
-        Ima
-
         LinearLayout ll = (LinearLayout) view.findViewById(R.id.tasks);
         ll.setOrientation(LinearLayout.HORIZONTAL);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        ImageView categoryButton = (ImageView) view.findViewById(R.id.category_icon);
+        String categoryId = getArguments().getString("category");
+        Log.i("kategoriaid", categoryId);
+        int categoryImage = getResources().getIdentifier(categoryId, "drawable", getActivity().getApplicationContext().getPackageName());
+        categoryButton.setImageResource(categoryImage);
+        ll.addView(categoryButton);
 
         StatusService.StaticStatusService.jc.newJson(response);
         ArrayList<HashMap<String, String>> tasks = StatusService.StaticStatusService.jc.getObjects();

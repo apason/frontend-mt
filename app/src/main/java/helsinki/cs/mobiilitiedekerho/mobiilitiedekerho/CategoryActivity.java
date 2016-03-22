@@ -23,10 +23,12 @@ public class CategoryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.category_layout);
 
-        Intent intent = getIntent();
-        String message = intent.getStringExtra(CategoriesActivity.EXTRA_MESSAGE_CATEGORY);
-
         TasksFragment tf = new TasksFragment();
+        Intent intent = getIntent();
+        String categoryId = intent.getStringExtra(CategoriesActivity.EXTRA_MESSAGE_CATEGORY);
+        Bundle bundle = new Bundle();
+        bundle.putString("category", categoryId);
+        tf.setArguments(bundle);
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.add(R.id.tasks_fragment, tf);
         transaction.commit();
