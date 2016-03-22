@@ -115,11 +115,13 @@ public class TasksFragment extends Fragment implements View.OnClickListener {
 
         TableLayout tl = (TableLayout) view.findViewById(R.id.columns);
         tl.setOrientation(TableLayout.VERTICAL);
-        TableLayout.LayoutParams tlp = new TableLayout.LayoutParams(TableLayout.LayoutParams.WRAP_CONTENT, TableLayout.LayoutParams.WRAP_CONTENT);
+        TableRow.LayoutParams trlp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT);
         TableRow tr1 = new TableRow(getContext());
+        tr1.setOrientation(TableLayout.VERTICAL);
         TableRow tr2 = new TableRow(getContext());
-        tr1.setLayoutParams(new TableRow.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        tr2.setLayoutParams(new TableRow.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        tr2.setOrientation(TableLayout.VERTICAL);
+        tr1.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT));
+        tr2.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT));
         tl.addView(tr1);
         tl.addView(tr2);
 
@@ -134,14 +136,22 @@ public class TasksFragment extends Fragment implements View.OnClickListener {
                 int imageID = getResources().getIdentifier(image, "drawable", getActivity().getApplicationContext().getPackageName());
                 taskbutton[i] = new ImageButton(getContext());
                 taskbutton[i].setImageResource(imageID);
-                taskbutton[i].setLayoutParams(tlp);
+                Log.i("onnistui3", String.valueOf(i));
+                taskbutton[i].setLayoutParams(trlp);
                 taskbutton[i].setScaleType(ImageView.ScaleType.FIT_CENTER);
                 taskbutton[i].setOnClickListener(this);
                 taskbutton[i].setBackgroundColor(Color.TRANSPARENT);
-                taskbutton[i].setId(Integer.parseInt(tasks.get(i).get("id")));
-                Log.i("onnistui", String.valueOf(i));
-                if (i % 2 == 1) tl.addView(taskbutton[i], tlp);
-                else tl.addView(taskbutton[i], tlp);
+                taskbutton[i].setId(1);
+                //taskbutton[i].setId(Integer.parseInt(tasks.get(i).get("id")));
+
+                if (i % 2 == 0) {
+                    tr1.addView(taskbutton[i]);
+                    Log.i("onnistui", String.valueOf(i));
+                }
+                else {
+                    tr2.addView(taskbutton[i]);
+                    Log.i("onnistui2", String.valueOf(i));
+                }
             } catch (Exception e) {
                 Log.i("kuvavirhe", "");
             }

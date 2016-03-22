@@ -13,7 +13,7 @@ import android.webkit.WebViewClient;
 //import android.view.KeyEvent;
 //import android.util.Log;
 
-import helsinki.cs.mobiilitiedekerho.mobiilitiedekerho.VideoEnabledWebView; //???!!
+import helsinki.cs.mobiilitiedekerho.mobiilitiedekerho.R; //???!!
 
 public class VideoScreen extends Activity {
 
@@ -118,7 +118,7 @@ public class VideoScreen extends Activity {
         String message = intent.getStringExtra(TaskActivity.EXTRA_MESSAGE_URL);
         
         // Navigate anywhere you want, but consider that this classes have only been tested on YouTube's mobile site NO VOI VITSI!
-        webView.loadUrl("https://s3.eu-central-1.amazonaws.com/p60v4ow30312-tasks/videotag.html");
+        webView.loadUrl("https://youtu.be/VRZNLBL7Px4");
         
         //webView.loadUrl(message);
     }
