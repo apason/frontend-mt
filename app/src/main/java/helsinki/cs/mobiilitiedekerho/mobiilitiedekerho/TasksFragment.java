@@ -94,7 +94,6 @@ public class TasksFragment extends Fragment implements View.OnClickListener {
     }
     
     private void tasks2(String response) {
-        Ima
 
         LinearLayout ll = (LinearLayout) view.findViewById(R.id.tasks);
         ll.setOrientation(LinearLayout.HORIZONTAL);
