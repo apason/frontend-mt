@@ -21,7 +21,6 @@ public class CategoriesActivity extends AppCompatActivity {
         CategoriesFragment cf = new CategoriesFragment();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.add(R.id.categories_fragment, cf);
-        //transaction.add(R.id.login_button_fragment, lf);
         transaction.commit();
     }
 

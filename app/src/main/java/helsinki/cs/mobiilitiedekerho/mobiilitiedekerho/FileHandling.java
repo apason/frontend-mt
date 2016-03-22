@@ -5,9 +5,12 @@ import android.graphics.Bitmap;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+
 
 /**
  * Class for managing all kind of file saving and loading. WIP
@@ -21,7 +24,7 @@ public class FileHandling {
     * Respectively authToken will become the user's auth_token.
     * @return true if there is a saved user.
     */
-    public boolean CheckIfSavedToken() {
+    public boolean CheckIfSavedToken() throws FileNotFoundException{
         File path = Environment.getDataDirectory(); //The data directory of the application.
         File file = new File(path, "token");
         
@@ -55,7 +58,7 @@ public class FileHandling {
     /**
     * Save the user's token into a text file for future auto-login.
     */
-    public void saveToken() {
+    public void saveToken () throws FileNotFoundException {
         //SharedPreferences.Editor editor = getSharedPreferences(nick, MODE_PRIVATE).edit(); //MODE_PRIVATE is just: 0
         //editor.putString("token", token).commit();
 
@@ -96,14 +99,14 @@ public class FileHandling {
     * @param name the file name.
     * @param image the image to be saved.
     */
-    public void saveImage(String name, Bitmap image) {
+    public void saveImage(String name, Bitmap image) throws IOException {
         File path = Environment.getDataDirectory(); //The data directory of the application.
         File file = new File(path, name);
         FileOutputStream stream = new FileOutputStream(file); //Created file if didn't existed before.
         
         try {
             image.compress(Bitmap.CompressFormat.PNG, 100, stream); //Compress and save the image. TODO: Check if true?, that is if it worked out.
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         } finally {
             try {

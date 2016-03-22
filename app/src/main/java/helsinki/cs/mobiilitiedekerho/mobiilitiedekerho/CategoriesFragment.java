@@ -24,10 +24,10 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
     public class categorieslistener implements TaskCompleted {
         @Override
         public void taskCompleted(String response) {
-            categories(response);
+            categories2(response);
         }
     }
-    
+
     public class catImgsDownloaded implements TaskCompleted {
         @Override
         public void taskCompleted(String response) {
@@ -49,15 +49,16 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
         
         if (!categories.isEmpty()) {
             ArrayList<String> names = new ArrayList<String>();
-            String imageName;
+            String imageName = "category_icon";
+
             for (int i = 0; i < categories.size(); i++) {
-                imageName = "category-icon" + categories.get(i).get("id");
+                imageName = "category_icon" + categories.get(i).get("id");
                 if(!StatusService.StaticStatusService.fh.checkIfImageExists(imageName)) {
                     names.add(imageName);
                 }
                     
             }
-            
+
             
             //Either all images are in memory or some must be downloaded from S3.
             if (!names.isEmpty()) {
@@ -68,7 +69,7 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
                 ImageButton[] categorybutton = new ImageButton[categories.size()];
                 for (int i = 0; i < categories.size(); i++) {
                     try {
-                        Bitmap bitmap = BitmapFactory.decodeFile(Environment.getDataDirectory() + "/" + "category-icon" + categories.get(i).get("id"));
+                        Bitmap bitmap = BitmapFactory.decodeFile(Environment.getDataDirectory() + "/" + "category_icon" + categories.get(i).get("id"));
                         
                         categorybutton[i] = new ImageButton(getContext());
                         categorybutton[i].setImageBitmap(bitmap);
@@ -99,14 +100,15 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
 
         StatusService.StaticStatusService.jc.newJson(response);
         ArrayList<HashMap<String, String>> categories = StatusService.StaticStatusService.jc.getObjects();
-        
+        Log.i("kategoriat", String.valueOf(categories.size()));
         ImageButton[] categorybutton = new ImageButton[categories.size()];
         for (int i = 0; i < categories.size(); i++) {
             try {
-                Bitmap bitmap = BitmapFactory.decodeFile(Environment.getDataDirectory() + "/" + "category-icon" + categories.get(i).get("id"));
-                
+                String image = "category_icon" + categories.get(i).get("id");
+                //Bitmap bitmap = BitmapFactory.decodeFile(Environment.getDataDirectory() + "/" + "category_icon" + categories.get(i).get("id"));
+                int imageID = getResources().getIdentifier(image, "drawable", getActivity().getApplicationContext().getPackageName());
                 categorybutton[i] = new ImageButton(getContext());
-                categorybutton[i].setImageBitmap(bitmap);
+                categorybutton[i].setImageResource(imageID);
                 categorybutton[i].setLayoutParams(lp);
                 categorybutton[i].setScaleType(ImageView.ScaleType.FIT_CENTER);
                 categorybutton[i].setOnClickListener(this);
@@ -128,6 +130,7 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
         view = inflater.inflate(R.layout.categories_fragment, container, false);
 
         String url = StatusService.StaticStatusService.sc.DescribeCategories();
+        Log.i("token", url);
         hp = new HTTPSRequester(new categorieslistener()).execute(url);
 
         return view;

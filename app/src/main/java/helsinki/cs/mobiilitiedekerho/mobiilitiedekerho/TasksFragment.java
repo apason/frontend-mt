@@ -25,7 +25,7 @@ public class TasksFragment extends Fragment implements View.OnClickListener {
     public class listener implements TaskCompleted {
         @Override
         public void taskCompleted(String response) {
-            tasks(response);
+            tasks2(response);
         }
     }
     
@@ -104,10 +104,11 @@ public class TasksFragment extends Fragment implements View.OnClickListener {
         ImageButton[] taskbutton = new ImageButton[tasks.size()];
         for (int i = 0; i < tasks.size(); i++) {
             try {
-                Bitmap bitmap = BitmapFactory.decodeFile(Environment.getDataDirectory() + "/" + "task-icon" + tasks.get(i).get("id"));
-                
+                //Bitmap bitmap = BitmapFactory.decodeFile(Environment.getDataDirectory() + "/" + "task-icon" + tasks.get(i).get("id"));
+                String image = "task_icon" + tasks.get(i).get("id");
+                 int imageID = getResources().getIdentifier(image, "drawable", getActivity().getApplicationContext().getPackageName());
                 taskbutton[i] = new ImageButton(getContext());
-                taskbutton[i].setImageBitmap(bitmap);
+                taskbutton[i].setImageResource(imageID);
                 taskbutton[i].setLayoutParams(lp);
                 taskbutton[i].setScaleType(ImageView.ScaleType.FIT_CENTER);
                 taskbutton[i].setOnClickListener(this);

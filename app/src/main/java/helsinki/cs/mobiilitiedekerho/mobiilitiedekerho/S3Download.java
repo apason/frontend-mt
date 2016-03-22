@@ -63,8 +63,8 @@ public class S3Download extends AsyncTask<String, Void, String> {
         return "failure";
     }
     
-    
-    protected void onPostExecute(String result) {
+    /*
+    protected void onPostExecute(String result) throws IOException {
     	if (!result.equals("success"))
     		act.taskCompleted(result);
     	
@@ -74,5 +74,5 @@ public class S3Download extends AsyncTask<String, Void, String> {
         
         act.taskCompleted(result);
     }
-    
+    */
 }

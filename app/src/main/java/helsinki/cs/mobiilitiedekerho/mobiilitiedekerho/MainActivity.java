@@ -19,7 +19,7 @@ public class MainActivity extends AppCompatActivity {
             //this.checkStatus();
 
             StatusService.StaticStatusService.authToken = StatusService.StaticStatusService.jc.getProperty("auth_token");
-            StatusService.StaticStatusService.fh.saveToken();
+            //StatusService.StaticStatusService.fh.saveToken();
             start();
         }
     }
@@ -38,12 +38,14 @@ public class MainActivity extends AppCompatActivity {
         StatusService.StaticStatusService.screenHeight = metrics.heightPixels;
 
         //Either saved token will be used (user auto-login) or an 'anonymous' one is retrieved for use.
+        /*
         if (StatusService.StaticStatusService.fh.CheckIfSavedToken()) {
             start();
         } else {
+            */
             String url = StatusService.StaticStatusService.sc.AnonymousSession();
             hp = new HTTPSRequester(new GotToken()).execute(url);
-        }
+
     }
 
 
