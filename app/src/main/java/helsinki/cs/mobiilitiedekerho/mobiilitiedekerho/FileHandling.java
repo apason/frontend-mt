@@ -2,6 +2,7 @@ package helsinki.cs.mobiilitiedekerho.mobiilitiedekerho;
 
 import android.os.Environment;
 import android.graphics.Bitmap;
+import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -25,6 +26,7 @@ public class FileHandling {
     * @return true if there is a saved user.
     */
     public boolean CheckIfSavedToken() throws FileNotFoundException{
+
         File path = Environment.getDataDirectory(); //The data directory of the application.
         File file = new File(path, "token");
         
@@ -44,7 +46,8 @@ public class FileHandling {
                 existed = true;
             } catch (IOException e) {
                 e.printStackTrace();
-            } finally {
+            }
+            finally {
                 try {
                     stream.close();
                 } catch (IOException e) {
@@ -59,6 +62,7 @@ public class FileHandling {
     * Save the user's token into a text file for future auto-login.
     */
     public void saveToken () throws FileNotFoundException {
+
         //SharedPreferences.Editor editor = getSharedPreferences(nick, MODE_PRIVATE).edit(); //MODE_PRIVATE is just: 0
         //editor.putString("token", token).commit();
 
@@ -76,6 +80,7 @@ public class FileHandling {
                 e.printStackTrace();
             }
         }
+
     }
     
     /**
@@ -99,7 +104,9 @@ public class FileHandling {
     * @param name the file name.
     * @param image the image to be saved.
     */
-    public void saveImage(String name, Bitmap image) throws IOException {
+
+    public void saveImage(String name, Bitmap image) throws IOException{
+
         File path = Environment.getDataDirectory(); //The data directory of the application.
         File file = new File(path, name);
         FileOutputStream stream = new FileOutputStream(file); //Created file if didn't existed before.

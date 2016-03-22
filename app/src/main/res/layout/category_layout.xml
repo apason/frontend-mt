@@ -3,13 +3,7 @@
                 android:orientation="horizontal"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
-                android:background="@drawable/landscape" >
-
-    // Fragment responsible for login
-    <FrameLayout
-        android:id="@+id/login_button_fragment"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+                android:background="#ffa500" >
 
     //Fragment responsible for showing task icons
     <FrameLayout

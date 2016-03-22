@@ -24,7 +24,7 @@ public class VideoScreen extends Activity {
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-//         setContentView(R.layout.activity_example); //Oli jo siellä, tarpeellinen?
+       setContentView(R.layout.activity_example); //Oli jo siellä, tarpeellinen?
 
         // Save the web view
         webView = (VideoEnabledWebView)findViewById(R.id.webView);

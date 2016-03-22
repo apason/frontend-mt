@@ -7,6 +7,8 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 
+import java.io.FileNotFoundException;
+
 public class MainActivity extends AppCompatActivity {
 
     AsyncTask hp = null;
