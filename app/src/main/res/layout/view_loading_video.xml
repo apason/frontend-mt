@@ -24,7 +24,7 @@
             android:layout_marginBottom="24dp"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="#a3a3a3"
-            android:text="@string/loading_video" />
+            android:text="loading_video" />
         
     </LinearLayout>
         

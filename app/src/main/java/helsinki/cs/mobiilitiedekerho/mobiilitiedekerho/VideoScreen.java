@@ -9,10 +9,11 @@ import android.view.WindowManager;
 import android.util.Log;
 import android.webkit.WebView;
 import android.webkit.WebSettings;
+import android.webkit.WebViewClient;
 //import android.view.KeyEvent;
 //import android.util.Log;
 
-import helsinki.cs.mobiilitiedekerho.mobiilitiedekerho.videoenabledwebview.R; //???!!
+import helsinki.cs.mobiilitiedekerho.mobiilitiedekerho.VideoEnabledWebView; //???!!
 
 public class VideoScreen extends Activity {
 
@@ -78,9 +79,9 @@ public class VideoScreen extends Activity {
         //Lisäys jotta video autoplayais, (vain jos android >=4.2):
         //Jos mieluiten ei autoplayaa, niin tämä on varteenotettava asia mitä lisätä HTML tageihin: preload="true" (jos toimii webviewelle)
         //Tai sitten seuraava ratkaisu: http://stackoverflow.com/questions/30692883/html5-video-slow-to-start-playing-on-android-phonegap/30692993#30692993
-        if (android.os.Build.VERSION.SDK_INT >= 17) {
-            WebView.getSettings().setMediaPlaybackRequiresUserGesture(false);
-        }
+       // if (android.os.Build.VERSION.SDK_INT >= 17) {
+       //     WebView.getSettings().setMediaPlaybackRequiresUserGesture(false);
+        //}
     }
 
     private class InsideWebViewClient extends WebViewClient {
