@@ -13,7 +13,7 @@ import android.webkit.WebViewClient;
 //import android.view.KeyEvent;
 //import android.util.Log;
 
-import cpr.name.videoenabledwebview.*; // import cpr.name.videoenabledwebview.R; ???!!
+import cpr.name.videoenabledwebview.R; // import cpr.name.videoenabledwebview.*; ???!!
 import name.cpr.VideoEnabledWebChromeClient;
 import name.cpr.VideoEnabledWebView;
 
