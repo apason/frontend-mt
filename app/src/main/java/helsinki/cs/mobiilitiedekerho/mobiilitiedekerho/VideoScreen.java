@@ -1,7 +1,7 @@
-/*
 package helsinki.cs.mobiilitiedekerho.mobiilitiedekerho;
 
 import android.app.Activity;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -26,7 +26,7 @@ public class VideoScreen extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
-        super.onCreate(savedInstanceState);
+       super.onCreate(savedInstanceState);
        setContentView(R.layout.activity_example); //Oli jo siellä, tarpeellinen?
 
         // Save the web view
@@ -85,6 +85,7 @@ public class VideoScreen extends Activity {
        // if (android.os.Build.VERSION.SDK_INT >= 17) {
        //     WebView.getSettings().setMediaPlaybackRequiresUserGesture(false);
         //}
+        webView.loadUrl("https://s3.eu-central-1.amazonaws.com/p60v4ow30312-tasks/videotag.html");
     }
 
     private class InsideWebViewClient extends WebViewClient {
@@ -119,30 +120,20 @@ public class VideoScreen extends Activity {
     public void playVideo() {
         Intent intent = getIntent();
         String message = intent.getStringExtra(TaskActivity.EXTRA_MESSAGE_URL);
-        
+
         // Navigate anywhere you want, but consider that this classes have only been tested on YouTube's mobile site NO VOI VITSI!
-        webView.loadUrl("https://youtu.be/VRZNLBL7Px4");
+        webView.loadUrl("https://s3.eu-central-1.amazonaws.com/p60v4ow30312-tasks/huuteluu");
         
         //webView.loadUrl(message);
     }
-    
-    
-    //Onko tarvetta tälle oikeasti? (Vanhaa tavaraa)
-//     @Override
-//     public void onStop() {
-//         super.onStop();
-//         webView.stopLoading();
-//         //Or something else?
-//     }
 
-//     //HMMMMMMMMMM
-//     // Stops showing and downloading of a video downloading if back button is pressed.
-//     @Override
-//     public void onPause() {
-//         super.onPause();
-//         webView.stopLoading();
-//         webView.destroy();
-//     }
+     // Stops showing and downloading of a video downloading if back button is pressed.
+     @Override
+     public void onPause() {
+         super.onPause();
+         webView.stopLoading();
+         webView.destroy();
+     }
 
 
 
@@ -165,9 +156,9 @@ public class VideoScreen extends Activity {
 
 }
 
-*/
 
-//THIS IS FOR DEMO:
+
+/*THIS IS FOR DEMO:
 package helsinki.cs.mobiilitiedekerho.mobiilitiedekerho;
 
         import android.app.Activity;
@@ -204,3 +195,4 @@ public class VideoScreen extends Activity {
         vView.destroy();
     }
 }
+*/
