@@ -15,24 +15,27 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
         <LinearLayout
-        android:id="@+id/tasks"
-        android:orientation="horizontal"
-        android:clickable="true"
-        android:layout_marginLeft="150dp"
-        android:layout_width="100dp"
-        android:layout_height="100dp" >
+            android:id="@+id/tasks"
+            android:orientation="vertical"
+            android:clickable="true"
+            android:layout_marginLeft="150dp"
+            android:layout_width="250dp"
+            android:layout_height="250dp" >
 
         <TableLayout
             android:id="@+id/columns"
+            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
             <TableRow
                 android:id="@+id/column1"
+                android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
             </TableRow>
             <TableRow
                 android:id="@+id/column2"
+                android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
             </TableRow>

@@ -1,3 +1,4 @@
+/*
 package helsinki.cs.mobiilitiedekerho.mobiilitiedekerho;
 
 import android.app.Activity;
@@ -160,4 +161,44 @@ public class VideoScreen extends Activity {
 //         return super.onKeyDown(keyCode, event);
 //     }
 
+}
+
+*/
+
+//THIS IS FOR DEMO:
+package helsinki.cs.mobiilitiedekerho.mobiilitiedekerho;
+
+        import android.app.Activity;
+        import android.content.Intent;
+        import android.os.Bundle;
+        import android.view.View;
+
+public class VideoScreen extends Activity {
+    View view;
+    HTML5WebView vView;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        vView = new HTML5WebView(this);
+
+        Intent intent = getIntent();
+        String message = intent.getStringExtra(TaskActivity.EXTRA_MESSAGE_URL);
+        vView.loadUrl("https://s3.eu-central-1.amazonaws.com/p60v4ow30312-tasks/videotag.html");
+        setContentView(vView.getLayout());
+    }
+
+    //Onko samaa varten kun se tarkistus?, Ainoastaan jos halutaan, että jos avataan sama video toiste, muistaisi missä oltiin.
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        vView.saveState(outState);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        vView.stopLoading();
+        vView.destroy();
+    }
 }

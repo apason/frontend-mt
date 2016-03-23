@@ -53,7 +53,6 @@ public class TaskVideoFragment extends Fragment implements View.OnClickListener 
 
         // String taskVideo = ServiceCommunication.DescribeTask(id);
         String url = StatusService.StaticStatusService.sc.DescribeTask(id);
-        Log.i("virheurl ", url);
         hp = new HTTPSRequester(new Listener()).execute(url);
         //String taskURL = "http://download.wavetlan.com/SVV/Media/HTTP/H264/Talkinghead_Media/H264_test1_Talkinghead_mp4_480x360.mp4";
 
@@ -63,7 +62,6 @@ public class TaskVideoFragment extends Fragment implements View.OnClickListener 
         StatusService.StaticStatusService.jc.newJson(response);
         ArrayList<HashMap<String, String>> task = StatusService.StaticStatusService.jc.getObjects();
         taskURL = StatusService.StaticStatusService.s3Location + StatusService.StaticStatusService.taskBucket + "/" + task.get(0).get("uri");
-        Log.i("taskURL ", taskURL);
         ((TaskActivity) getActivity()).playback(taskURL);
     }
 }
