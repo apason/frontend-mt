@@ -1,10 +1,6 @@
 package helsinki.cs.mobiilitiedekerho.mobiilitiedekerho;
 
 
-import android.app.Service;
-import android.util.Log;
-import android.view.View;
-
 /**
  * A class for making urls for communicating with the back-end server via HTTPS.
  * All classes returns String contained the formed url corresponding to the API call + query.
@@ -32,7 +28,6 @@ public class ServerCommunication  {
                 query += paramsAndValues[i] + "=" + paramsAndValues[i+1];
                 if (i < paramsAndValues.length -2) query += "&";
             }
-        //Log.i("autentikointi", StatusService.StaticStatusService.getAuthToken());
             //Creates the textual representation of the url.
             StringBuilder sb = new StringBuilder();
             if (API_call == "GetAuthToken" && paramsAndValues.length == 0) sb.append(StatusService.StaticStatusService.urli + API_call);
@@ -67,7 +62,7 @@ public class ServerCommunication  {
      * @param password: The user's password.
      */
     public String CreateUser(String email, String password) {
-        return getResponse("CreateUser", "email", email, "password", password);
+        return getResponse("CreateUser", "user_email", email, "user_password", password);
     }
 
     /**
@@ -90,10 +85,10 @@ public class ServerCommunication  {
     /**
      * Gets the information necessary to start uploading a video to S3 and notices the back-end server about the uploading so that it would be possible.
      * @param taskId: All answers does link to a certain task -> taskId is the task's id of the task to be answered.
+     * @param subUserID: The subUser's id which answer is to be uploaded.
      */
-    public String StartAnswerUpload(String taskId) {
-        return getResponse("StartAnswerUpload", "task_id", taskId);
-
+    public String StartAnswerUpload(String taskId, String subUserID) {
+        return getResponse("StartAnswerUpload", "task_id", taskId, "subuser_id", subUserID);
     }
 
     /**
@@ -144,6 +139,37 @@ public class ServerCommunication  {
     */
     public String DescribeCategoryTasks(String categoryId) {
         return getResponse("DescribeCategoryTasks", "category_id", categoryId);
+    }
+    
+    /**
+     * Creates a new sub user for the current user.
+     * @param nick the nick of the subUser to be created.
+     */
+    public String CreateSubUser(String nick) {
+        return getResponse("CreateSubUser", "subuser_nick", nick);
+    }
+    
+    /**
+     * Deletes a subuser pointing to the current user.
+     * @param subUserId the id of the subuser to be deleted.
+     */
+    public String DeleteSubUser(String subUserId) {
+        return getResponse("DeleteSubUser", "subuser_id", subUserId);
+    }
+    
+    /**
+     * Gets the info of all subusers of this current user.
+     */
+    public String DescribeSubUsers() {
+        return getResponse("DescribeSubUsers");
+    }
+    
+    /**
+    * Get all the answers info of the desired subuser.
+    * @param subUserId the id of the subuser which answers belonging to it are wanted to be retrieved.
+    */
+    public String DescribeSubUserAnswers(String subUserId) {
+        return getResponse("DescribeSubUserAnswers", "subuser_id", subUserId);
     }
 
 }

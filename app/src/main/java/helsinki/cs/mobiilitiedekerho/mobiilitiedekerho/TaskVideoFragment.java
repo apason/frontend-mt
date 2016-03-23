@@ -47,22 +47,21 @@ public class TaskVideoFragment extends Fragment implements View.OnClickListener 
 
     @Override
     public void onClick(View v){
+
         //task_id from TaskActivity.java:
         String id = getArguments().getString("task");
 
         // String taskVideo = ServiceCommunication.DescribeTask(id);
         String url = StatusService.StaticStatusService.sc.DescribeTask(id);
-
         hp = new HTTPSRequester(new Listener()).execute(url);
         //String taskURL = "http://download.wavetlan.com/SVV/Media/HTTP/H264/Talkinghead_Media/H264_test1_Talkinghead_mp4_480x360.mp4";
-
 
     }
 
     private void task(String response) {
         StatusService.StaticStatusService.jc.newJson(response);
         ArrayList<HashMap<String, String>> task = StatusService.StaticStatusService.jc.getObjects();
-        taskURL = "https://s3.eu-central-1.amazonaws.com/p60v4ow30312-tasks/"+task.get(0).get("uri");
+        taskURL = StatusService.StaticStatusService.s3Location + StatusService.StaticStatusService.taskBucket + "/" + task.get(0).get("uri");
         ((TaskActivity) getActivity()).playback(taskURL);
     }
 }

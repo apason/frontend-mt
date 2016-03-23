@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent" >
+
+    <ImageButton
+        android:paddingRight="10dp"
+        android:paddingLeft="10dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:maxWidth="100dp"
+        android:id="@+id/next_button"
+        android:typeface="monospace"
+        android:clickable="true"
+        android:layout_gravity="center"
+        android:background="@drawable/next_button"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="false"
+        android:layout_marginRight="10dp"/>
+
+</RelativeLayout>

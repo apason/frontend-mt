@@ -2,14 +2,12 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:orientation="horizontal"
                 android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:background="#ffa500" >
+                android:layout_height="fill_parent" >
 
-    //Fragment responsible for showing task icons
+    // Fragment responsible for showing category icons
     <FrameLayout
-        android:id="@+id/tasks_fragment"
+        android:id="@+id/categories_fragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
 </RelativeLayout>
-

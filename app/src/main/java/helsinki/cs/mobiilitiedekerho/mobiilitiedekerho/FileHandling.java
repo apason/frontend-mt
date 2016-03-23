@@ -1,69 +1,76 @@
 package helsinki.cs.mobiilitiedekerho.mobiilitiedekerho;
 
 import android.os.Environment;
+import android.graphics.Bitmap;
+import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 
+
 /**
  * Class for managing all kind of file saving and loading. WIP
- * TODO: Should this use SharedPreferences?. Many users supported.
+ * TODO: Should token saving use SharedPreferences?. Many users supported? Specially many sub-users extra stuff?
  */
 public class FileHandling {
 
+
     /**
-    * If there is saved the data of a user, loggedIn will be true.
-    * Respectively nick will be the user's nick and authToken the user's auth_token.
+    * If there is saved the token for a user, loggedIn will be true.
+    * Respectively authToken will become the user's auth_token.
     * @return true if there is a saved user.
     */
-    public boolean CheckIfSavedUser() {
+    public boolean CheckIfSavedToken() throws FileNotFoundException{
+
         File path = Environment.getDataDirectory(); //The data directory of the application.
-        File file = new File(path, "user.txt");
+        File file = new File(path, "token");
+        
+        int length = (int) file.length();
+        byte[] bytes = new byte[length];
+        FileInputStream stream = new FileInputStream(file);
+        
+        boolean existed = false;
 
         if (file.exists()) {
             try {
-                BufferedReader br = new BufferedReader(new FileReader(file));
-                //Fort now:
-                String nick = br.readLine();
-                String token = br.readLine();
-                br.close();
+                stream.read(bytes);
                 
-                StatusService.StaticStatusService.nick = nick;
-                StatusService.StaticStatusService.authToken = token;
+                StatusService.StaticStatusService.authToken = new String(bytes);
                 StatusService.StaticStatusService.loggedIn = true;
 
-                return true;
+                existed = true;
             } catch (IOException e) {
                 e.printStackTrace();
             }
+            finally {
+                try {
+                    stream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
-        return false;
+        return existed;
     }
 
     /**
-    * Save the needed data into a text file for future auto-login.
-    * @param nick the user's nick which auth_token is to be saved.
-    * @param token the auth_token to be saved.
+    * Save the user's token into a text file for future auto-login.
     */
-    public void saveUser(String nick, String token) {
+    public void saveToken () throws FileNotFoundException {
+
         //SharedPreferences.Editor editor = getSharedPreferences(nick, MODE_PRIVATE).edit(); //MODE_PRIVATE is just: 0
-        //editor.putString(nick, token).commit();
-    
-        FileOutputStream stream = null;
+        //editor.putString("token", token).commit();
+
+        File path = Environment.getDataDirectory(); //The data directory of the application.
+        File file = new File(path, "token");
+        FileOutputStream stream = new FileOutputStream(file);
         try {
-            File path = Environment.getDataDirectory(); //The data directory of the application.
-            File file = new File(path, "user.txt");
-
-            if (!file.exists()) {
-                file.createNewFile();
-            }
-
-            stream = new FileOutputStream(file);
-
-            stream.write((nick + "\n" + token).getBytes());
+            stream.write((StatusService.StaticStatusService.authToken).getBytes()); //Created file if didn't existed before.
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -73,6 +80,70 @@ public class FileHandling {
                 e.printStackTrace();
             }
         }
+
     }
+    
+    /**
+    * Checks whether the pointed image (or any file...) exist in applications allocated Internal Storage.
+    * @param name the file's' name to be checked if exists..
+    * @return true if exists.
+    */
+    public boolean checkIfImageExists(String name) {
+        File path = Environment.getDataDirectory(); //The data directory of the application.
+        File file = new File(path, name);
+
+        if (file.exists()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    /**
+    * Saves the wanted image to the Applications data directory.
+    * @param name the file name.
+    * @param image the image to be saved.
+    */
+
+    public void saveImage(String name, Bitmap image) throws IOException{
+
+        File path = Environment.getDataDirectory(); //The data directory of the application.
+        File file = new File(path, name);
+        FileOutputStream stream = new FileOutputStream(file); //Created file if didn't existed before.
+        
+        try {
+            image.compress(Bitmap.CompressFormat.PNG, 100, stream); //Compress and save the image. TODO: Check if true?, that is if it worked out.
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                stream.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    
+   
+//     public void saveImage(String name, Bitmap image) {
+//         FileOutputStream stream = null;
+//         try {
+//              stream = StatusService.StaticStatusService.context.openFileOutput(Name, Context.MODE_PRIVATE); 
+//              image.compress(Bitmap.CompressFormat.PNG, 100, stream); //Compress and save the image.
+// 
+//             /*if (!file.exists()) {
+//                 file.createNewFile();
+//             */
+//            
+//         } catch (IOException e) {
+//             e.printStackTrace();
+//         } finally {
+//             try {
+//                 stream.close();
+//             } catch (IOException e) {
+//                 e.printStackTrace();
+//             }
+//         }
+//     }
 
 }

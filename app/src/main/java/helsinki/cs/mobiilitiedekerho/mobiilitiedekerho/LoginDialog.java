@@ -1,9 +1,9 @@
 package helsinki.cs.mobiilitiedekerho.mobiilitiedekerho;
 
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Point;
 import android.media.Image;
 import android.net.wifi.WifiConfiguration;
@@ -11,7 +11,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -31,17 +31,17 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class LoginFragment extends Fragment implements View.OnClickListener {
+public class LoginDialog extends AppCompatActivity {
 
     private Dialog login = null;
-/*
+
     public class listener implements TaskCompleted {
         @Override
         public void taskCompleted(String response) {
             authenticated(response);
         }
     }
-    */
+
     String url;
     View view;
     TextView emailTV;
@@ -50,57 +50,38 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     String password;
     AsyncTask hp = null;
     ImageButton loginIconButton;
-/*
+
     public void authenticated(String response) {
         StatusService.StaticStatusService.jc.newJson(response);
         //ArrayList<HashMap<String, String>> tasks = StatusService.StaticStatusService.jc.getObjects();
-        Log.i("status", StatusService.StaticStatusService.jc.getProperty("status"));
+        //Log.i("status", StatusService.StaticStatusService.jc.getProperty("status"));
         if (StatusService.StaticStatusService.sc.checkStatus()) {
-            Toast.makeText(LoginFragment.this.getActivity(), "Kirjautuminen onnistui!",
-                    Toast.LENGTH_LONG).show();
+            Toast toast = new Toast(this);
+            Toast.makeText(this, "Kirjautuminen onnistui!",
+                Toast.LENGTH_LONG).show();
             StatusService.setLoggedIn(true);
-            loginIconButton.setBackgroundResource(R.drawable.logout_icon);
-            login.dismiss();
+            this.finish();
+            //loginIconButton.setBackgroundResource(R.drawable.logout_icon);
         } else {
             // If username or password is incorrect empty TextViews and notify user.
             emailTV.setText("");
             passwordTV.setText("");
-            Toast.makeText(LoginFragment.this.getActivity(), "Sähköpostiosoite tai salasana väärin!",
-                    Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Sähköpostiosoite tai salasana väärin!",
+                Toast.LENGTH_LONG).show();
         }
+
     }
-*/
+
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        view = inflater.inflate(R.layout.login_button_fragment, null);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        //setContentView(R.layout.login_fragment);
         // Add onClickListener to the login button
-        loginIconButton =
-                (ImageButton) view.findViewById(R.id.login_icon_button);
-        if(StatusService.loggedIn()) {
-            loginIconButton.setBackgroundResource(R.drawable.logout_icon);
-        }else {
-            loginIconButton.setBackgroundResource(R.drawable.login_icon);
-        }
-        loginIconButton.setOnClickListener(this);
-
-        return view;
+        openLoginDialog();
     }
 
-    // When loginButton is pressed call method openLoginDialog
-    @Override
-    public void onClick(View v) {
-        if(StatusService.loggedIn()) { ((MainActivity) getActivity()).startUserActivity();
-        }
-        else {
-            Intent intent = new Intent(getActivity().getApplicationContext(), LoginDialog.class);
-            startActivity(intent);
-        }
-    }
-/*
     public void openLoginDialog() {
-        login = new Dialog(LoginFragment.this.getActivity());
+        login = new Dialog(this);
         // Set GUI of login screen
         login.setContentView(R.layout.login_fragment);
         login.setTitle("Kirjaudu mobiilitiedekerhoon");
@@ -111,22 +92,19 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 
         // Add buttons to the dialog and set onclicklisteners
         Button loginButton =
-                (Button) login.findViewById(R.id.login_button);
+            (Button) login.findViewById(R.id.login_button);
         loginButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 // On click of login button get content from TextViews and check if they match a valid user using ServerCommunication.
-                    email = emailTV.getText().toString();
-                    password = passwordTV.getText().toString();
+                email = emailTV.getText().toString();
+                password = passwordTV.getText().toString();
                 url = StatusService.StaticStatusService.sc.AuthenticateUser(email, password);
                 hp = new HTTPSRequester(new listener()).execute(url);
-
-
-
-        }});
+            }});
 
         Button registerButton =
-                (Button) login.findViewById(R.id.register_button);
+            (Button) login.findViewById(R.id.register_button);
         registerButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -135,8 +113,8 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                 url = StatusService.StaticStatusService.sc.CreateUser(email, password);
                 hp = new HTTPSRequester(new listener()).execute(url);
 
-                Toast.makeText(LoginFragment.this.getActivity(), "Tunnuksesi on nyt rekisteröity ja voit kirjautua sillä sisään",
-                        Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "Tunnuksesi on nyt rekisteröity ja voit kirjautua sillä sisään",
+                    Toast.LENGTH_LONG).show();
                 emailTV.setText("");
                 passwordTV.setText("");
             }
@@ -144,12 +122,13 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 
         // On click of cancel button close the dialog
         Button closePopupButton =
-                (Button) login.findViewById(R.id.cancel_button);
+            (Button) login.findViewById(R.id.cancel_button);
         closePopupButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                login.dismiss();
-                }
+                finish();
+                //login.dismiss();
+            }
 
         });
 
@@ -161,5 +140,5 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         login.show();
         login.getWindow().setAttributes(lp);
     }
-*/
+
 }

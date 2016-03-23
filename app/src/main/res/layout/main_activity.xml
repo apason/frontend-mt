@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+                android:orientation="horizontal"
+                android:layout_height="match_parent"
+                android:background="@drawable/frontpage">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:id="@+id/linearLayout"
+        android:layout_below="@+id/login_button_fragment">
+
+    </LinearLayout>
+
+
+
+    // Fragment responsible for registering
+    <FrameLayout
+        android:id="@+id/login_button_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    // Fragment responsible for entering the next screen
+    <FrameLayout
+        android:id="@+id/next_button_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:orientation="vertical"
+        android:layout_alignParentEnd="false"
+        android:layout_below="@+id/login_button_fragment"/>
+
+    // Fragment responsible for showing info text
+    <FrameLayout
+        android:id="@+id/info_button_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/next_button_fragment"/>
+
+    <FrameLayout
+        android:id="@+id/user_videos_button_fragment"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginBottom="55dp"
+        android:layout_marginRight="183dp"
+        android:layout_marginEnd="183dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"/>
+
+    <FrameLayout
+        android:id="@+id/login_dialog"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+</RelativeLayout>

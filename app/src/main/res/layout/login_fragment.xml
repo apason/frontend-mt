@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="600dp" android:layout_height="300dp"
-    >
+             android:background="#ffffff">
 
 
     <FrameLayout
@@ -11,7 +11,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_margin="30dp"
-        android:background="#b9000000"
+        android:background="#ffffff"
         android:id="@+id/login_popup">
 
         <EditText
@@ -25,11 +25,10 @@
         <EditText
             android:layout_width="324dp"
             android:layout_height="61dp"
-            android:inputType="textPassword"
             android:id="@+id/password"
             android:layout_gravity="left|center"
             android:background="#d9d9d9"
-            android:layout_margin="10dp" />
+            android:layout_margin="10dp" android:inputType="text"/>
 
         <TextView
             android:layout_width="185dp"
@@ -38,7 +37,7 @@
             android:id="@+id/usernameText"
             android:layout_gravity="right|top"
             android:layout_marginTop="30dp"
-            android:textColor="#d9d9d9"
+            android:textColor="#000000"
             android:textStyle="bold"
             android:textSize="18sp" />
 
@@ -48,14 +47,14 @@
             android:text="Salasana"
             android:id="@+id/passwordText"
             android:layout_gravity="right|center"
-            android:textColor="#d9d9d9"
+            android:textColor="#000000"
             android:textStyle="bold"
             android:textSize="18sp" />
 
         <Button
             android:layout_width="150dp"
             android:layout_height="61dp"
-            android:text="KIRJAUDU"
+            android:text="Kirjaudu"
             android:id="@+id/login_button"
             android:layout_gravity="left|bottom"
             android:layout_margin="10dp"
@@ -74,7 +73,7 @@
         <Button
             android:layout_width="150dp"
             android:layout_height="61dp"
-            android:text="PERUUTA"
+            android:text="Peruuta"
             android:id="@+id/cancel_button"
             android:layout_gravity="right|bottom"
             android:layout_margin="10dp"
