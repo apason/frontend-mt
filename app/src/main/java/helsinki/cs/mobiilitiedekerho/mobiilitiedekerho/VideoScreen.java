@@ -14,7 +14,9 @@ import android.webkit.WebViewClient;
 //import android.view.KeyEvent;
 //import android.util.Log;
 
-import helsinki.cs.mobiilitiedekerho.mobiilitiedekerho.R; //???!!
+import helsinki.cs.mobiilitiedekerho.mobiilitiedekerho.R; //See http://stackoverflow.com/a/16175711 for more details.
+import name.cpr.VideoEnabledWebChromeClient;
+import name.cpr.VideoEnabledWebView;
 
 public class VideoScreen extends Activity {
 

@@ -1,4 +1,4 @@
-package helsinki.cs.mobiilitiedekerho.mobiilitiedekerho;
+package name.cpr;
 
 import android.media.MediaPlayer;
 import android.view.SurfaceView;
