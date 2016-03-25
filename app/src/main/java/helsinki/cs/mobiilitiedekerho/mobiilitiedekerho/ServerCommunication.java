@@ -205,4 +205,51 @@ public class ServerCommunication  {
     }
     
 
+    /**
+    * Get all the likes of a task.
+    * @param taskId the id of the task of which likes are to be described.
+    */
+    public String DescribeTaskLikes(String taskId) {
+        return getResponse("DescribeTaskLikes", "task_id", taskId);
+    }
+    
+    /**
+    * Get all the likes of a asnwer.
+    * @param answerId the id of the answer of which likes are to be described.
+    */
+    public String DescribeAnswerLikes(String answerId) {
+        return getResponse("DescribeAnswerLikes", "answer_id", answerId);
+    }
+    
+    /**
+    * Get all the likes of the desired subuser.
+    * @param subUserId the id of the subuser which likes belonging to it are wanted to be retrieved.
+    */
+    public String DescribeSubUserLikes(String subUserId) {
+        return getResponse("DescribeSubUserLikes", "subuser_id", subUserId);
+    }
+    
+    /**
+    * Like the pointed task
+    * @param taskId the id of the task to be liked.
+    */
+    public String LikeTask(String taskId) {
+        return getResponse("LikeTask", "task_id", taskId);
+    }
+    
+    /**
+    * Like the pointed answer
+    * @param answerId the id of the asnwer to be liked.
+    */
+    public String LikeAnswer(String answerId)) {
+        return getResponse("LikeAnswer", "answer_id", answerId);
+    }
+    
+    /**
+    * Delete the pointed like.
+    * @param likeId the id of the like to be deleted.
+    */
+    public String DeleteLike(String likeId) {
+        return getResponse("DeleteLike", "like_id", likeId);
+    }
 }
