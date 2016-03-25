@@ -69,7 +69,7 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
                 ImageButton[] categorybutton = new ImageButton[categories.size()];
                 for (int i = 0; i < categories.size(); i++) {
                     try {
-                        Bitmap bitmap = BitmapFactory.decodeFile(Environment.getDataDirectory() + "/" + "category_icon" + categories.get(i).get("id"));
+                        Bitmap bitmap = BitmapFactory.decodeFile(StatusService.StaticStatusService.context.getFilesDir() + "/" + "category_icon" + categories.get(i).get("id"));
                         
                         categorybutton[i] = new ImageButton(getContext());
                         categorybutton[i].setImageBitmap(bitmap);
@@ -105,7 +105,7 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
         for (int i = 0; i < categories.size(); i++) {
             try {
                 String image = "category_icon" + categories.get(i).get("id");
-                //Bitmap bitmap = BitmapFactory.decodeFile(Environment.getDataDirectory() + "/" + "category_icon" + categories.get(i).get("id"));
+                //Bitmap bitmap = BitmapFactory.decodeFile(StatusService.StaticStatusService.context.getFilesDir() + "/" + "category_icon" + categories.get(i).get("id"));
                 int imageID = getResources().getIdentifier(image, "drawable", getActivity().getApplicationContext().getPackageName());
                 categorybutton[i] = new ImageButton(getContext());
                 categorybutton[i].setImageResource(imageID);
