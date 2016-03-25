@@ -27,7 +27,12 @@ public class FileHandling {
     */
     public boolean CheckIfSavedToken() throws FileNotFoundException{
 
-        File path = Environment.getDataDirectory(); //The data directory of the application.
+        File path = StatusService.StaticStatusService.context.getFilesDir(); //The data directory of the application.
+        //This is due to a racing condition bug in <4.4 where .getFilesDir() may return really rarely the root directory "/".
+        if(path.getAbsolutePath().equals("/")) {
+            path = StatusService.StaticStatusService.context.getFilesDir(); //Just try again!
+        }
+        
         File file = new File(path, "token");
         
         int length = (int) file.length();
@@ -66,7 +71,11 @@ public class FileHandling {
         //SharedPreferences.Editor editor = getSharedPreferences(nick, MODE_PRIVATE).edit(); //MODE_PRIVATE is just: 0
         //editor.putString("token", token).commit();
 
-        File path = Environment.getDataDirectory(); //The data directory of the application.
+        File path = StatusService.StaticStatusService.context.getFilesDir(); //The data directory of the application.
+        //This is due to a racing condition bug in <4.4 where .getFilesDir() may return really rarely the root directory "/".
+        if(path.getAbsolutePath().equals("/")) {
+            path = StatusService.StaticStatusService.context.getFilesDir(); //Just try again!
+        }
         File file = new File(path, "token");
         FileOutputStream stream = new FileOutputStream(file);
         try {
@@ -89,7 +98,11 @@ public class FileHandling {
     * @return true if exists.
     */
     public boolean checkIfImageExists(String name) {
-        File path = Environment.getDataDirectory(); //The data directory of the application.
+        File path = StatusService.StaticStatusService.context.getFilesDir(); //The data directory of the application.
+        //This is due to a racing condition bug in <4.4 where .getFilesDir() may return really rarely the root directory "/".
+        if(path.getAbsolutePath().equals("/")) {
+            path = StatusService.StaticStatusService.context.getFilesDir(); //Just try again!
+        }
         File file = new File(path, name);
 
         if (file.exists()) {
@@ -107,7 +120,11 @@ public class FileHandling {
 
     public void saveImage(String name, Bitmap image) throws IOException{
 
-        File path = Environment.getDataDirectory(); //The data directory of the application.
+        File path = StatusService.StaticStatusService.context.getFilesDir(); //The data directory of the application.
+        //This is due to a racing condition bug in <4.4 where .getFilesDir() may return really rarely the root directory "/".
+        if(path.getAbsolutePath().equals("/")) {
+            path = StatusService.StaticStatusService.context.getFilesDir(); //Just try again!
+        }
         File file = new File(path, name);
         FileOutputStream stream = new FileOutputStream(file); //Created file if didn't existed before.
         

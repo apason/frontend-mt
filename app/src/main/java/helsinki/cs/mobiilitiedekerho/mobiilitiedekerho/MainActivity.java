@@ -18,10 +18,14 @@ public class MainActivity extends AppCompatActivity {
         public void taskCompleted(String response) {
             StatusService.StaticStatusService.jc.newJson(response);
 
-            //this.checkStatus();
-
-            StatusService.StaticStatusService.authToken = StatusService.StaticStatusService.jc.getProperty("auth_token");
-            //StatusService.StaticStatusService.fh.saveToken();
+            if (StatusService.StaticStatusService.sc.checkStatus()) {
+                StatusService.StaticStatusService.authToken = StatusService.StaticStatusService.jc.getProperty("auth_token");
+                StatusService.StaticStatusService.fh.saveToken();
+            }
+            else {
+                //TODO: Problem getting an anonymous token from the server => ???
+            }
+            
             start();
         }
     }
@@ -31,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         new StatusService();
-        //StatusService.StaticStatusService.context = getApplicationContext(); //needed for saving files to internal memory. Maybe not, at least for now.
+        StatusService.StaticStatusService.context = getApplicationContext(); //needed for saving files to internal memory.
         
         //Saves the screen resolution for being able to show correct sized images.
         DisplayMetrics metrics = new DisplayMetrics();
@@ -40,11 +44,9 @@ public class MainActivity extends AppCompatActivity {
         StatusService.StaticStatusService.screenHeight = metrics.heightPixels;
 
         //Either saved token will be used (user auto-login) or an 'anonymous' one is retrieved for use.
-        /*
         if (StatusService.StaticStatusService.fh.CheckIfSavedToken()) {
             start();
         } else {
-            */
             String url = StatusService.StaticStatusService.sc.AnonymousSession();
             hp = new HTTPSRequester(new GotToken()).execute(url);
 
