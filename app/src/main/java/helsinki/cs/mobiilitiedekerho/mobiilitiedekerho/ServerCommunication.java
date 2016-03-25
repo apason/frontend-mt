@@ -208,7 +208,7 @@ public class ServerCommunication  {
     * Like the pointed answer
     * @param answerId the id of the asnwer to be liked.
     */
-    public String LikeAnswer(String answerId)) {
+    public String LikeAnswer(String answerId) {
         return getResponse("LikeAnswer", "answer_id", answerId);
     }
     
