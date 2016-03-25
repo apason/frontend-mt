@@ -197,10 +197,26 @@ public class ServerCommunication  {
     }
     
     /**
+    * Like the pointed task
+    * @param taskId the id of the task to be liked.
+    */
+    public String LikeTask(String taskId) {
+        return getResponse("LikeTask", "task_id", taskId);
+    }
+    
+    /**
+    * Like the pointed answer
+    * @param answerId the id of the asnwer to be liked.
+    */
+    public String LikeAnswer(String answerId)) {
+        return getResponse("LikeAnswer", "answer_id", answerId);
+    }
+    
+    /**
     * Delete the pointed like.
     * @param likeId the id of the like to be deleted.
     */
-    public String DeleteLike(String likeID) {
+    public String DeleteLike(String likeId) {
         return getResponse("DeleteLike", "like_id", likeId);
     }
 }
