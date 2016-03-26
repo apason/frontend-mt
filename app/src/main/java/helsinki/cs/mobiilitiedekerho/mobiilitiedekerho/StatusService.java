@@ -1,6 +1,7 @@
 package helsinki.cs.mobiilitiedekerho.mobiilitiedekerho;
 
 
+import android.content.Context;
 
 public class StatusService {
 
