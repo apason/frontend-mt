@@ -63,16 +63,16 @@ public class S3Download extends AsyncTask<String, Void, String> {
         return "failure";
     }
     
-    /*
-    protected void onPostExecute(String result) throws IOException {
+    
+    protected void onPostExecute(String result) {
     	if (!result.equals("success"))
     		act.taskCompleted(result);
     	
         for (int i = 0 ; i < imageNames.size() ; i++) {
-            StatusService.StaticStatusService.fh.saveImage(imageNames.get(i), bitmaps.get(i));
+            StatusService.StaticStatusService.fh.saveImage(imageNames.get(i), bitmaps.get(i)); //If returns false didn't worked out, => ????
         }
         
         act.taskCompleted(result);
     }
-    */
+    
 }

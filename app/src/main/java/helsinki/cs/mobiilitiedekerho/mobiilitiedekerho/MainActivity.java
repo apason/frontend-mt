@@ -21,10 +21,8 @@ public class MainActivity extends AppCompatActivity {
 
             if (StatusService.StaticStatusService.sc.checkStatus()) {
                 StatusService.StaticStatusService.authToken = StatusService.StaticStatusService.jc.getProperty("auth_token");
-                try {StatusService.StaticStatusService.fh.saveToken();}
-                catch (FileNotFoundException e) {
-                    Log.i("Try again", "Catch if you can");
-                    //ERROR MESSAGE OR SOMETHING ELSE HERE?
+                if (!StatusService.StaticStatusService.fh.saveToken()) {
+                	//ERROR MESSAGE OR SOMETHING ELSE HERE?
                 }
             }
             else {
@@ -48,12 +46,9 @@ public class MainActivity extends AppCompatActivity {
         StatusService.StaticStatusService.screenWidth = metrics.widthPixels;
         StatusService.StaticStatusService.screenHeight = metrics.heightPixels;
 
-        //Either saved token will be used (user auto-login) or an ';' one is retrieved for use.
+        //Either saved token will be used (user auto-login) or an anonymous-token is retrieved for use.
         boolean hasSavedToken = false;
-        try {if (StatusService.StaticStatusService.fh.CheckIfSavedToken()) hasSavedToken = true;}
-        catch (Exception e) {
-            hasSavedToken = false;
-        }
+        if (StatusService.StaticStatusService.fh.CheckIfSavedToken()) hasSavedToken = true;
         if (hasSavedToken) {
             start();
         } else {
