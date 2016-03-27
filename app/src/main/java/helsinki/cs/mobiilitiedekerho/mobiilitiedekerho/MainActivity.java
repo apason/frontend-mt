@@ -1,6 +1,9 @@
 package helsinki.cs.mobiilitiedekerho.mobiilitiedekerho;
 
 import android.content.Intent;
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
@@ -13,6 +16,7 @@ import java.io.FileNotFoundException;
 public class MainActivity extends AppCompatActivity {
 
     AsyncTask hp = null;
+    boolean triedCommunicatingAlready = false;
 
     public class GotToken implements TaskCompleted {
         @Override
@@ -22,11 +26,19 @@ public class MainActivity extends AppCompatActivity {
             if (StatusService.StaticStatusService.sc.checkStatus()) {
                 StatusService.StaticStatusService.authToken = StatusService.StaticStatusService.jc.getProperty("auth_token");
                 if (!StatusService.StaticStatusService.fh.saveToken()) {
-                	//ERROR MESSAGE OR SOMETHING ELSE HERE?
+                    //ERROR MESSAGE OR SOMETHING ELSE HERE? Note: The program cannot be used without a token.
                 }
             }
             else {
-                //TODO: Problem getting an anonymous token from the server => ???
+                if (triedCommunicatingAlready) {
+                    //PROBLEM COMUNICATING WITH THE SERVER.
+                }
+                else {
+                    //Try again just in case.
+                    triedCommunicatingAlready = true;
+                    String url = StatusService.StaticStatusService.sc.AnonymousSession();
+                    hp = new HTTPSRequester(new GotToken()).execute(url);
+                }
             }
 
             start();
@@ -36,7 +48,16 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        
+        
+        //Cheks if there is an internet connection aviable. Note:  isConnectedOrConnecting () is true if connection is being established, but hasn't already.
+        ConnectivityManager conMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        boolean internetConnectionAviable = conMgr.getActiveNetworkInfo() != null && conMgr.getActiveNetworkInfo().isAvailable() && conMgr.getActiveNetworkInfo().isConnected();
+        if (!internetConnectionAviable) {
+            //TODO: Something, since there is no internet connection.
+        }
+        
+        
         new StatusService();
         StatusService.StaticStatusService.context = getApplicationContext(); //needed for saving files to internal memory.
         
