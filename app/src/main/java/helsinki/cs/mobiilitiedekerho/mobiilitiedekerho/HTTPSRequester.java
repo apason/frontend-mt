@@ -8,6 +8,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.UnknownHostException;
 import java.net.MalformedURLException;
+import java.net.SocketTimeoutException;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.IOException;
@@ -37,6 +38,7 @@ public class HTTPSRequester extends AsyncTask<String, String, String> {
             URL url = new URL(urli[0]);
         
             urlConnection = (HttpURLConnection) url.openConnection();
+            urlConnection.setConnectTimeout (10000);
         
             //Creates a string (for JsonConverter to be parsed) from the connection's inputStream.
             BufferedReader br = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
@@ -47,8 +49,9 @@ public class HTTPSRequester extends AsyncTask<String, String, String> {
             }
             br.close();
             return sb.toString();
-        
-        
+        } catch (SocketTimeoutException e) {
+            Log.i("java.net.SocketTimeoutException", urli.toString()); //Unable to get response at a reasonable time.
+            e.printStackTrace();
         } catch (MalformedURLException e) {
             Log.i("MalformedURLException", urli.toString());
             e.printStackTrace();
