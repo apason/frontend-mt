@@ -11,7 +11,6 @@ import android.util.Log;
 import android.webkit.WebView;
 import android.webkit.WebSettings;
 import android.webkit.WebViewClient;
-//import android.view.KeyEvent;
 //import android.util.Log;
 
 import helsinki.cs.mobiilitiedekerho.mobiilitiedekerho.R; //See http://stackoverflow.com/a/16175711 for more details.
@@ -85,7 +84,15 @@ public class VideoScreen extends Activity {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN_MR1) {
             webView.getSettings().setMediaPlaybackRequiresUserGesture(false);
         }
-        webView.loadUrl("https://s3.eu-central-1.amazonaws.com/p60v4ow30312-tasks/videotag.html");
+        
+        
+        //Video loading code
+        Intent intent = getIntent();
+        String message = intent.getStringExtra(TaskActivity.EXTRA_MESSAGE_URL);
+        /*message kovakoodataan tilalle, niin lataa eri videoita*/
+        /* TEMPORAL */ String kovakoodataan = "https://s3.eu-central-1.amazonaws.com/p60v4ow30312-tasks/huuteluu"
+        String html_text = StatusService.StaticStatusService.VideoPlay_HtmlTemplate.replace("#video_src#", kovakoodataan);
+        webView.loadData(html_text, "text/html; charset=utf-8", "UTF-8"); //NOTE: Only "US-ASCII charset" is allowed/works in the html_text actually (android bug).
     }
 
     private class InsideWebViewClient extends WebViewClient {
@@ -116,15 +123,14 @@ public class VideoScreen extends Activity {
         }
     }
     
-    //Meidän projektin metodi.
+    //Meidän projektin metodi. Tarvii intenttina passatun URLn. Onko enää edes käytössä?
     public void playVideo() {
         Intent intent = getIntent();
         String message = intent.getStringExtra(TaskActivity.EXTRA_MESSAGE_URL);
 
-        // Navigate anywhere you want, but consider that this classes have only been tested on YouTube's mobile site NO VOI VITSI!
-        webView.loadUrl("https://s3.eu-central-1.amazonaws.com/p60v4ow30312-tasks/huuteluu");
-        
-        //webView.loadUrl(message);
+        //Video loading code
+        String html_text = StatusService.StaticStatusService.VideoPlay_HtmlTemplate.replace("#video_src#", message);
+        webView.loadData(html_text, "text/html; charset=utf-8", "UTF-8"); //NOTE: Only "US-ASCII charset" is allowed/works in the html_text actually (android bug).
     }
 
      // Stops showing and downloading of a video downloading if back button is pressed.
@@ -134,65 +140,6 @@ public class VideoScreen extends Activity {
          webView.stopLoading();
          webView.destroy();
      }
-
-
-
-
-//Mitä tämä edes tekee? Näyttää lähtevän pois videonäkymästä ja piilottaa vaan sen.    
-//     @Override
-//     public boolean onKeyDown(int keyCode, KeyEvent event) {
-// 
-//         if (keyCode == KeyEvent.KEYCODE_BACK) {
-//             if (mWebView.inCustomView()) {
-//                 mWebView.hideCustomView();
-//             //  mWebView.goBack();
-//                 //mWebView.goBack();
-//                 return true;
-//             }
-// 
-//         }
-//         return super.onKeyDown(keyCode, event);
-//     }
+     
 
 }
-
-
-
-/*THIS IS FOR DEMO:
-package helsinki.cs.mobiilitiedekerho.mobiilitiedekerho;
-
-        import android.app.Activity;
-        import android.content.Intent;
-        import android.os.Bundle;
-        import android.view.View;
-
-public class VideoScreen extends Activity {
-    View view;
-    HTML5WebView vView;
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        vView = new HTML5WebView(this);
-
-        Intent intent = getIntent();
-        String message = intent.getStringExtra(TaskActivity.EXTRA_MESSAGE_URL);
-        vView.loadUrl("https://s3.eu-central-1.amazonaws.com/p60v4ow30312-tasks/videotag.html");
-        setContentView(vView.getLayout());
-    }
-
-    //Onko samaa varten kun se tarkistus?, Ainoastaan jos halutaan, että jos avataan sama video toiste, muistaisi missä oltiin.
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        vView.saveState(outState);
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        vView.stopLoading();
-        vView.destroy();
-    }
-}
-*/
