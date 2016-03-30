@@ -245,9 +245,8 @@ public class ServerCommunication {
     }
 
     /**
-     * @param token
-     *
-     * @return TokenError if the token is not valid.
+     * Check if the token is a valid one that is it hasn't expired.
+     * @param token the auth_token to check.
      */
     public String CheckTokenIntegrity(String token) {
         return getResponse("CheckTokenIntegrity", "auth_token", token);
