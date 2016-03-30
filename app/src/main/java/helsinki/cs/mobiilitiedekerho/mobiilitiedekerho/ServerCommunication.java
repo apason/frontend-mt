@@ -241,5 +241,9 @@ public class ServerCommunication {
     public String LikeAnswer(String answerId) {
         return getResponse("LikeAnswer", "answer_id", answerId);
     }
+
+    public String CheckTokenIntegrity(String token) {
+        return getResponse("CheckTokenIntegrity", "auth_token", token);
+    }
 }
 

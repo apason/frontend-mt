@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
         }else if (StatusService.StaticStatusService.fh.CheckIfSavedToken()) {
             hasSavedToken = true;
         }
-        if (hasSavedToken) {
+        if (hasSavedToken && StatusService.StaticStatusService.sc.CheckTokenIntegrity(StatusService.StaticStatusService.authToken) == "success") {
             start();
         } else {
             String url = StatusService.StaticStatusService.sc.AnonymousSession();
