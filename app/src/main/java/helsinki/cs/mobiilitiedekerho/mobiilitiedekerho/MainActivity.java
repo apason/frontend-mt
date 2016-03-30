@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
         StatusService.StaticStatusService.screenWidth = metrics.widthPixels;
         StatusService.StaticStatusService.screenHeight = metrics.heightPixels;
 
-        //Either saved token will be used (user auto-login) or an anonymous-token is retrieved for use.
+        //Either saved token will be used (user auto-login) or an anonymous-token is retrieved for use. Token validity is also checked.
         boolean hasSavedToken = false;
         if (StatusService.StaticStatusService.authToken == null) {
             StatusService.StaticStatusService.authToken = "";

@@ -242,6 +242,11 @@ public class ServerCommunication {
         return getResponse("LikeAnswer", "answer_id", answerId);
     }
 
+    /**
+     * @param token
+     *
+     * @return TokenError if the token is not valid.
+     */
     public String CheckTokenIntegrity(String token) {
         return getResponse("CheckTokenIntegrity", "auth_token", token);
     }

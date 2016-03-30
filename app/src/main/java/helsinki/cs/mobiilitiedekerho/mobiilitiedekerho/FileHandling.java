@@ -28,7 +28,7 @@ public class FileHandling extends AppCompatActivity {
     /**
     * If there is saved the token for a user, loggedIn will be true.
     * Respectively authToken will become the user's auth_token.
-    * @return true if there is saved a token for an user and reading it worked out.
+    * @return true if there is a saved token for an user and reading it worked out.
     */
     public boolean CheckIfSavedToken() {
         SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
@@ -39,7 +39,7 @@ public class FileHandling extends AppCompatActivity {
     }
 
     /**
-    * Save the user's token into a text file for future auto-login.
+    * Save the user's token into SharedPreferences with key token for future auto-login.
     * @return true if saving the token worked out.
     */
     public boolean saveToken (Context context) {
