@@ -28,6 +28,7 @@ public class UserActivity extends AppCompatActivity {
             public void onClick(View v) {
                 StatusService.setLoggedIn(false);
                 Toast.makeText(getApplication(), "Olet nyt kirjautunut ulos Mobiilitiedekerhosta", Toast.LENGTH_LONG).show();
+                StatusService.StaticStatusService.authToken = null;
                 Intent intent = new Intent(getApplication(), MainActivity.class);
                 startActivity(intent);
             }
