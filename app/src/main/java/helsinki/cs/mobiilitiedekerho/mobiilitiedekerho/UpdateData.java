@@ -1,7 +1,6 @@
 package helsinki.cs.mobiilitiedekerho.mobiilitiedekerho;
 
 import android.os.AsyncTask;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -51,27 +50,4 @@ public class UpdateData {
         hp = new HTTPSRequester(new Update()).execute(url);
     }
 
-
-    /*
-        if (StatusService.StaticStatusService.sc.checkStatus()) {
-            StatusService.StaticStatusService.authToken = StatusService.StaticStatusService.jc.getProperty("auth_token");
-
-
-            if (!categories.isEmpty()) {
-                ArrayList<String> names = new ArrayList<String>();
-                String imageName = "category_icon";
-
-                for (int i = 0; i < categories.size(); i++) {
-                    imageName = "category_icon" + categories.get(i).get("id");
-                    if (!StatusService.StaticStatusService.fh.checkIfImageExists(imageName)) {
-                        names.add(imageName);
-                    }
-
-                }
-
-            }
-
-
-      */
-    }
 }

@@ -19,6 +19,8 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -128,6 +130,7 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
 
                 String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
                 String selectedFileName = "VID_" + timeStamp + ".mp4";
+
 
                 File selectedFile = new File(selectedVideoLocation.getLastPathSegment(), selectedFileName);
 

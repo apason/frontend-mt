@@ -1,6 +1,9 @@
 package helsinki.cs.mobiilitiedekerho.mobiilitiedekerho;
 
 import android.content.Intent;
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
@@ -9,13 +12,11 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity {
 
     AsyncTask hp = null;
-
+    boolean triedCommunicatingAlready = false;
 
     public class GotToken implements TaskCompleted {
         @Override
@@ -24,35 +25,21 @@ public class MainActivity extends AppCompatActivity {
 
             if (StatusService.StaticStatusService.sc.checkStatus()) {
                 StatusService.StaticStatusService.authToken = StatusService.StaticStatusService.jc.getProperty("auth_token");
-
-
-                try {StatusService.StaticStatusService.fh.saveToken();}
-                catch (FileNotFoundException e) {
-                    Log.i("Try again", "Catch if you can");
-                    //ERROR MESSAGE OR SOMETHING ELSE HERE?
+                if (!StatusService.StaticStatusService.fh.saveToken(getApplicationContext())) {
+                    //ERROR MESSAGE OR SOMETHING ELSE HERE? Note: The program cannot be used without a token.
                 }
             }
             else {
-                //TODO: Problem getting an anonymous token from the server => ???
+                if (triedCommunicatingAlready) {
+                    //PROBLEM COMUNICATING WITH THE SERVER.
+                }
+                else {
+                    //Try again just in case.
+                    triedCommunicatingAlready = true;
+                    String url = StatusService.StaticStatusService.sc.AnonymousSession();
+                    hp = new HTTPSRequester(new GotToken()).execute(url);
+                }
             }
-
-            start();
-        }
-    }
-
-    public class UpdateData implements TaskCompleted {
-        @Override
-        public void taskCompleted(String response) {
-
-            StatusService.StaticStatusService.jc.newJson(response);
-            ArrayList<HashMap<String, String>> categories = StatusService.StaticStatusService.jc.getObjects();
-        }
-            StatusService.StaticStatusService.jc.newJson(response);
-
-            if (StatusService.StaticStatusService.sc.checkStatus()) {
-                StatusService.StaticStatusService.authToken = StatusService.StaticStatusService.jc.getProperty("auth_token");
-
-
 
             start();
         }
@@ -62,22 +49,32 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+
+        //Cheks if there is an internet connection available. Note:  isConnectedOrConnecting () is true if connection is being established, but hasn't already.
+        ConnectivityManager conMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        boolean internetConnectionAviable = conMgr.getActiveNetworkInfo() != null && conMgr.getActiveNetworkInfo().isAvailable() && conMgr.getActiveNetworkInfo().isConnected();
+        if (!internetConnectionAviable) {
+            //TODO: Something, since there is no internet connection.
+        }
+
         new StatusService();
         StatusService.StaticStatusService.context = getApplicationContext(); //needed for saving files to internal memory.
-        
+
         //Saves the screen resolution for being able to show correct sized images.
         DisplayMetrics metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
         StatusService.StaticStatusService.screenWidth = metrics.widthPixels;
         StatusService.StaticStatusService.screenHeight = metrics.heightPixels;
 
-        //Either saved token will be used (user auto-login) or an ';' one is retrieved for use.
+        //Either saved token will be used (user auto-login) or an anonymous-token is retrieved for use. Token validity is also checked.
         boolean hasSavedToken = false;
-        try {if (StatusService.StaticStatusService.fh.CheckIfSavedToken()) hasSavedToken = true;}
-        catch (Exception e) {
-            hasSavedToken = false;
+        if (StatusService.StaticStatusService.authToken == null) {
+            StatusService.StaticStatusService.authToken = "";
+            StatusService.StaticStatusService.fh.saveToken(this);
+        }else if (StatusService.StaticStatusService.fh.CheckIfSavedToken()) {
+            hasSavedToken = true;
         }
-        if (hasSavedToken) {
+        if (hasSavedToken && StatusService.StaticStatusService.sc.CheckTokenIntegrity(StatusService.StaticStatusService.authToken) == "success") {
             start();
         } else {
             String url = StatusService.StaticStatusService.sc.AnonymousSession();
