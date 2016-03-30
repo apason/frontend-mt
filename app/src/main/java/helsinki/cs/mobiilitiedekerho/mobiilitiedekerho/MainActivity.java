@@ -9,10 +9,13 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity {
 
     AsyncTask hp = null;
+
 
     public class GotToken implements TaskCompleted {
         @Override
@@ -21,6 +24,8 @@ public class MainActivity extends AppCompatActivity {
 
             if (StatusService.StaticStatusService.sc.checkStatus()) {
                 StatusService.StaticStatusService.authToken = StatusService.StaticStatusService.jc.getProperty("auth_token");
+
+
                 try {StatusService.StaticStatusService.fh.saveToken();}
                 catch (FileNotFoundException e) {
                     Log.i("Try again", "Catch if you can");
@@ -30,6 +35,24 @@ public class MainActivity extends AppCompatActivity {
             else {
                 //TODO: Problem getting an anonymous token from the server => ???
             }
+
+            start();
+        }
+    }
+
+    public class UpdateData implements TaskCompleted {
+        @Override
+        public void taskCompleted(String response) {
+
+            StatusService.StaticStatusService.jc.newJson(response);
+            ArrayList<HashMap<String, String>> categories = StatusService.StaticStatusService.jc.getObjects();
+        }
+            StatusService.StaticStatusService.jc.newJson(response);
+
+            if (StatusService.StaticStatusService.sc.checkStatus()) {
+                StatusService.StaticStatusService.authToken = StatusService.StaticStatusService.jc.getProperty("auth_token");
+
+
 
             start();
         }

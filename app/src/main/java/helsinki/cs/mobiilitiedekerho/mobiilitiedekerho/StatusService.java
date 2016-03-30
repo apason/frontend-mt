@@ -3,10 +3,12 @@ package helsinki.cs.mobiilitiedekerho.mobiilitiedekerho;
 
 import android.content.Context;
 
+import java.util.ArrayList;
+
 public class StatusService {
 
     public static class StaticStatusService {
-    
+
         protected static final String urli = "https://mobiilitiedekerho.duckdns.org:27461/"; //The DNS name of the back-end server. Hard-coded and will always be.
         
         protected static final String s3Location = "https://s3.eu-central-1.amazonaws.com/"; //TODO: Not hard-coded but from the back-end server.
@@ -17,7 +19,9 @@ public class StatusService {
 
         protected static boolean loggedIn;
         protected static String authToken;
-        
+        protected static int [] categories;
+        protected static ArrayList [] task;
+
         protected static String currentNick; //the not-unique name of the current subuser.
         protected static String currentSubUserID;
     

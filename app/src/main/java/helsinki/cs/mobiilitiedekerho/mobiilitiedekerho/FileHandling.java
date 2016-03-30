@@ -2,6 +2,7 @@ package helsinki.cs.mobiilitiedekerho.mobiilitiedekerho;
 
 
 import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.util.Log;
 
 import java.io.File;
@@ -17,13 +18,67 @@ import java.io.IOException;
  */
 public class FileHandling {
 
+    public class listener implements TaskCompleted {
+        @Override
+        public void taskCompleted(String response) {
+
+        }
+    }
+
+    AsyncTask hp;
+
+    /**
+     * If there is saved the token for a user, loggedIn will be true.
+     * Respectively authToken will become the user's auth_token.
+     * @return true if there is a saved user.
+     */
+    public boolean checkIfValidToken(String response) throws FileNotFoundException{
+
+        File path = StatusService.StaticStatusService.context.getFilesDir(); //The data directory of the application.
+        //This is due to a racing condition bug in <4.4 where .getFilesDir() may return really rarely the root directory "/".
+        if(path.getAbsolutePath().equals("/")) {
+            path = StatusService.StaticStatusService.context.getFilesDir(); //Just try again!
+        }
+
+        File file = new File(path, "token");
+
+        int length = (int) file.length();
+        byte[] bytes = new byte[length];
+        FileInputStream stream = new FileInputStream(file);
+
+        boolean existed = false;
+
+        if (file.exists()) {
+            try {
+                stream.read(bytes);
+
+                StatusService.StaticStatusService.authToken = new String(bytes);
+                String url = StatusService.StaticStatusService.sc.S;
+                hp = new HTTPSRequester(new listener()).execute(url);
+
+                //StatusService.StaticStatusService.loggedIn = true;
+
+                existed = true;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            finally {
+                try {
+                    stream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return existed;
+    }
 
     /**
     * If there is saved the token for a user, loggedIn will be true.
     * Respectively authToken will become the user's auth_token.
     * @return true if there is a saved user.
     */
-    public boolean CheckIfSavedToken() throws FileNotFoundException{
+/*    public boolean CheckIfSavedToken() throws FileNotFoundException{
 
         File path = StatusService.StaticStatusService.context.getFilesDir(); //The data directory of the application.
         //This is due to a racing condition bug in <4.4 where .getFilesDir() may return really rarely the root directory "/".
@@ -60,7 +115,7 @@ public class FileHandling {
         }
         return existed;
     }
-
+*/
     /**
     * Save the user's token into a text file for future auto-login.
     */

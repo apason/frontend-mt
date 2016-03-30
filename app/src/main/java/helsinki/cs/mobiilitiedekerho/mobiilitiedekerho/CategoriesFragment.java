@@ -130,7 +130,6 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
         view = inflater.inflate(R.layout.categories_fragment, container, false);
 
         String url = StatusService.StaticStatusService.sc.DescribeCategories();
-        Log.i("token", url);
         hp = new HTTPSRequester(new categorieslistener()).execute(url);
 
         return view;
@@ -139,7 +138,6 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
     @Override
     public void onClick(View v) {
         String id = Integer.toString(v.getId());
-        Log.i("kuvaid", id);
         ((CategoriesActivity) getActivity()).startCategory(id);
     }
 }

@@ -3,12 +3,13 @@ package helsinki.cs.mobiilitiedekerho.mobiilitiedekerho;
 
 /**
  * A class for making urls for communicating with the back-end server via HTTPS.
- * All classes returns String contained the formed url corresponding to the API call + query.
+ * All classes returns String contained the formed url corresponding to the API call query.
  * Use the public methods for creating API-call urls to the server.
  * Also has checkStatus() for checking if response is allright.
  * Please note: Method descriptions are the descriptions of what the HTTP call will do, NOT what this actual method does.
  */
 public class ServerCommunication {
+
 
 
     /**
@@ -87,6 +88,7 @@ public class ServerCommunication {
      */
     public String DescribeTask(String taskId) {
         return getResponse("DescribeTask", "task_id", taskId);
+        //return getResponse("DescribeTask", "task_id", taskId);
     }
 
     /**
