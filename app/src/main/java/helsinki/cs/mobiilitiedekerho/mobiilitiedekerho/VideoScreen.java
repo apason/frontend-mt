@@ -90,7 +90,7 @@ public class VideoScreen extends Activity {
         Intent intent = getIntent();
         String message = intent.getStringExtra(TaskActivity.EXTRA_MESSAGE_URL);
         /*message kovakoodataan tilalle, niin lataa eri videoita*/
-        /* TEMPORAL */ String kovakoodataan = "https://s3.eu-central-1.amazonaws.com/p60v4ow30312-tasks/huuteluu"
+        /* TEMPORAL */ String kovakoodataan = "https://s3.eu-central-1.amazonaws.com/p60v4ow30312-tasks/huuteluu";
         String html_text = StatusService.StaticStatusService.VideoPlay_HtmlTemplate.replace("#video_src#", kovakoodataan);
         webView.loadData(html_text, "text/html; charset=utf-8", "UTF-8"); //NOTE: Only "US-ASCII charset" is allowed/works in the html_text actually (android bug).
     }

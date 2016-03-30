@@ -50,7 +50,7 @@ public class HTTPSRequester extends AsyncTask<String, String, String> {
             br.close();
             return sb.toString();
         } catch (SocketTimeoutException e) {
-            Log.i("java.net.SocketTimeoutException", urli.toString()); //Unable to get response at a reasonable time.
+            Log.i("SocketTimeoutException", urli.toString()); //Unable to get response at a reasonable time.
             e.printStackTrace();
         } catch (MalformedURLException e) {
             Log.i("MalformedURLException", urli.toString());

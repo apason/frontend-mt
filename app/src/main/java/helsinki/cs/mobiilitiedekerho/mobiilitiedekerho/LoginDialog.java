@@ -1,35 +1,18 @@
 package helsinki.cs.mobiilitiedekerho.mobiilitiedekerho;
 
 
-import android.app.Activity;
 import android.app.Dialog;
-import android.content.Context;
-import android.graphics.Point;
-import android.media.Image;
-import android.net.wifi.WifiConfiguration;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View.OnClickListener;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.FrameLayout;
-import android.widget.ImageButton;
-import android.widget.PopupWindow;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 
 public class LoginDialog extends AppCompatActivity {
 
@@ -49,19 +32,16 @@ public class LoginDialog extends AppCompatActivity {
     String email;
     String password;
     AsyncTask hp = null;
-    ImageButton loginIconButton;
 
     public void authenticated(String response) {
         StatusService.StaticStatusService.jc.newJson(response);
         //ArrayList<HashMap<String, String>> tasks = StatusService.StaticStatusService.jc.getObjects();
         //Log.i("status", StatusService.StaticStatusService.jc.getProperty("status"));
         if (StatusService.StaticStatusService.sc.checkStatus()) {
-            Toast toast = new Toast(this);
             Toast.makeText(this, "Kirjautuminen onnistui!",
                 Toast.LENGTH_LONG).show();
             StatusService.setLoggedIn(true);
             this.finish();
-            //loginIconButton.setBackgroundResource(R.drawable.logout_icon);
         } else {
             // If username or password is incorrect empty TextViews and notify user.
             emailTV.setText("");
@@ -113,7 +93,7 @@ public class LoginDialog extends AppCompatActivity {
                 url = StatusService.StaticStatusService.sc.CreateUser(email, password);
                 hp = new HTTPSRequester(new listener()).execute(url);
 
-                Toast.makeText(getApplicationContext(), "Tunnuksesi on nyt rekisteröity ja voit kirjautua sillä sisään",
+                Toast.makeText(getApplicationContext(), "Tunnuksesi on nyt rekisteröity ja voit käyttää sitä jatkossa sisäänkirjautumiseen",
                     Toast.LENGTH_LONG).show();
                 emailTV.setText("");
                 passwordTV.setText("");
@@ -127,7 +107,6 @@ public class LoginDialog extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 finish();
-                //login.dismiss();
             }
 
         });

@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
 
             if (StatusService.StaticStatusService.sc.checkStatus()) {
                 StatusService.StaticStatusService.authToken = StatusService.StaticStatusService.jc.getProperty("auth_token");
-                if (!StatusService.StaticStatusService.fh.saveToken()) {
+                if (!StatusService.StaticStatusService.fh.saveToken(getApplicationContext())) {
                     //ERROR MESSAGE OR SOMETHING ELSE HERE? Note: The program cannot be used without a token.
                 }
             }
@@ -48,19 +48,18 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
-        
-        //Cheks if there is an internet connection aviable. Note:  isConnectedOrConnecting () is true if connection is being established, but hasn't already.
+
+
+        //Cheks if there is an internet connection available. Note:  isConnectedOrConnecting () is true if connection is being established, but hasn't already.
         ConnectivityManager conMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         boolean internetConnectionAviable = conMgr.getActiveNetworkInfo() != null && conMgr.getActiveNetworkInfo().isAvailable() && conMgr.getActiveNetworkInfo().isConnected();
         if (!internetConnectionAviable) {
             //TODO: Something, since there is no internet connection.
         }
-        
-        
+
         new StatusService();
         StatusService.StaticStatusService.context = getApplicationContext(); //needed for saving files to internal memory.
-        
+
         //Saves the screen resolution for being able to show correct sized images.
         DisplayMetrics metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
@@ -69,7 +68,12 @@ public class MainActivity extends AppCompatActivity {
 
         //Either saved token will be used (user auto-login) or an anonymous-token is retrieved for use.
         boolean hasSavedToken = false;
-        if (StatusService.StaticStatusService.fh.CheckIfSavedToken()) hasSavedToken = true;
+        if (StatusService.StaticStatusService.authToken == null) {
+            StatusService.StaticStatusService.authToken = "";
+            StatusService.StaticStatusService.fh.saveToken(this);
+        }else if (StatusService.StaticStatusService.fh.CheckIfSavedToken()) {
+            hasSavedToken = true;
+        }
         if (hasSavedToken) {
             start();
         } else {

@@ -1,7 +1,11 @@
 package helsinki.cs.mobiilitiedekerho.mobiilitiedekerho;
 
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.net.wifi.WifiConfiguration;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import java.io.File;
@@ -15,7 +19,10 @@ import java.io.IOException;
  * Class for managing all kind of file saving and loading. WIP
  * TODO: Should token saving use SharedPreferences?. Many users supported? Specially many sub-users extra stuff?
  */
-public class FileHandling {
+public class FileHandling extends AppCompatActivity {
+
+
+    String token = "token";
 
 
     /**
@@ -24,76 +31,23 @@ public class FileHandling {
     * @return true if there is saved a token for an user and reading it worked out.
     */
     public boolean CheckIfSavedToken() {
-    	
-    	boolean existed = false;
+        SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
+        String tokenValue = sharedPref.getString(token, "Tokenia ei löydy");
+        Log.i("tokeni", tokenValue);
+        return  tokenValue == "Tokenia ei löydy";
 
-        FileInputStream stream  = null;
-        try {
-            File path = StatusService.StaticStatusService.context.getFilesDir(); //The data directory of the application.
-            //This is due to a racing condition bug in <4.4 where .getFilesDir() may return really rarely the root directory "/".
-            if(path.getAbsolutePath().equals("/")) {
-                path = StatusService.StaticStatusService.context.getFilesDir(); //Just try again!
-            }
-            
-            File file = new File(path, "token");
-            if (file.exists()) {
-               	int length = (int) file.length();
-               	byte[] bytes = new byte[length];
-               	stream = new FileInputStream(file);
-               
-               	stream.read(bytes);
-               
-               	StatusService.StaticStatusService.authToken = new String(bytes);
-               	StatusService.StaticStatusService.loggedIn = true;
-               	existed = true;
-            }
-        } catch (Exception e) {
-        	Log.i("Problem while reading token.", "");
-            e.printStackTrace();
-        }
-        finally {
-            try {
-               	if (stream != null) stream.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        
-        return existed;
     }
 
     /**
     * Save the user's token into a text file for future auto-login.
     * @return true if saving the token worked out.
     */
-    public boolean saveToken () {
-    	
-    	boolean workedOut = false;
-
-    	FileOutputStream stream = null;
-        try {
-            File path = StatusService.StaticStatusService.context.getFilesDir(); //The data directory of the application.
-            //This is due to a racing condition bug in <4.4 where .getFilesDir() may return really rarely the root directory "/".
-            if(path.getAbsolutePath().equals("/")) {
-                path = StatusService.StaticStatusService.context.getFilesDir(); //Just try again!
-            }
-            File file = new File(path, "token");
-            stream = new FileOutputStream(file);
-            stream.write((StatusService.StaticStatusService.authToken).getBytes()); //Created file if didn't existed before.
-            workedOut = true;
-        } catch (Exception e) {
-        	Log.i("Problem while saving token", "");
-            e.printStackTrace();
-        } finally {
-            try {
-            	if (stream != null) stream.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        
-        return workedOut;
-
+    public boolean saveToken (Context context) {
+        SharedPreferences sharedPref = context.getSharedPreferences("helsinki.cs.mobiilitiedekerho.mobiilitiedekerho",Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString(token, StatusService.StaticStatusService.authToken);
+        Log.i("tokeni", StatusService.StaticStatusService.authToken);
+        return editor.commit();
     }
     
     /**
