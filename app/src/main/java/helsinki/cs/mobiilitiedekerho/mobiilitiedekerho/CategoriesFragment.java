@@ -32,7 +32,9 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
         @Override
         public void taskCompleted(String response) {
             Log.i("responssi", response);
-            categories2(response);
+            if (response.equals("succes")) categories2(response);
+            else if (response.equals("failure")) /*TODO: Try again?*/;
+            else /*TODO: Check which images couldn't be saved and try to do their loading again?*/;
         }
     }
 
