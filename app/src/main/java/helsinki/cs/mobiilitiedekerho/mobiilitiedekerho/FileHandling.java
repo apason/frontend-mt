@@ -98,13 +98,14 @@ public class FileHandling extends AppCompatActivity {
             
             stream = new FileOutputStream(file);
             
-            boolean savedAccomplished = image.compress(Bitmap.CompressFormat.PNG, 100, stream); //Compress and save the image.
+            boolean savedAccomplished = image.compress(Bitmap.CompressFormat.PNG, 100, stream); //Compress and save the image as png.
             
+            //Sometimes it is worth to try again. This does remove the previous file and create a new FileOutputStream which is used to save (again) the image.
             if (!savedAccomplished) {
-                stream = new FileOutputStream(file);
-                StatusService.StaticStatusService.context.deleteFile(name); //Deletes the existing file just in case. Otherwise truncating may mess up things.
+                StatusService.StaticStatusService.context.deleteFile(name);
                 file.createNewFile();
-                savedAccomplished = image.compress(Bitmap.CompressFormat.PNG, 100, stream); //Sometimes it is worth to try again.
+                stream = new FileOutputStream(file);
+                savedAccomplished = image.compress(Bitmap.CompressFormat.PNG, 100, stream);
             }
             
             workedOut = savedAccomplished;
