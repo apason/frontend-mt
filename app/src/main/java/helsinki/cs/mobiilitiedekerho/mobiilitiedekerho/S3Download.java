@@ -58,7 +58,7 @@ public class S3Download extends AsyncTask<String, Void, String> {
             Log.i("SomeError", "");
             e.printStackTrace();
         } finally {
-            urlConnection.disconnect();
+            if (urlConnection != null) urlConnection.disconnect();
         }
 
         return "failure";

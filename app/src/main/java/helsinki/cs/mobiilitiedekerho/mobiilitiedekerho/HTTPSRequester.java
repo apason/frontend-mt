@@ -65,7 +65,7 @@ public class HTTPSRequester extends AsyncTask<String, String, String> {
             Log.i("SomeError", urli.toString());
             e.printStackTrace();
         } finally {
-            urlConnection.disconnect();
+            if (urlConnection != null) urlConnection.disconnect();
         }
         
         return "{\"status\":\"CommunicationWithServerError\"}"; //A problem has been encountered while either calling the API or the response its damaged in some way (strange if data checking...) => Some special precautions to take?

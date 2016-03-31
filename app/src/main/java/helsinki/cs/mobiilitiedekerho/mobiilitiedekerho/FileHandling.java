@@ -101,8 +101,10 @@ public class FileHandling extends AppCompatActivity {
             boolean savedAccomplished = image.compress(Bitmap.CompressFormat.PNG, 100, stream); //Compress and save the image.
             
             if (!savedAccomplished) {
+                stream = new FileOutputStream(file);
                 StatusService.StaticStatusService.context.deleteFile(name); //Deletes the existing file just in case. Otherwise truncating may mess up things.
-                savedAccomplished = image.compress(Bitmap.CompressFormat.PNG, 100, stream); //Sometimes it is worth a try.
+                file.createNewFile();
+                savedAccomplished = image.compress(Bitmap.CompressFormat.PNG, 100, stream); //Sometimes it is worth to try again.
             }
             
             workedOut = savedAccomplished;
