@@ -101,6 +101,7 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
         StatusService.StaticStatusService.jc.newJson(response);
         ArrayList<HashMap<String, String>> categories = StatusService.StaticStatusService.jc.getObjects();
         Log.i("kategoriat", String.valueOf(categories.size()));
+
         ImageButton[] categorybutton = new ImageButton[categories.size()];
         for (int i = 0; i < categories.size(); i++) {
             try {
@@ -128,7 +129,7 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.categories_fragment, container, false);
-
+        Log.i("mitah", Integer.toString(StatusService.StaticStatusService.categories.length));
         String url = StatusService.StaticStatusService.sc.DescribeCategories();
         hp = new HTTPSRequester(new categorieslistener()).execute(url);
 

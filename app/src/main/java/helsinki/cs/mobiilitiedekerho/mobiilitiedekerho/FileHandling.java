@@ -27,7 +27,7 @@ public class FileHandling extends AppCompatActivity {
 
     /**
      * If there is saved the token for a user, loggedIn will be true.
-     * Respectively authToken will become the user's auth_token.
+     * R         espectively authToken will become the user's auth_token.
      * @return true if there is a saved token for an user and reading it worked out.
      */
     public boolean CheckIfSavedToken() {

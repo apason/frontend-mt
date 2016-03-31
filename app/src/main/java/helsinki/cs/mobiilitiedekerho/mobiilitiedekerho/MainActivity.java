@@ -14,7 +14,9 @@ import android.util.DisplayMetrics;
 public class MainActivity extends AppCompatActivity {
 
     AsyncTask hp = null;
+    UpdateData ud;
     boolean triedCommunicatingAlready = false;
+
 
     public class GotToken implements TaskCompleted {
         @Override
@@ -47,16 +49,16 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
-    
+
     /**
-    * A listener hat checks teh response about token integrity.
-    * If it is "no good", then it gets an anonymous one. 
-    */
+     * A listener hat checks teh response about token integrity.
+     * If it is "no good", then it gets an anonymous one.
+     */
     public class CheckToken implements TaskCompleted {
         @Override
         public void taskCompleted(String response) {
             StatusService.StaticStatusService.jc.newJson(response);
-            
+
             if (!StatusService.StaticStatusService.sc.checkStatus()) {
                 String url = StatusService.StaticStatusService.sc.AnonymousSession();
                 hp = new HTTPSRequester(new GotToken()).execute(url);
@@ -67,7 +69,6 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
-    
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,7 +120,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void start() {
+        //while (StatusService.StaticStatusService.authToken.isEmpty())
         setContentView(R.layout.main_activity);
+        ud = new UpdateData();
+        ud.updateCategories();
+
         LoginFragment lf = new LoginFragment();
         UserVideosFragment uvf = new UserVideosFragment();
         InfoTextFragment uif = new InfoTextFragment();
@@ -134,6 +139,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void startCategories() {
+        //ArrayList taskit = StatusService.StaticStatusService.task[pituus];
+
+        ud.updateTasks();
         Intent intent = new Intent(this, CategoriesActivity.class);
         startActivity(intent);
     }
