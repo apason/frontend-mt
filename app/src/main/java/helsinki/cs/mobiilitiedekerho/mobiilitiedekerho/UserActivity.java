@@ -1,6 +1,7 @@
 package helsinki.cs.mobiilitiedekerho.mobiilitiedekerho;
 
 import android.app.AlertDialog;
+import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -41,6 +42,17 @@ public class UserActivity extends AppCompatActivity {
                 showUserAgreement();
             }
 
+        });
+
+        Button subUserButton = (Button) findViewById(R.id.addsubuserbutton);
+        subUserButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SubUserFragment suf = new SubUserFragment();
+                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                ft.add(R.id.sub_user_fragment, suf);
+                ft.commit();
+            }
         });
     }
 

@@ -65,7 +65,7 @@ public class TasksFragment extends Fragment implements View.OnClickListener {
             
             //Either all images are in memory or some must be downloaded from S3.
             if (!names.isEmpty()) {
-                //NOTE: The code works only as simple if S3 has saved the the needed images in a single bucket with the same naming convency.
+                //NOTE: The code works only as simple if S3 has saved the the needed images in a single bucket with the same naming convention.
                 new S3Download(new taskImgsDownloaded(), names).execute();
             } 
             else {

@@ -1,5 +1,7 @@
 package helsinki.cs.mobiilitiedekerho.mobiilitiedekerho;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -43,13 +45,12 @@ public class JsonConverter {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
 
     private void parseJson(JsonReader reader) throws IOException
     {
-        //json object allways starts with "{"
+        //json object always starts with "{"
         reader.beginObject();
 
         while (reader.hasNext()) {
