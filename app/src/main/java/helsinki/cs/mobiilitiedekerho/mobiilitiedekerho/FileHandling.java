@@ -4,13 +4,10 @@ package helsinki.cs.mobiilitiedekerho.mobiilitiedekerho;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.net.wifi.WifiConfiguration;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
@@ -27,7 +24,7 @@ public class FileHandling extends AppCompatActivity {
 
     /**
      * If there is saved the token for a user, loggedIn will be true.
-     * R         espectively authToken will become the user's auth_token.
+     * Respectively authToken will become the user's auth_token.
      * @return true if there is a saved token for an user and reading it worked out.
      */
     public boolean CheckIfSavedToken() {
