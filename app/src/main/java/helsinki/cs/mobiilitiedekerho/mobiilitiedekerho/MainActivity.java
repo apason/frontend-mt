@@ -12,11 +12,14 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
     AsyncTask hp = null;
+    UpdateData ud;
     boolean triedCommunicatingAlready = false;
+
 
     public class GotToken implements TaskCompleted {
         @Override
@@ -25,9 +28,7 @@ public class MainActivity extends AppCompatActivity {
 
             if (StatusService.StaticStatusService.sc.checkStatus()) {
                 StatusService.StaticStatusService.authToken = StatusService.StaticStatusService.jc.getProperty("auth_token");
-                if (!StatusService.StaticStatusService.fh.saveToken(getApplicationContext())) {
-                    //ERROR MESSAGE OR SOMETHING ELSE HERE? Note: The program cannot be used without a token.
-                }
+                start();
             }
             else {
                 if (triedCommunicatingAlready) {
@@ -40,10 +41,29 @@ public class MainActivity extends AppCompatActivity {
                     hp = new HTTPSRequester(new GotToken()).execute(url);
                 }
             }
-
-            start();
         }
     }
+
+    /**
+     * A listener hat checks teh response about token integrity.
+     * If it is "no good", then it gets an anonymous one.
+     */
+    public class CheckToken implements TaskCompleted {
+        @Override
+        public void taskCompleted(String response) {
+            StatusService.StaticStatusService.jc.newJson(response);
+
+            if (!StatusService.StaticStatusService.sc.checkStatus()) {
+                String url = StatusService.StaticStatusService.sc.AnonymousSession();
+                hp = new HTTPSRequester(new GotToken()).execute(url);
+            }
+            else {
+                StatusService.setLoggedIn(true);
+                start();
+            }
+        }
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,15 +87,9 @@ public class MainActivity extends AppCompatActivity {
         StatusService.StaticStatusService.screenHeight = metrics.heightPixels;
 
         //Either saved token will be used (user auto-login) or an anonymous-token is retrieved for use. Token validity is also checked.
-        boolean hasSavedToken = false;
-        if (StatusService.StaticStatusService.authToken == null) {
-            StatusService.StaticStatusService.authToken = "";
-            StatusService.StaticStatusService.fh.saveToken(this);
-        }else if (StatusService.StaticStatusService.fh.CheckIfSavedToken()) {
-            hasSavedToken = true;
-        }
-        if (hasSavedToken && StatusService.StaticStatusService.sc.CheckTokenIntegrity(StatusService.StaticStatusService.authToken) == "success") {
-            start();
+        if (StatusService.StaticStatusService.fh.CheckIfSavedToken()) {
+            String url = StatusService.StaticStatusService.sc.CheckTokenIntegrity(StatusService.StaticStatusService.authToken);
+            hp = new HTTPSRequester(new CheckToken()).execute(url);
         } else {
             String url = StatusService.StaticStatusService.sc.AnonymousSession();
             hp = new HTTPSRequester(new GotToken()).execute(url);
@@ -91,7 +105,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void start() {
+        //while (StatusService.StaticStatusService.authToken.isEmpty())
         setContentView(R.layout.main_activity);
+        ud = new UpdateData();
+        ud.updateCategories();
+
         LoginFragment lf = new LoginFragment();
         UserVideosFragment uvf = new UserVideosFragment();
         InfoTextFragment uif = new InfoTextFragment();
@@ -106,6 +124,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void startCategories() {
+        //ArrayList taskit = StatusService.StaticStatusService.task[pituus];
+
+        ud.updateTasks();
         Intent intent = new Intent(this, CategoriesActivity.class);
         startActivity(intent);
     }
