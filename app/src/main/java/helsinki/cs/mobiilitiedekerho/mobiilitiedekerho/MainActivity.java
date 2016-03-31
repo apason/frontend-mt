@@ -56,14 +56,12 @@ public class MainActivity extends AppCompatActivity {
             if (!StatusService.StaticStatusService.sc.checkStatus()) {
                 String url = StatusService.StaticStatusService.sc.AnonymousSession();
                 hp = new HTTPSRequester(new GotToken()).execute(url);
-            }
-            else {
+            } else {
                 StatusService.setLoggedIn(true);
                 start();
             }
         }
     }
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,12 +78,14 @@ public class MainActivity extends AppCompatActivity {
         new StatusService();
         StatusService.StaticStatusService.context = getApplicationContext(); //needed for saving files to internal memory.
 
+        
         //Saves the screen resolution for being able to show correct sized images.
         DisplayMetrics metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
         StatusService.StaticStatusService.screenWidth = metrics.widthPixels;
         StatusService.StaticStatusService.screenHeight = metrics.heightPixels;
 
+        
         //Either saved token will be used (user auto-login) or an anonymous-token is retrieved for use. Token validity is also checked.
         if (StatusService.StaticStatusService.fh.CheckIfSavedToken()) {
             String url = StatusService.StaticStatusService.sc.CheckTokenIntegrity(StatusService.StaticStatusService.authToken);
@@ -94,6 +94,7 @@ public class MainActivity extends AppCompatActivity {
             String url = StatusService.StaticStatusService.sc.AnonymousSession();
             hp = new HTTPSRequester(new GotToken()).execute(url);
         }
+        
     }
 
 

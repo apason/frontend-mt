@@ -16,8 +16,8 @@ import java.io.IOException;
 
 
 /**
- * Class for managing all kind of file saving and loading. WIP
- * TODO: Should token saving use SharedPreferences?. Many users supported? Specially many sub-users extra stuff?
+ * Class for managing all kind of file saving and loading.
+ * TODO: Specially many sub-users extra stuff?
  */
 public class FileHandling extends AppCompatActivity {
 
@@ -27,14 +27,19 @@ public class FileHandling extends AppCompatActivity {
 
     /**
      * If there is saved the token for a user, loggedIn will be true.
-     * Respectively authToken will become the user's auth_token.
+     * R         espectively authToken will become the user's auth_token.
      * @return true if there is a saved token for an user and reading it worked out.
      */
     public boolean CheckIfSavedToken() {
-        SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = StatusService.StaticStatusService.context.getSharedPreferences("mobiilitiedekerho",Context.MODE_PRIVATE);
         String tokenValue = sharedPref.getString(token, "Tokenia ei löydy");
         Log.i("tokeni", tokenValue);
-        return  tokenValue == "Tokenia ei löydy";
+        if (tokenValue.equals("Tokenia ei löydy"))
+            return false;
+        else {
+            StatusService.StaticStatusService.authToken = tokenValue;
+            return true;
+        }
 
     }
 
@@ -42,8 +47,8 @@ public class FileHandling extends AppCompatActivity {
      * Save the user's token into SharedPreferences with key token for future auto-login.
      * @return true if saving the token worked out.
      */
-    public boolean saveToken (Context context) {
-        SharedPreferences sharedPref = context.getSharedPreferences("helsinki.cs.mobiilitiedekerho.mobiilitiedekerho",Context.MODE_PRIVATE);
+    public boolean saveToken () {
+        SharedPreferences sharedPref = StatusService.StaticStatusService.context.getSharedPreferences("mobiilitiedekerho",Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString(token, StatusService.StaticStatusService.authToken);
         Log.i("tokeni", StatusService.StaticStatusService.authToken);
@@ -58,7 +63,7 @@ public class FileHandling extends AppCompatActivity {
     public boolean checkIfImageExists(String name) {
 
         File path = StatusService.StaticStatusService.context.getFilesDir(); //The data directory of the application.
-        //This is due to a racing condition bug in <4.4 where .getFilesDir() may return really rarely the root directory "/".
+        //This is due to a racing condition bug in <4.4 where .getFilesDir() may return realy rarely the root directory "/".
         if(path.getAbsolutePath().equals("/")) {
             path = StatusService.StaticStatusService.context.getFilesDir(); //Just try again!
         }

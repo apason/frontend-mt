@@ -21,8 +21,6 @@ public class StatusService {
 
         protected static boolean loggedIn;
         protected static String authToken;
-        protected static int [] categories;
-        protected static ArrayList [] task;
 
         protected static String currentNick; //the not-unique name of the current subuser.
         protected static String currentSubUserID;
@@ -32,6 +30,10 @@ public class StatusService {
         //Note: These variables declare the resolution of the screen in pixels, in this APP is the landscape orientation (width is the larger).
         protected static int screenWidth;
         protected static int screenHeight;
+        
+        
+        protected static int [] categories;
+        protected static ArrayList [] task;
     
     
         protected static final JsonConverter jc = new JsonConverter();
