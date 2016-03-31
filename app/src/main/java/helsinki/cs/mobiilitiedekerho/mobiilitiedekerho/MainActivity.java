@@ -1,17 +1,15 @@
 package helsinki.cs.mobiilitiedekerho.mobiilitiedekerho;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Context;
 import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
-import android.util.Log;
-
-import java.io.FileNotFoundException;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -29,7 +27,16 @@ public class MainActivity extends AppCompatActivity {
             }
             else {
                 if (triedCommunicatingAlready) {
-                    //PROBLEM COMUNICATING WITH THE SERVER.
+                    //Show the user an alert dialog notifying there is a problem with connecting to the server.
+                    AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
+                    alert.setTitle("Tietoliikennevirhe");
+                    alert.setMessage("Valitettavasti Mobiilitiedekerho ei saa tällä hetkellä yhteyttä palvelimeen. Yritä myöhemmin uudestaan.");
+                    alert.setNegativeButton("Sulje", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            dialog.dismiss();
+                        }
+                    });
+                    alert.show();
                 }
                 else {
                     //Try again just in case.
@@ -55,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
                 hp = new HTTPSRequester(new GotToken()).execute(url);
             }
             else {
-                StatusService.StaticStatusService.setLoggedIn(true);
+                StatusService.setLoggedIn(true);
                 start();
             }
         }
@@ -66,12 +73,19 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
-        //Cheks if there is an internet connection available. Note:  isConnectedOrConnecting () is true if connection is being established, but hasn't already.
+        //Checks if there is an internet connection available. Note:  isConnectedOrConnecting () is true if connection is being established, but hasn't already.
         ConnectivityManager conMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        boolean internetConnectionAviable = conMgr.getActiveNetworkInfo() != null && conMgr.getActiveNetworkInfo().isAvailable() && conMgr.getActiveNetworkInfo().isConnected();
-        if (!internetConnectionAviable) {
-            //TODO: Something, since there is no internet connection.
+        boolean internetConnectionAvailable = conMgr.getActiveNetworkInfo() != null && conMgr.getActiveNetworkInfo().isAvailable() && conMgr.getActiveNetworkInfo().isConnected();
+        if (!internetConnectionAvailable) {
+            AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
+            alert.setTitle("Tietoliikennevirhe");
+            alert.setMessage("Laite ei ole yhteydessä internetiin. Suurinta osaa Mobiilitiedekerhon toiminnoista ei voi käyttää ilman toimivaa verkkoyhteyttä");
+            alert.setNegativeButton("Sulje", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int whichButton) {
+                    dialog.dismiss();
+                }
+            });
+            alert.show();
         }
 
         new StatusService();
@@ -99,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onResume()
-    {  // Refreshes screen when returned to the front page, after eg. loggin in or out
+    {  // Refreshes screen when returned to the front page, after eg. logging in or out
         super.onResume();
         start();
     }

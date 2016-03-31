@@ -1,6 +1,8 @@
 package helsinki.cs.mobiilitiedekerho.mobiilitiedekerho;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -64,4 +66,6 @@ public class InfoTextFragment extends Fragment implements View.OnClickListener {
         info.show();
         info.getWindow().setAttributes(lp);
     }
+
+
 }
