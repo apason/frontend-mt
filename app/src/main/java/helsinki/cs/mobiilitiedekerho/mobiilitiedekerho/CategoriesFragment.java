@@ -24,13 +24,14 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
     public class categorieslistener implements TaskCompleted {
         @Override
         public void taskCompleted(String response) {
-            categories2(response);
+            categories(response);
         }
     }
 
     public class catImgsDownloaded implements TaskCompleted {
         @Override
         public void taskCompleted(String response) {
+            Log.i("responssi", response);
             categories2(response);
         }
     }
@@ -46,7 +47,7 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
 
         StatusService.StaticStatusService.jc.newJson(response);
         ArrayList<HashMap<String, String>> categories = StatusService.StaticStatusService.jc.getObjects();
-        
+        Log.i("kategoriat", Integer.toString(categories.size()));
         if (!categories.isEmpty()) {
             ArrayList<String> names = new ArrayList<String>();
             String imageName = "category_icon";
@@ -59,18 +60,20 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
                     
             }
 
-            
+
             //Either all images are in memory or some must be downloaded from S3.
             if (!names.isEmpty()) {
                 //NOTE: The code works only as simple if S3 has saved the the needed images in a single bucket with the same naming convency.
                 new S3Download(new catImgsDownloaded(), names).execute();
+                Log.i("lataus", "ok");
             } 
             else {
+                Log.i("lataus", "sucks");
                 ImageButton[] categorybutton = new ImageButton[categories.size()];
                 for (int i = 0; i < categories.size(); i++) {
                     try {
                         Bitmap bitmap = BitmapFactory.decodeFile(StatusService.StaticStatusService.context.getFilesDir() + "/" + "category_icon" + categories.get(i).get("id"));
-                        
+                        Log.i("bitmap", bitmap.toString());
                         categorybutton[i] = new ImageButton(getContext());
                         categorybutton[i].setImageBitmap(bitmap);
                         categorybutton[i].setLayoutParams(lp);
@@ -105,11 +108,11 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
         ImageButton[] categorybutton = new ImageButton[categories.size()];
         for (int i = 0; i < categories.size(); i++) {
             try {
-                String image = "category_icon" + categories.get(i).get("id");
-                //Bitmap bitmap = BitmapFactory.decodeFile(StatusService.StaticStatusService.context.getFilesDir() + "/" + "category_icon" + categories.get(i).get("id"));
-                int imageID = getResources().getIdentifier(image, "drawable", getActivity().getApplicationContext().getPackageName());
+                //String image = "category_icon" + categories.get(i).get("id");
+                Bitmap bitmap = BitmapFactory.decodeFile(StatusService.StaticStatusService.context.getFilesDir() + "/" + "category_icon" + categories.get(i).get("id"));
+                //int imageID = getResources().getIdentifier(image, "drawable", getActivity().getApplicationContext().getPackageName());
                 categorybutton[i] = new ImageButton(getContext());
-                categorybutton[i].setImageResource(imageID);
+                categorybutton[i].setImageBitmap(bitmap);
                 categorybutton[i].setLayoutParams(lp);
                 categorybutton[i].setScaleType(ImageView.ScaleType.FIT_CENTER);
                 categorybutton[i].setOnClickListener(this);
@@ -129,8 +132,8 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.categories_fragment, container, false);
-        Log.i("mitah", Integer.toString(StatusService.StaticStatusService.categories.length));
         String url = StatusService.StaticStatusService.sc.DescribeCategories();
+        Log.i("katurl", url);
         hp = new HTTPSRequester(new categorieslistener()).execute(url);
 
         return view;

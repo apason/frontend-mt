@@ -69,7 +69,10 @@ public class S3Download extends AsyncTask<String, Void, String> {
     		act.taskCompleted(result);
     	
         for (int i = 0 ; i < imageNames.size() ; i++) {
-            StatusService.StaticStatusService.fh.saveImage(imageNames.get(i), bitmaps.get(i)); //If returns false didn't worked out, => ????
+            if (!StatusService.StaticStatusService.fh.saveImage(imageNames.get(i), bitmaps.get(i))){
+                Log.i("feilasi", imageNames.get(i));
+                //If returns false didn't worked out, => ????
+            }
         }
         
         act.taskCompleted(result);

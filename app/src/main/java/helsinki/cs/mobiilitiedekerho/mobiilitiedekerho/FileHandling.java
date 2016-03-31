@@ -27,7 +27,7 @@ public class FileHandling extends AppCompatActivity {
 
     /**
      * If there is saved the token for a user, loggedIn will be true.
-     * R         espectively authToken will become the user's auth_token.
+     * Respectively authToken will become the user's auth_token.
      * @return true if there is a saved token for an user and reading it worked out.
      */
     public boolean CheckIfSavedToken() {
@@ -99,7 +99,7 @@ public class FileHandling extends AppCompatActivity {
             image.compress(Bitmap.CompressFormat.PNG, 100, stream); //Compress and save the image. TODO: Check if true?, that is if it worked out.
             workedOut = true;
         } catch (Exception e) {
-            Log.i("Problem while saving image", name);
+            Log.i("Problem saving image", name);
             e.printStackTrace();
         } finally {
             try {

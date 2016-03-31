@@ -32,8 +32,8 @@ public class StatusService {
         protected static int screenHeight;
         
         
-        protected static int [] categories;
-        protected static ArrayList [] task;
+        protected static ArrayList<Integer> categories;
+        protected static ArrayList<ArrayList<Integer>> category;
     
     
         protected static final JsonConverter jc = new JsonConverter();

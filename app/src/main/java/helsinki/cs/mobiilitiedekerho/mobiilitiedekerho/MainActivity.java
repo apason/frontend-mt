@@ -100,17 +100,18 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onResume()
-    {  // Refreshes screen when returned to the front page, after eg. loggin in or out
+    {  // Refreshes screen when returned to the front page, after eg. loggin in or outee
         super.onResume();
-        start();
+        drawScreen();
     }
 
     public void start() {
-        //while (StatusService.StaticStatusService.authToken.isEmpty())
-        setContentView(R.layout.main_activity);
-        ud = new UpdateData();
-        ud.updateCategories();
+        // TODO: Maybe some kind of data-preloading.
+        drawScreen();
+    }
 
+    public void drawScreen() {
+        setContentView(R.layout.main_activity);
         LoginFragment lf = new LoginFragment();
         UserVideosFragment uvf = new UserVideosFragment();
         InfoTextFragment uif = new InfoTextFragment();
@@ -125,9 +126,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void startCategories() {
-        //ArrayList taskit = StatusService.StaticStatusService.task[pituus];
-
-        ud.updateTasks();
         Intent intent = new Intent(this, CategoriesActivity.class);
         startActivity(intent);
     }
