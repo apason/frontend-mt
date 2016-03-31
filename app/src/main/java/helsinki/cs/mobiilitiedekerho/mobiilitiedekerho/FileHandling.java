@@ -54,8 +54,8 @@ public class FileHandling extends AppCompatActivity {
 
     /**
      * Checks whether the pointed image (or any file...) exist in applications allocated Internal Storage.
-     * @param name the file's' name to be checked if exists..
-     * @return true if exists.
+     * @param name the file's' name to be checked if exists.
+     * @return true if the asked file exists.
      */
     public boolean checkIfImageExists(String name) {
 
@@ -76,7 +76,7 @@ public class FileHandling extends AppCompatActivity {
 
     /**
      * Saves the wanted image to the Applications data directory.
-     * @param name the file name.
+     * @param name the to-be-saved file's name.
      * @param image the image to be saved.
      * @return true if saving the image worked out.
      */
@@ -92,9 +92,21 @@ public class FileHandling extends AppCompatActivity {
                 path = StatusService.StaticStatusService.context.getFilesDir(); //Just try again!
             }
             File file = new File(path, name);
-            stream = new FileOutputStream(file); //Created file if didn't existed before.
-            image.compress(Bitmap.CompressFormat.PNG, 100, stream); //Compress and save the image. TODO: Check if true?, that is if it worked out.
-            workedOut = true;
+            
+            if(file.exists()) StatusService.StaticStatusService.context.deleteFile(name); //Deletes the existing file just in case. Otherwise truncating may mess up things.
+            file.createNewFile();
+            
+            stream = new FileOutputStream(file);
+            
+            boolean savedAccomplished = image.compress(Bitmap.CompressFormat.PNG, 100, stream); //Compress and save the image.
+            
+            if (!savedAccomplished) {
+                StatusService.StaticStatusService.context.deleteFile(name); //Deletes the existing file just in case. Otherwise truncating may mess up things.
+                savedAccomplished = image.compress(Bitmap.CompressFormat.PNG, 100, stream); //Sometimes it is worth a try.
+            }
+            
+            workedOut = savedAccomplished;
+            
         } catch (Exception e) {
             Log.i("Problem saving image", name);
             e.printStackTrace();
