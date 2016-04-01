@@ -2,8 +2,10 @@ package helsinki.cs.mobiilitiedekerho.mobiilitiedekerho;
 
 import android.app.AlertDialog;
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -16,6 +18,8 @@ import android.widget.Toast;
  */
 public class UserActivity extends AppCompatActivity {
 
+    AsyncTask hp;
+    boolean triedCommunicatingAlready = false;
 
     public class GotToken implements TaskCompleted {
         @Override
@@ -64,7 +68,7 @@ public class UserActivity extends AppCompatActivity {
                 Toast.makeText(getApplication(), "Olet nyt kirjautunut ulos Mobiilitiedekerhosta", Toast.LENGTH_LONG).show();
                 
                 //Removes token from SharedPreferences.
-                StatusService.StaticStatusService.context.getSharedPreferences("mobiilitiedekerho",Context.MODE_PRIVATE).edit().clear().commit();
+                StatusService.StaticStatusService.context.getSharedPreferences("mobiilitiedekerho", Context.MODE_PRIVATE).edit().clear().commit();
                 
                 String url = StatusService.StaticStatusService.sc.AnonymousSession();
                 hp = new HTTPSRequester(new GotToken()).execute(url);

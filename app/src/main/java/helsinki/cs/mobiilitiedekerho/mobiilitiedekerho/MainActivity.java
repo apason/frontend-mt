@@ -14,7 +14,6 @@ import android.util.DisplayMetrics;
 public class MainActivity extends AppCompatActivity {
 
     AsyncTask hp = null;
-    UpdateData ud;
     boolean triedCommunicatingAlready = false;
 
 
