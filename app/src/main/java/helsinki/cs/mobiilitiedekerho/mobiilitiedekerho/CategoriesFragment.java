@@ -40,16 +40,11 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
 
     private View view;
     private AsyncTask hp = null;
+    private ArrayList<HashMap<String, String>> categories;
 
     private void categories(String response) {
-    	//Tässä jo?, välttämättä ei laitteessa. -> else osaan.
-        LinearLayout ll = (LinearLayout) view.findViewById(R.id.categories);
-        ll.setOrientation(LinearLayout.HORIZONTAL);
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-
         StatusService.StaticStatusService.jc.newJson(response);
-        ArrayList<HashMap<String, String>> categories = StatusService.StaticStatusService.jc.getObjects();
-        Log.i("kategoriat", Integer.toString(categories.size()));
+        categories = StatusService.StaticStatusService.jc.getObjects();
         if (!categories.isEmpty()) {
             ArrayList<String> names = new ArrayList<String>();
             String imageName = "category_icon";
@@ -59,7 +54,7 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
                 if(!StatusService.StaticStatusService.fh.checkIfImageExists(imageName)) {
                     names.add(imageName);
                 }
-                    
+
             }
 
 
@@ -68,66 +63,50 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
                 //NOTE: The code works only as simple if S3 has saved the the needed images in a single bucket with the same naming convency.
                 new S3Download(new catImgsDownloaded(), names).execute();
                 Log.i("lataus", "ok");
-            } 
+            }
             else {
                 Log.i("lataus", "sucks");
-                ImageButton[] categorybutton = new ImageButton[categories.size()];
-                for (int i = 0; i < categories.size(); i++) {
-                    try {
-                        Bitmap bitmap = BitmapFactory.decodeFile(StatusService.StaticStatusService.context.getFilesDir() + "/" + "category_icon" + categories.get(i).get("id"));
-                        Log.i("bitmap", bitmap.toString());
-                        categorybutton[i] = new ImageButton(getContext());
-                        categorybutton[i].setImageBitmap(bitmap);
-                        categorybutton[i].setLayoutParams(lp);
-                        categorybutton[i].setScaleType(ImageView.ScaleType.FIT_CENTER);
-                        categorybutton[i].setOnClickListener(this);
-                        categorybutton[i].setBackgroundColor(Color.TRANSPARENT);
-                        categorybutton[i].setId(Integer.parseInt(categories.get(i).get("id")));
-                        
-                        //categorybutton[i].setId(i+1);
-                        ll.addView(categorybutton[i], lp);
-                    } catch (Exception e) {
-                        Log.i("kuvavirhe", "");
-                    }
-                }
+                drawImages();
             }
         }
         else {
             //TODO: Something showing that there are no categories??? Not gonna happen! (Except of because a problem.)
         }
     }
-    
-    
+
+
     private void categories2(String response) {
+        /*
         LinearLayout ll = (LinearLayout) view.findViewById(R.id.categories);
         ll.setOrientation(LinearLayout.HORIZONTAL);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        */
 
         StatusService.StaticStatusService.jc.newJson(response);
-        ArrayList<HashMap<String, String>> categories = StatusService.StaticStatusService.jc.getObjects();
-        Log.i("kategoriat", String.valueOf(categories.size()));
+        categories = StatusService.StaticStatusService.jc.getObjects();
+        drawImages();
+    }
 
+    private void drawImages() {
+        LinearLayout ll = (LinearLayout) view.findViewById(R.id.categories);
+        ll.setOrientation(LinearLayout.HORIZONTAL);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        Log.i("kategoriat", String.valueOf(categories.size()));
         ImageButton[] categorybutton = new ImageButton[categories.size()];
         for (int i = 0; i < categories.size(); i++) {
             try {
-                //String image = "category_icon" + categories.get(i).get("id");
                 Bitmap bitmap = BitmapFactory.decodeFile(StatusService.StaticStatusService.context.getFilesDir() + "/" + "category_icon" + categories.get(i).get("id"));
-                //int imageID = getResources().getIdentifier(image, "drawable", getActivity().getApplicationContext().getPackageName());
                 categorybutton[i] = new ImageButton(getContext());
-                categorybutton[i].setImageBitmap(bitmap);
+                categorybutton[i].setImageBitmap(Bitmap.createScaledBitmap(bitmap, 300, 300, false));
                 categorybutton[i].setLayoutParams(lp);
-                categorybutton[i].setScaleType(ImageView.ScaleType.FIT_CENTER);
                 categorybutton[i].setOnClickListener(this);
                 categorybutton[i].setBackgroundColor(Color.TRANSPARENT);
                 categorybutton[i].setId(Integer.parseInt(categories.get(i).get("id")));
-                
-                //categorybutton[i].setId(i+1);
                 ll.addView(categorybutton[i], lp);
             } catch (Exception e) {
-                Log.i("kuvavirhe", "");
+                Log.e("Image error", e.toString());
             }
         }
-            
     }
 
     @Override
@@ -135,7 +114,6 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.categories_fragment, container, false);
         String url = StatusService.StaticStatusService.sc.DescribeCategories();
-        Log.i("katurl", url);
         hp = new HTTPSRequester(new categorieslistener()).execute(url);
 
         return view;

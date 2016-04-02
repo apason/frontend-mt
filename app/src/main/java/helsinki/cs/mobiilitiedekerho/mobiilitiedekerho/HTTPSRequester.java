@@ -22,9 +22,9 @@ public class HTTPSRequester extends AsyncTask<String, String, String> {
     private TaskCompleted act;
 
     /**
-    * Constructor for HTTPSRequester.
-    * @param act a interface for being able to pass the response for the calling activity.
-    */
+     * Constructor for HTTPSRequester.
+     * @param act a interface for being able to pass the response for the calling activity.
+     */
     public HTTPSRequester(TaskCompleted act){
         this.act = act;
     }
@@ -36,10 +36,10 @@ public class HTTPSRequester extends AsyncTask<String, String, String> {
         try {
 
             URL url = new URL(urli[0]);
-        
+
             urlConnection = (HttpURLConnection) url.openConnection();
             urlConnection.setConnectTimeout (10000);
-        
+
             //Creates a string (for JsonConverter to be parsed) from the connection's inputStream.
             BufferedReader br = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
             StringBuilder sb = new StringBuilder();
@@ -67,11 +67,11 @@ public class HTTPSRequester extends AsyncTask<String, String, String> {
         } finally {
             if (urlConnection != null) urlConnection.disconnect();
         }
-        
+
         return "{\"status\":\"CommunicationWithServerError\"}"; //A problem has been encountered while either calling the API or the response its damaged in some way (strange if data checking...) => Some special precautions to take?
     }
-    
-    
+
+
     protected void onPostExecute(String result) {
         act.taskCompleted(result);
     }

@@ -19,109 +19,106 @@ import java.io.IOException;
 public class FileHandling extends AppCompatActivity {
 
 
-    String token = "token";
+  String token = "token";
 
 
-    /**
-     * If there is saved the token for a user, loggedIn will be true.
-     * Respectively authToken will become the user's auth_token.
-     * @return true if there is a saved token for an user and reading it worked out.
-     */
-    public boolean CheckIfSavedToken() {
-        SharedPreferences sharedPref = StatusService.StaticStatusService.context.getSharedPreferences("mobiilitiedekerho",Context.MODE_PRIVATE);
-        String tokenValue = sharedPref.getString(token, "Tokenia ei löydy");
-        Log.i("tokeni", tokenValue);
-        if (tokenValue.equals("Tokenia ei löydy"))
-            return false;
-        else {
-            StatusService.StaticStatusService.authToken = tokenValue;
-            return true;
-        }
-
+  /**
+   * If there is saved the token for a user, loggedIn will be true.
+   * Respectively authToken will become the user's auth_token.
+   * @return true if there is a saved token for an user and reading it worked out.
+   */
+  public boolean CheckIfSavedToken() {
+    SharedPreferences sharedPref = StatusService.StaticStatusService.context.getSharedPreferences("mobiilitiedekerho",Context.MODE_PRIVATE);
+    String tokenValue = sharedPref.getString(token, "Tokenia ei löydy");
+    Log.i("tokeni", tokenValue);
+    if (tokenValue.equals("Tokenia ei löydy"))
+      return false;
+    else {
+      StatusService.StaticStatusService.authToken = tokenValue;
+      return true;
     }
 
-    /**
-     * Save the user's token into SharedPreferences with key token for future auto-login.
-     * @return true if saving the token worked out.
-     */
-    public boolean saveToken () {
-        SharedPreferences sharedPref = StatusService.StaticStatusService.context.getSharedPreferences("mobiilitiedekerho",Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putString(token, StatusService.StaticStatusService.authToken);
-        Log.i("tokeni", StatusService.StaticStatusService.authToken);
-        return editor.commit();
+  }
+
+  /**
+   * Save the user's token into SharedPreferences with key token for future auto-login.
+   * @return true if saving the token worked out.
+   */
+  public boolean saveToken () {
+    SharedPreferences sharedPref = StatusService.StaticStatusService.context.getSharedPreferences("mobiilitiedekerho",Context.MODE_PRIVATE);
+    SharedPreferences.Editor editor = sharedPref.edit();
+    editor.putString(token, StatusService.StaticStatusService.authToken);
+    Log.i("tokeni", StatusService.StaticStatusService.authToken);
+    return editor.commit();
+  }
+
+  /**
+   * Checks whether the pointed image (or any file...) exist in applications allocated Internal Storage.
+   * @param name the file's' name to be checked if exists.
+   * @return true if the asked file exists.
+   */
+  public boolean checkIfImageExists(String name) {
+
+    File path = StatusService.StaticStatusService.context.getFilesDir(); //The data directory of the application.
+    //This is due to a racing condition bug in <4.4 where .getFilesDir() may return realy rarely the root directory "/".
+    if(path.getAbsolutePath().equals("/")) {
+      path = StatusService.StaticStatusService.context.getFilesDir(); //Just try again!
+    }
+    File file = new File(path, name);
+
+    if (file.exists()) {
+      return true;
+    } else {
+      return false;
     }
 
-    /**
-     * Checks whether the pointed image (or any file...) exist in applications allocated Internal Storage.
-     * @param name the file's' name to be checked if exists.
-     * @return true if the asked file exists.
-     */
-    public boolean checkIfImageExists(String name) {
+  }
 
-        File path = StatusService.StaticStatusService.context.getFilesDir(); //The data directory of the application.
-        //This is due to a racing condition bug in <4.4 where .getFilesDir() may return realy rarely the root directory "/".
-        if(path.getAbsolutePath().equals("/")) {
-            path = StatusService.StaticStatusService.context.getFilesDir(); //Just try again!
-        }
-        File file = new File(path, name);
+  /**
+   * Saves the wanted image to the Applications data directory.
+   * @param name the to-be-saved file's name.
+   * @param image the image to be saved.
+   * @return true if saving the image worked out.
+   */
+  public boolean saveImage(String name, Bitmap image) {
 
-        if (file.exists()) {
-            return true;
-        } else {
-            return false;
-        }
+    boolean workedOut = false;
+    FileOutputStream stream = null;
+    try {
+      File path = StatusService.StaticStatusService.context.getFilesDir(); //The data directory of the application.
+      //This is due to a racing condition bug in <4.4 where .getFilesDir() may return really rarely the root directory "/".
+      if(path.getAbsolutePath().equals("/")) {
+        path = StatusService.StaticStatusService.context.getFilesDir(); //Just try again!
+      }
+      File file = new File(path, name);
+      if(file.exists()) StatusService.StaticStatusService.context.deleteFile(name); //Deletes the existing file just in case. Otherwise truncating may mess up things.
+      file.createNewFile();
 
+      stream = new FileOutputStream(file);
+
+      boolean savedAccomplished = image.compress(Bitmap.CompressFormat.PNG, 100, stream); //Compress and save the image as png.
+      //Sometimes it is worth to try again. This does remove the previous file and create a new FileOutputStream which is used to save (again) the image.
+      if (!savedAccomplished) {
+        StatusService.StaticStatusService.context.deleteFile(name);
+        file.createNewFile();
+        stream = new FileOutputStream(file);
+        savedAccomplished = image.compress(Bitmap.CompressFormat.PNG, 100, stream);
+
+      }
+
+      workedOut = savedAccomplished;
+
+    } catch (Exception e) {
+      Log.e("Problem saving image", e.toString());
+    } finally {
+      try {
+        if (stream != null) stream.close();
+      } catch (IOException e) {
+        Log.e("Problem saving image", e.toString());
+      }
     }
 
-    /**
-     * Saves the wanted image to the Applications data directory.
-     * @param name the to-be-saved file's name.
-     * @param image the image to be saved.
-     * @return true if saving the image worked out.
-     */
-    public boolean saveImage(String name, Bitmap image) {
-
-        boolean workedOut = false;
-
-        FileOutputStream stream = null;
-        try {
-            File path = StatusService.StaticStatusService.context.getFilesDir(); //The data directory of the application.
-            //This is due to a racing condition bug in <4.4 where .getFilesDir() may return really rarely the root directory "/".
-            if(path.getAbsolutePath().equals("/")) {
-                path = StatusService.StaticStatusService.context.getFilesDir(); //Just try again!
-            }
-            File file = new File(path, name);
-            
-            if(file.exists()) StatusService.StaticStatusService.context.deleteFile(name); //Deletes the existing file just in case. Otherwise truncating may mess up things.
-            file.createNewFile();
-            
-            stream = new FileOutputStream(file);
-            
-            boolean savedAccomplished = image.compress(Bitmap.CompressFormat.PNG, 100, stream); //Compress and save the image as png.
-            
-            //Sometimes it is worth to try again. This does remove the previous file and create a new FileOutputStream which is used to save (again) the image.
-            if (!savedAccomplished) {
-                StatusService.StaticStatusService.context.deleteFile(name);
-                file.createNewFile();
-                stream = new FileOutputStream(file);
-                savedAccomplished = image.compress(Bitmap.CompressFormat.PNG, 100, stream);
-            }
-            
-            workedOut = savedAccomplished;
-            
-        } catch (Exception e) {
-            Log.i("Problem saving image", name);
-            e.printStackTrace();
-        } finally {
-            try {
-                if (stream != null) stream.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-        return workedOut;
-    }
+    return workedOut;
+  }
 
 }

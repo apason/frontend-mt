@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
+import android.util.Log;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -21,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void taskCompleted(String response) {
             StatusService.StaticStatusService.jc.newJson(response);
-
+            Log.i("täällä", "täällä");
             if (StatusService.StaticStatusService.sc.checkStatus()) {
                 StatusService.StaticStatusService.authToken = StatusService.StaticStatusService.jc.getProperty("auth_token");
                 start();
@@ -57,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void taskCompleted(String response) {
             StatusService.StaticStatusService.jc.newJson(response);
-
+            Log.i("täällä2", "täällä");
             if (!StatusService.StaticStatusService.sc.checkStatus()) {
                 String url = StatusService.StaticStatusService.sc.AnonymousSession();
                 hp = new HTTPSRequester(new GotToken()).execute(url);
