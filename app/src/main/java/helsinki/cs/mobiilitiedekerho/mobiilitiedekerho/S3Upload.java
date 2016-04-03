@@ -28,6 +28,8 @@ public class S3Upload extends AsyncTask<String, Void, String> {
     private File selectedFile;
     private Context context;
     
+    private String outcome = "succes";
+    
     /**
     * Constructor for S3Upload.
     * @param act a interface for being able to pass the response for the calling ativity.
@@ -90,10 +92,11 @@ public class S3Upload extends AsyncTask<String, Void, String> {
             @Override
             public void onError(int id, Exception ex) {
                 Log.i("Amazon", "Error on amazon service ! " + ex);
+                outcome = "failure";
             }
         });
 
-        return "success";
+        return outcome;
     }
     
     protected void onPostExecute(String result) {

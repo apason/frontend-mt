@@ -28,21 +28,39 @@ import java.util.Date;
 public class CameraFragment extends Fragment implements View.OnClickListener {
 
 
-    public class listener implements TaskCompleted {
+    public class S3uploadFinished implements TaskCompleted {
         @Override
         public void taskCompleted(String response) {
-            //TODO
+            String url = StatusService.StaticStatusService.sc.EndAnswerUpload(answerID, response);
+            new HTTPSRequester(new CheckToken()).execute(url);
         }
     }
+    
+    public class GotUrlToUpload implements TaskCompleted {
+        @Override
+        public void taskCompleted(String response) {
+            boolean parsingWorked = StatusService.StaticStatusService.jc.newJson(response);
+            Log.i("upataan", "uppaus on yeeeeah");
+            if (parsingWorked && StatusService.StaticStatusService.sc.checkStatus()) {
+                String answerUri = StatusService.StaticStatusService.jc.getProperty("answer_uri");
+                answerID = StatusService.StaticStatusService.jc.getProperty("answer_id");
+                upload(answerUri);
+            }
+        }
+    }
+    
 
-    View view;
+    private View view;
     private static final int VIDEO_CAPTURE = 101;
     private Uri fileUri;
     private File selectedFile;
     private String selectedFileName;
+    private String selectedFileType;
+    private String answerID;
 
-    LoginFragment lf;
-    AsyncTask hp = null;
+    private LoginFragment lf;
+    private AsyncTask S3 = null;
+    private AsyncTask hp = null;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -86,10 +104,12 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
                         }
 
                         // Create a file for saving the shot video VID + timestamp + .mp4
+                        // TODO name should contain task.
                         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
                         selectedFile = new File(mediaStorageDirectory.getPath() + File.separator +
                             "VID_" + timeStamp + ".mp4");
                         selectedFileName = selectedFile.getName();
+                        
                         // Create a new Intent to shoot video and save the result to the file specified earlier
                         Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
                         fileUri = Uri.fromFile(selectedFile);
@@ -128,11 +148,13 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
                 // Get the selected file's Uri, name and the file itself
                 Uri selectedVideoLocation = data.getData();
 
+                // Mikä ihme kovakoodattu tiesdosto tämä on?
                 String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-                String selectedFileName = "VID_" + timeStamp + ".mp4";
+                selectedFileName = "VID_" + timeStamp + ".mp4";
+                
 
 
-                File selectedFile = new File(selectedVideoLocation.getLastPathSegment(), selectedFileName);
+                selectedFile = new File(selectedVideoLocation.getLastPathSegment(), selectedFileName);
 
                 Log.i("filename", selectedFileName);
                 Log.i("location", selectedVideoLocation.toString());
@@ -141,7 +163,9 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
                 // Initialize the Amazon Cognito credentials provider
                 //if(selectedFile.exists()) {
                     Log.i("lataa", "lataa");
-                    hp = new S3Upload(new listener(), getContext(), selectedFile).execute(selectedFileName);
+                    String url = StatusService.StaticStatusService.sc.StartAnswerUpload(
+                    "taskId", StatusService.StaticStatusService.currentSubUserID, selectedFileName.substring(selectedFileName.lastIndexOf(".")).toLowerCase()); //TODO: Check if there is subuser in use! Get task. 
+                    hp = new HTTPSRequester(new GotUrlToUpload()).execute(url);
                 //}
             }
         }
@@ -154,7 +178,9 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
                 // Initialize the Amazon Cognito credentials provider
 
                 if(selectedFile.exists()) {
-                    hp = new S3Upload(new listener(), getContext(), selectedFile).execute(selectedFileName);
+                    String url = StatusService.StaticStatusService.sc.StartAnswerUpload
+                    ("taskId", StatusService.StaticStatusService.currentSubUserID, selectedFileName.substring(selectedFileName.lastIndexOf(".")).toLowerCase()); //TODO: Check if there is subuser in use! Get task.
+                    hp = new HTTPSRequester(new GotUrlToUpload()).execute(url);
                 }
 
             } else if (resultCode == TaskActivity.RESULT_CANCELED) {
@@ -165,5 +191,9 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
                         Toast.LENGTH_LONG).show();
             }
         }
+    }
+    
+    public void upload(String answerUri) {
+        S3 = new S3Upload(new S3uploadFinished(), getContext(), selectedFile).execute(answerUri);
     }
 }
