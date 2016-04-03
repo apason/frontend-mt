@@ -51,7 +51,12 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
     
 
     private View view;
+    
     private static final int VIDEO_CAPTURE = 101;
+    private static final int IMAGE_CAPTURE = 102;
+    private static final int VIDEO_SAVED = 201;
+    private static final int IMAGE_SAVED = 202;
+    
     private Uri fileUri;
     private File selectedFile;
     private String selectedFileName;
@@ -85,26 +90,26 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
             startActivity(intent);
             //recordButton.setEnabled(false);
         } else {
-            // Create a dialog that allows the user to choose which method they want to use to create the answer video
+            // Create a dialog that allows the user to choose which method they want to use to create the answer video.
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            builder.setMessage("Miten haluat lisätä vastauksen?")
+            builder.setMessage("Millä tavalla haluat vastata tehtävään?")
 
-                //Create button that enables to user to record a video using the device's camera
-                .setNegativeButton("Kuvaa uusi vastaus", new DialogInterface.OnClickListener() {
+                //Create button that after clicking leads the user to record a video using the device's camera.
+                .setNeutralButton(("Kuvaa uusi vastausvideo.", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        // Create a new folder on the device, where videos related to this app are stored
+                        // The directory where taken videos (and images) related to this app are stored.
                         File mediaStorageDirectory = new File(Environment.getExternalStoragePublicDirectory(
                             Environment.DIRECTORY_PICTURES), "Mobiilitiedekerho");
 
-                        // If the new folder could not be created, then notify
+                        // Creates new folder if necessary. If the new folder could not be created, then notify ???
                         if (!mediaStorageDirectory.exists()) {
                             if (!mediaStorageDirectory.mkdirs()) {
                                 Log.e("Mobiilitiedekerho", "failed to create directory");
                             }
                         }
 
-                        // Create a file for saving the shot video VID + timestamp + .mp4
-                        // TODO name should contain task.
+                        // Creates a file for saving the shot video VID + timestamp + .mp4 TODO: Check if possible to use WebM in device, NEVER expect that the recorded video is of a certain format.
+                        // TODO: the name should contain task.
                         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
                         selectedFile = new File(mediaStorageDirectory.getPath() + File.separator +
                             "VID_" + timeStamp + ".mp4");
@@ -119,16 +124,55 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
                         startActivityForResult(intent, VIDEO_CAPTURE);
                     }
                 })
-                    // Create button that enables the user to use a file from the device's gallery
-                .setNeutralButton("Valitse olemassaoleva", new DialogInterface.OnClickListener() {
+                //Create button that after clicking leads the user to take a picture using the device's camera.
+                .setNeutralButton("Ota uusi kuva ja vastaa sillä.", new DialogInterface.OnClickListener() { //TODO: Set real button-type in place of#SOME#.
+                    public void onClick(DialogInterface dialog, int id) {
+                        // The directory where taken videos (and images) related to this app are stored.
+                        File mediaStorageDirectory = new File(Environment.getExternalStoragePublicDirectory(
+                            Environment.DIRECTORY_PICTURES), "Mobiilitiedekerho");
+
+                        // Creates new folder if necessary. If the new folder could not be created, then notify ???
+                        if (!mediaStorageDirectory.exists()) {
+                            if (!mediaStorageDirectory.mkdirs()) {
+                                Log.e("Mobiilitiedekerho", "failed to create directory");
+                            }
+                        }
+
+                        // Creates a file for saving the shot image VID + timestamp + .JPEG
+                        // TODO: the name should contain task.
+                        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+                        selectedFile = new File(mediaStorageDirectory.getPath() + File.separator +
+                            "IID_" + timeStamp + ".JPEG");
+                        selectedFileName = selectedFile.getName();
+                        
+                        // Create a new Intent to shoot image and save the result to the file specified earlier
+                        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                        fileUri = Uri.fromFile(selectedFile);
+
+                        // Start the intent using the device's own camera software
+                        intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
+                        startActivityForResult(intent, IMAGE_CAPTURE);
+                    }
+                })
+                }
+                // Creates a button that after clicking leads the user to upload a picture from the device's gallery.
+                .setNeutralButton("Valitse olemassaoleva kuva.", new DialogInterface.OnClickListener() { //TODO: Set real button-type in place of#SOME#.
+                    public void onClick(DialogInterface dialog, int id) {
+                        Intent pickMedia = new Intent(Intent.ACTION_GET_CONTENT);
+                        pickMedia.setType("image/*");
+                        startActivityForResult(pickMedia, IMAGE_SAVED);
+                    }
+                })
+                    // Creates a button that after clicking leads the user to upload a video from the device's gallery.
+                .setNeutralButton("Valitse olemassaoleva video.", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         Intent pickMedia = new Intent(Intent.ACTION_GET_CONTENT);
                         pickMedia.setType("video/*");
-                        startActivityForResult(pickMedia, 12345);
+                        startActivityForResult(pickMedia, VIDEO_SAVED);
                     }
                 })
-                    // Create button that enables the user to use a file from the device's gallery
-                .setPositiveButton("Peruuta", new DialogInterface.OnClickListener() {
+                    // Creates a button that makes the dialog dissapear, that is a cancel-action.
+                .setNegativeButton("Peruuta", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.dismiss();
                     }
@@ -138,11 +182,10 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
         }
     }
 
-    public void onActivityResult(int requestCode,
-                                    int resultCode, Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         // Result handler for videos from the gallery
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 12345) {
+        if (requestCode == VIDEO_SAVED) {
             if (resultCode == TaskActivity.RESULT_OK) {
 
                 // Get the selected file's Uri, name and the file itself
@@ -152,8 +195,6 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
                 String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
                 selectedFileName = "VID_" + timeStamp + ".mp4";
                 
-
-
                 selectedFile = new File(selectedVideoLocation.getLastPathSegment(), selectedFileName);
 
                 Log.i("filename", selectedFileName);
@@ -163,14 +204,14 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
                 // Initialize the Amazon Cognito credentials provider
                 //if(selectedFile.exists()) {
                     Log.i("lataa", "lataa");
-                    String url = StatusService.StaticStatusService.sc.StartAnswerUpload(
-                    "taskId", StatusService.StaticStatusService.currentSubUserID, selectedFileName.substring(selectedFileName.lastIndexOf(".")).toLowerCase()); //TODO: Check if there is subuser in use! Get task. 
+                    String url = StatusService.StaticStatusService.sc.StartAnswerUpload
+                    ("taskId", StatusService.StaticStatusService.currentSubUserID, selectedFileName.substring(selectedFileName.lastIndexOf(".")).toLowerCase()); //TODO: Check if there is subuser in use! Get task. 
                     hp = new HTTPSRequester(new GotUrlToUpload()).execute(url);
                 //}
             }
         }
         // Result handler for videos from the camera
-        if (requestCode == VIDEO_CAPTURE) {
+        else if (requestCode == VIDEO_CAPTURE) {
             if (resultCode == TaskActivity.RESULT_OK) {
                 //Toast t = Toast.makeText(CameraFragment.this.getContext(), "Video has been saved to:\n" +
                 //        data.getData(), Toast.LENGTH_LONG);
@@ -184,10 +225,57 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
                 }
 
             } else if (resultCode == TaskActivity.RESULT_CANCELED) {
-                Toast.makeText(CameraFragment.this.getActivity(), "Video recording cancelled.",
+                Toast.makeText(CameraFragment.this.getActivity(), "Videon ottaminen peruttu.",
                         Toast.LENGTH_LONG).show();
             } else {
-                Toast.makeText(CameraFragment.this.getActivity(), "Failed to record video",
+                Toast.makeText(CameraFragment.this.getActivity(), "Videon ottaminen epäonnistui.",
+                        Toast.LENGTH_LONG).show();
+            }
+        }
+        // Result handler for iamges from the gallery
+        else if (requestCode == IMAGE_SAVED) {
+            if (resultCode == TaskActivity.RESULT_OK) {
+
+            // Get the selected file's Uri, name and the file itself
+            Uri selectedVideoLocation = data.getData();
+
+            // Mikä ihme kovakoodattu tiesdosto tämä on? D: Tein samantyylinsen kun näemmäs tämä oikeasti ei toimi kuten pitää...
+            String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+            selectedFileName = "VID_" + timeStamp + ".JPEG";
+
+            selectedFile = new File(selectedVideoLocation.getLastPathSegment(), selectedFileName);
+
+            Log.i("filename", selectedFileName);
+            Log.i("location", selectedVideoLocation.toString());
+            Log.i("file", selectedFile.getName());
+
+            // Initialize the Amazon Cognito credentials provider
+            //if(selectedFile.exists()) {
+                Log.i("lataa", "lataa");
+                String url = StatusService.StaticStatusService.sc.StartAnswerUpload
+                ("taskId", StatusService.StaticStatusService.currentSubUserID, selectedFileName.substring(selectedFileName.lastIndexOf(".")).toLowerCase()); //TODO: Check if there is subuser in use! Get task. 
+                hp = new HTTPSRequester(new GotUrlToUpload()).execute(url);
+        //}
+            }
+        }
+        else if (requestCode == IMAGE_CAPTURE) {
+            if (resultCode == TaskActivity.RESULT_OK) {
+                //Toast t = Toast.makeText(CameraFragment.this.getContext(), "Video has been saved to:\n" +
+                //        data.getData(), Toast.LENGTH_LONG);
+                //t.show();-->
+                // Initialize the Amazon Cognito credentials provider
+
+                if(selectedFile.exists()) {
+                    String url = StatusService.StaticStatusService.sc.StartAnswerUpload
+                    ("taskId", StatusService.StaticStatusService.currentSubUserID, selectedFileName.substring(selectedFileName.lastIndexOf(".")).toLowerCase()); //TODO: Check if there is subuser in use! Get task.
+                    hp = new HTTPSRequester(new GotUrlToUpload()).execute(url);
+                }
+
+            } else if (resultCode == TaskActivity.RESULT_CANCELED) {
+                Toast.makeText(CameraFragment.this.getActivity(), "Kuvan ottaminen peruttu.",
+                        Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(CameraFragment.this.getActivity(), "Kuvan ottaminen epäonnistui.",
                         Toast.LENGTH_LONG).show();
             }
         }
