@@ -43,35 +43,38 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
     private ArrayList<HashMap<String, String>> categories;
 
     private void categories(String response) {
-        StatusService.StaticStatusService.jc.newJson(response);
-        categories = StatusService.StaticStatusService.jc.getObjects();
-        if (!categories.isEmpty()) {
-            ArrayList<String> names = new ArrayList<String>();
-            String imageName = "category_icon";
+        boolean parsingWorked = StatusService.StaticStatusService.jc.newJson(response);
+        if (parsingWorked && StatusService.StaticStatusService.sc.checkStatus()) {
+            categories = StatusService.StaticStatusService.jc.getObjects();
+            if (!categories.isEmpty()) {
+                ArrayList<String> names = new ArrayList<String>();
+                String imageName = "category_icon";
 
-            for (int i = 0; i < categories.size(); i++) {
-                imageName = "category_icon" + categories.get(i).get("id");
-                if(!StatusService.StaticStatusService.fh.checkIfImageExists(imageName)) {
-                    names.add(imageName);
+                for (int i = 0; i < categories.size(); i++) {
+                    imageName = "category_icon" + categories.get(i).get("id");
+                    if(!StatusService.StaticStatusService.fh.checkIfImageExists(imageName)) {
+                        names.add(imageName);
+                    }
+
                 }
 
-            }
 
-
-            //Either all images are in memory or some must be downloaded from S3.
-            if (!names.isEmpty()) {
-                //NOTE: The code works only as simple if S3 has saved the the needed images in a single bucket with the same naming convency.
-                new S3Download(new catImgsDownloaded(), names).execute();
-                Log.i("lataus", "ok");
+                //Either all images are in memory or some must be downloaded from S3.
+                if (!names.isEmpty()) {
+                    //NOTE: The code works only as simple if S3 has saved the the needed images in a single bucket with the same naming convency.
+                    new S3Download(new catImgsDownloaded(), names).execute();
+                    Log.i("lataus", "ok");
+                }
+                else {
+                    Log.i("lataus", "sucks");
+                    drawImages();
+                }
             }
             else {
-                Log.i("lataus", "sucks");
-                drawImages();
+                //TODO: Something showing that there are no categories??? Not gonna happen! (Except of because a problem.)
             }
         }
-        else {
-            //TODO: Something showing that there are no categories??? Not gonna happen! (Except of because a problem.)
-        }
+        //TODO else?
     }
 
 
@@ -82,9 +85,12 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         */
 
-        StatusService.StaticStatusService.jc.newJson(response);
-        categories = StatusService.StaticStatusService.jc.getObjects();
-        drawImages();
+        boolean parsingWorked = StatusService.StaticStatusService.jc.newJson(response);
+        if (parsingWorked && StatusService.StaticStatusService.sc.checkStatus()) {
+            categories = StatusService.StaticStatusService.jc.getObjects();
+            drawImages();
+        }
+        //TODO else?
     }
 
     private void drawImages() {

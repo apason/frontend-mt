@@ -21,9 +21,9 @@ public class MainActivity extends AppCompatActivity {
     public class GotToken implements TaskCompleted {
         @Override
         public void taskCompleted(String response) {
-            StatusService.StaticStatusService.jc.newJson(response);
+            boolean parsingWorked = StatusService.StaticStatusService.jc.newJson(response);
             Log.i("täällä", "täällä");
-            if (StatusService.StaticStatusService.sc.checkStatus()) {
+            if (parsingWorked && StatusService.StaticStatusService.sc.checkStatus()) {
                 StatusService.StaticStatusService.authToken = StatusService.StaticStatusService.jc.getProperty("auth_token");
                 getBuckets();
             }
@@ -57,16 +57,19 @@ public class MainActivity extends AppCompatActivity {
     public class CheckToken implements TaskCompleted {
         @Override
         public void taskCompleted(String response) {
-            StatusService.StaticStatusService.jc.newJson(response);
+            boolean parsingWorked = StatusService.StaticStatusService.jc.newJson(response);
             Log.i("täällä2", "täällä");
-            if (!StatusService.StaticStatusService.sc.checkStatus()) {
-                String url = StatusService.StaticStatusService.sc.AnonymousSession();
-                hp = new HTTPSRequester(new GotToken()).execute(url);
+            if (parsingWorked) {
+                if (!StatusService.StaticStatusService.sc.checkStatus()) {
+                    String url = StatusService.StaticStatusService.sc.AnonymousSession();
+                    hp = new HTTPSRequester(new GotToken()).execute(url);
+                }
+                else {
+                    StatusService.setLoggedIn(true);
+                    getBuckets();
+                }
             }
-            else {
-                StatusService.setLoggedIn(true);
-                getBuckets();
-            }
+            //else {String url = StatusService.StaticStatusService.sc.AnonymousSession(); hp = new HTTPSRequester(new GotToken()).execute(url);} //???
         }
     }
     

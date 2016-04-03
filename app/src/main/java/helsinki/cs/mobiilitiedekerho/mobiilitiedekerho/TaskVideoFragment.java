@@ -59,9 +59,12 @@ public class TaskVideoFragment extends Fragment implements View.OnClickListener 
     }
 
     private void task(String response) {
-        StatusService.StaticStatusService.jc.newJson(response);
-        ArrayList<HashMap<String, String>> task = StatusService.StaticStatusService.jc.getObjects();
-        taskURL = StatusService.StaticStatusService.s3Location + StatusService.StaticStatusService.taskBucket + "/" + task.get(0).get("uri");
-        ((TaskActivity) getActivity()).playback(taskURL);
+        boolean parsingWorked = StatusService.StaticStatusService.jc.newJson(response);
+        if (parsingWorked && StatusService.StaticStatusService.sc.checkStatus()) {
+            ArrayList<HashMap<String, String>> task = StatusService.StaticStatusService.jc.getObjects();
+            taskURL = StatusService.StaticStatusService.s3Location + StatusService.StaticStatusService.taskBucket + "/" + task.get(0).get("uri");
+            ((TaskActivity) getActivity()).playback(taskURL);
+        }
+        //TODO: else?
     }
 }
