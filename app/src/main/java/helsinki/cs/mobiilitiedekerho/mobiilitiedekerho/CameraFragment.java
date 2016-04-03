@@ -95,7 +95,7 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
             builder.setMessage("Millä tavalla haluat vastata tehtävään?")
 
                 //Create button that after clicking leads the user to record a video using the device's camera.
-                .setNeutralButton(("Kuvaa uusi vastausvideo.", new DialogInterface.OnClickListener() {
+                .setNeutralButton("Kuvaa uusi vastausvideo.", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         // The directory where taken videos (and images) related to this app are stored.
                         File mediaStorageDirectory = new File(Environment.getExternalStoragePublicDirectory(
@@ -154,7 +154,6 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
                         startActivityForResult(intent, IMAGE_CAPTURE);
                     }
                 })
-                }
                 // Creates a button that after clicking leads the user to upload a picture from the device's gallery.
                 .setNeutralButton("Valitse olemassaoleva kuva.", new DialogInterface.OnClickListener() { //TODO: Set real button-type in place of#SOME#.
                     public void onClick(DialogInterface dialog, int id) {
