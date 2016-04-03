@@ -11,15 +11,11 @@ public class StatusService {
 
         protected static final String urli = "https://mobiilitiedekerho.duckdns.org:27461/"; //The DNS name of the back-end server. Hard-coded and will always be.
         
-        protected static final String s3Location = "https://s3-eu-west-1.amazonaws.com/"; //TODO: Not hard-coded but from the back-end server.
-        protected static final String taskBucket = "p60v4ow30312-tasks"; //TODO: Not hard-coded but from the back-end server.
-        protected static final String answerBucket = "p60v4ow30312-answers"; //TODO: Not hard-coded but from the back-end server.
-        protected static final String graphicsBucket = "p60v4ow30312-graphics"; //TODO: Not hard-coded but from the back-end server.
-        //Amazon S3:
-        // The bucket you are attempting to access must be addressed using the specified endpoint.
-        // Please send all future requests to this endpoint:
-        // </Message><Bucket>p60v4ow30312-graphics</Bucket>
-        // <Endpoint>p60v4ow30312-graphics.s3-eu-west-1.amazonaws.com</Endpoint>
+        protected static String s3Location = "https://s3-eu-west-1.amazonaws.com/";
+        protected static String taskBucket = "p60v4ow30312-tasks";
+        protected static String answerBucket = "p60v4ow30312-answers";.
+        protected static String graphicsBucket = "p60v4ow30312-graphics";
+        
 
         protected static final String VideoPlay_HtmlTemplate = "<!DOCTYPE html><head><script>var elem = document.getElementById(\"video\");if (elem.requestFullscreen) {elem.requestFullscreen();} else if (elem.msRequestFullscreen) {elem.msRequestFullscreen();} else if (elem.mozRequestFullScreen) {elem.mozRequestFullScreen();} else if (elem.webkitRequestFullscreen) {elem.webkitRequestFullscreen();}elem.play();</script></head><body><video controls id=\"video\" width=\"100%\" height=\"100%\" preload=\"auto\" data-setup=\"{}\" autoplay><source src=\"#video_src#\"></video></body>";
         

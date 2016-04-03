@@ -251,5 +251,13 @@ public class ServerCommunication {
     public String CheckTokenIntegrity(String token) {
         return getResponse("CheckTokenIntegrity", "auth_token", token);
     }
+    
+    /**
+     * Gets all the adresses of the S3 buckets and its location.
+     */
+    public String GetBuckets(String token) {
+        return getResponse("GetBuckets");
+    }
+    
 }
 
