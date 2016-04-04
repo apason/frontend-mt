@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,9 +19,24 @@ import android.widget.ImageView;
 public class SubUserFragment extends Fragment {
 
     View view;
-    String subusernameTV;
     static final int REQUEST_IMAGE_CAPTURE = 1;
     ImageView iv;
+
+
+    /**
+     * A listener that checks if saving subuser worked out.
+     */
+    public class SubListener implements TaskCompleted {
+        @Override
+        public void taskCompleted(String response) {
+            Log.i("subia", response);
+            boolean parsingWorked = StatusService.StaticStatusService.jc.newJson(response);
+            if (parsingWorked && StatusService.StaticStatusService.sc.checkStatus()) {
+                //TODO
+            }
+            else ;//TODO
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -46,8 +62,7 @@ public class SubUserFragment extends Fragment {
         saveSubUserButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO Save the selected image and sub user nickname to sql database
-                subusernameTV = subuserNick.getText().toString();
+                saveSubUser(subuserNick.getText().toString());
             }
         });
 
@@ -55,6 +70,11 @@ public class SubUserFragment extends Fragment {
 
 
         return view;
+    }
+
+    public void saveSubUser(String subuser) {
+        String url = StatusService.StaticStatusService.sc.CreateSubUser(subuser);
+        new HTTPSRequester(new SubListener()).execute(url);
     }
 
     /**
