@@ -33,10 +33,11 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
         public void taskCompleted(String response) {
             Log.i("responssi", response);
             if (response.equals("succes")) categories2(response);
-            else if (response.equals("failure")) /*TODO: Try again?*/;
-            else /*TODO: Check which images couldn't be saved and try to do their loading again?*/;
-        }
+            else if (response.equals("failure")) categories2(response)/*TODO: Try again?*/;
+            else categories2(response);
+        }/*TODO: Check which images couldn't be saved and try to do their loading again?*/;
     }
+
 
     private View view;
     private AsyncTask hp = null;
@@ -62,10 +63,8 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
             if (!names.isEmpty()) {
                 //NOTE: The code works only as simple if S3 has saved the the needed images in a single bucket with the same naming convency.
                 new S3Download(new catImgsDownloaded(), names).execute();
-                Log.i("lataus", "ok");
             }
             else {
-                Log.i("lataus", "sucks");
                 drawImages();
             }
         }
@@ -81,7 +80,6 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
         ll.setOrientation(LinearLayout.HORIZONTAL);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         */
-
         StatusService.StaticStatusService.jc.newJson(response);
         categories = StatusService.StaticStatusService.jc.getObjects();
         drawImages();
