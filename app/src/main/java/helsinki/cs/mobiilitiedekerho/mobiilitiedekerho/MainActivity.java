@@ -83,10 +83,10 @@ public class MainActivity extends AppCompatActivity {
             Log.i("bucketit", response);
             boolean parsingWorked = StatusService.StaticStatusService.jc.newJson(response);
             if (parsingWorked && StatusService.StaticStatusService.sc.checkStatus()) {
-                StatusService.StaticStatusService.s3Location = StatusService.StaticStatusService.jc.getProperty("s3Location")
-                StatusService.StaticStatusService.taskBucket = StatusService.StaticStatusService.jc.getProperty("taskBucket")
-                StatusService.StaticStatusService.answerBucket = StatusService.StaticStatusService.jc.getProperty("answerBucket")
-                StatusService.StaticStatusService.graphicsBucket = StatusService.StaticStatusService.jc.getProperty("graphicsBucket")
+                StatusService.StaticStatusService.s3Location = StatusService.StaticStatusService.jc.getProperty("s3Location");
+                StatusService.StaticStatusService.taskBucket = StatusService.StaticStatusService.jc.getProperty("taskBucket");
+                StatusService.StaticStatusService.answerBucket = StatusService.StaticStatusService.jc.getProperty("answerBucket");
+                StatusService.StaticStatusService.graphicsBucket = StatusService.StaticStatusService.jc.getProperty("graphicsBucket");
             }
             //else just uses the hard-coded ones.
             start();
@@ -144,7 +144,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void getBuckets() {
-        String url = StatusService.StaticStatusService.sc.GetBuckets();
+        String url = StatusService.StaticStatusService.sc.GetBuckets(StatusService.StaticStatusService.authToken);
         hp = new HTTPSRequester(new GotBuckets()).execute(url);
     }
     

@@ -13,7 +13,7 @@ public class StatusService {
         
         protected static String s3Location = "https://s3-eu-west-1.amazonaws.com/";
         protected static String taskBucket = "p60v4ow30312-tasks";
-        protected static String answerBucket = "p60v4ow30312-answers";.
+        protected static String answerBucket = "p60v4ow30312-answers";
         protected static String graphicsBucket = "p60v4ow30312-graphics";
         
 
