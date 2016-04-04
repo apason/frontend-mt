@@ -32,7 +32,7 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
         @Override
         public void taskCompleted(String response) {
             String url = StatusService.StaticStatusService.sc.EndAnswerUpload(answerID, response);
-            new HTTPSRequester(new CheckToken()).execute(url);
+            new HTTPSRequester(new GotUrlToUpload()).execute(url);
         }
     }
     
