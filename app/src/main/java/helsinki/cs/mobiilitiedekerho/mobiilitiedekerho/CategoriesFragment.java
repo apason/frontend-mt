@@ -89,14 +89,14 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
     }
 
     private void drawImages() {
-        /*
+
         LinearLayout ll = (LinearLayout) view.findViewById(R.id.categories);
         ll.setOrientation(LinearLayout.HORIZONTAL);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        */
+        /*
         GridView gv = (GridView) view.findViewById(R.id.categories);
         GridView.LayoutParams lp = new GridView.LayoutParams(GridView.LayoutParams.WRAP_CONTENT, GridView.LayoutParams.WRAP_CONTENT);
-
+        */
         ImageButton[] categorybutton = new ImageButton[categories.size()];
         for (int i = 0; i < categories.size(); i++) {
             try {
@@ -107,7 +107,7 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
                 categorybutton[i].setOnClickListener(this);
                 categorybutton[i].setBackgroundColor(Color.TRANSPARENT);
                 categorybutton[i].setId(Integer.parseInt(categories.get(i).get("id")));
-                gv.addView(categorybutton[i], lp);
+                ll.addView(categorybutton[i], lp);
             } catch (Exception e) {
                 Log.e("Image error", e.toString());
             }

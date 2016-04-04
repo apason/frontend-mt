@@ -11,7 +11,7 @@ public class StatusService {
 
         protected static final String urli = "https://mobiilitiedekerho.duckdns.org:27461/"; //The DNS name of the back-end server. Hard-coded and will always be.
         
-        protected static String s3Location = "https://s3-eu-west-1.amazonaws.com/";
+        protected static String s3Location = "https://s3-eu-central-1.amazonaws.com/";
         protected static String taskBucket = "p60v4ow30312-tasks";
         protected static String answerBucket = "p60v4ow30312-answers";
         protected static String graphicsBucket = "p60v4ow30312-graphics";

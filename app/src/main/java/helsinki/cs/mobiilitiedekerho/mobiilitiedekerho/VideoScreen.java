@@ -96,10 +96,22 @@ public class VideoScreen extends Activity {
         String type = mime.getMimeTypeFromExtension(ext);
 
         String html_text;
+
+        //
+        html_text = null;
+        if (type == null) {
+            html_text = StatusService.StaticStatusService.VideoPlay_HtmlTemplate.replace("#video_src#", url);
+            Log.i("html", html_text);
+        }
+        //
+        /*
         if (type.contains("video")) {
             html_text = StatusService.StaticStatusService.VideoPlay_HtmlTemplate.replace("#video_src#", url);
+            Log.i("html", html_text);
         }
+
         else html_text = url;
+        */
         webView.loadData(html_text, "text/html; charset=utf-8", "UTF-8"); //NOTE: Only "US-ASCII charset" is allowed/works in the html_text actually (android bug).
     }
 
