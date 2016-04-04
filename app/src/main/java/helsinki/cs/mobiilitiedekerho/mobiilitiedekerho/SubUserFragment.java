@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 /**
  * Fragment to be used inside UserActivity to create new sub-users.
@@ -22,9 +23,8 @@ public class SubUserFragment extends Fragment {
     static final int REQUEST_IMAGE_CAPTURE = 1;
     ImageView iv;
 
-
     /**
-     * A listener that checks if saving subuser worked out.
+     * A listener that checks if saving sub-user worked out and notifies the user of the result.
      */
     public class SubListener implements TaskCompleted {
         @Override
@@ -32,9 +32,13 @@ public class SubUserFragment extends Fragment {
             Log.i("subia", response);
             boolean parsingWorked = StatusService.StaticStatusService.jc.newJson(response);
             if (parsingWorked && StatusService.StaticStatusService.sc.checkStatus()) {
-                //TODO
+                Toast.makeText(getActivity(), "Alikäyttäjän luonti onnistui.",
+                        Toast.LENGTH_LONG).show();
             }
-            else ;//TODO
+            else {
+                Toast.makeText(getActivity(), "Alikäyttäjän luonti ei onnistunut.",
+                        Toast.LENGTH_LONG).show();
+            }
         }
     }
 
