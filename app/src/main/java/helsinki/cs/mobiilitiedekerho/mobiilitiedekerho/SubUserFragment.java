@@ -34,6 +34,7 @@ public class SubUserFragment extends Fragment {
             if (parsingWorked && StatusService.StaticStatusService.sc.checkStatus()) {
                 Toast.makeText(getActivity(), "Alikäyttäjän luonti onnistui.",
                         Toast.LENGTH_LONG).show();
+                getActivity().onBackPressed();
             }
             else {
                 Toast.makeText(getActivity(), "Alikäyttäjän luonti ei onnistunut.",

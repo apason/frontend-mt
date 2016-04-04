@@ -8,8 +8,11 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -59,6 +62,19 @@ public class UserActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.user_activity);
 
+        RadioButton a = (RadioButton) findViewById(R.id.onlyme);
+        RadioButton b = (RadioButton) findViewById(R.id.registered);
+        RadioButton c = (RadioButton) findViewById(R.id.anyone);
+
+        switch(StatusService.getUsageRights()) {
+            case 0:
+                a.setChecked(true);
+            case 1:
+                b.setChecked(true);
+            case 2:
+                c.setChecked(true);
+        }
+
         // Add OnClickListener to the logout button
         Button logoutButton = (Button) findViewById(R.id.logout_button);
         logoutButton.setOnClickListener(new View.OnClickListener() {
@@ -94,6 +110,8 @@ public class UserActivity extends AppCompatActivity {
                 ft.commit();
             }
         });
+
+
     }
 
     public void showUserAgreement() {
@@ -115,6 +133,29 @@ public class UserActivity extends AppCompatActivity {
     public void afterLogout() {
         Intent intent = new Intent(getApplication(), MainActivity.class);
         startActivity(intent);
+    }
+
+    /**
+     * Method for handling changes in usage rights the user makes.
+     */
+    public void radioButtonOnClick(View view) {
+        boolean checked = ((RadioButton) view).isChecked();
+
+        // Check which radio button was clicked
+        switch(view.getId()) {
+            case R.id.onlyme:
+                if (checked)
+                    StatusService.setUsageRights(0);
+                    break;
+            case R.id.registered:
+                if (checked)
+                    StatusService.setUsageRights(1);
+                    break;
+            case R.id.anyone:
+                if (checked)
+                    StatusService.setUsageRights(2);
+                    break;
+        }
     }
 }
 

@@ -29,18 +29,19 @@
             android:layout_height="wrap_content"
             android:text="Vain minä"
             android:id="@+id/onlyme" android:textColor="#000000" android:enabled="true"
-            android:checked="true"/>
+            android:onClick="radioButtonOnClick"/>
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Rekisteröityneet käyttäjät"
-            android:id="@+id/registered" android:textColor="#000000" android:enabled="true"/>
+            android:id="@+id/registered" android:textColor="#000000" android:enabled="true"
+            android:onClick="radioButtonOnClick"/>
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Kuka tahansa"
             android:id="@+id/anyone" android:textColor="#000000" android:enabled="true"
-            />
+            android:onClick="radioButtonOnClick"/>
     </RadioGroup>
     <TextView
         android:layout_width="wrap_content"
