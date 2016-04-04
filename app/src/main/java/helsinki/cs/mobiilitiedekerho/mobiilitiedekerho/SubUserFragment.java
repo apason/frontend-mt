@@ -32,11 +32,11 @@ public class SubUserFragment extends Fragment {
             Log.i("subia", response);
             boolean parsingWorked = StatusService.StaticStatusService.jc.newJson(response);
             if (parsingWorked && StatusService.StaticStatusService.sc.checkStatus()) {
-                Toast.makeText(getContext(), "Alikäyttäjän luonti onnistui.",
+                Toast.makeText(getActivity(), "Alikäyttäjän luonti onnistui.",
                         Toast.LENGTH_LONG).show();
             }
             else {
-                Toast.makeText(getContext(), "Alikäyttäjän luonti ei onnistunut.",
+                Toast.makeText(getActivity(), "Alikäyttäjän luonti ei onnistunut.",
                         Toast.LENGTH_LONG).show();
             }
         }
