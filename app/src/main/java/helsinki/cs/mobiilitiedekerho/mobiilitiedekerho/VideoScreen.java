@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.util.Log;
+import android.webkit.MimeTypeMap;
 import android.webkit.WebView;
 import android.webkit.WebSettings;
 import android.webkit.WebViewClient;
@@ -88,10 +89,17 @@ public class VideoScreen extends Activity {
         
         //Video loading code
         Intent intent = getIntent();
-        String message = intent.getStringExtra(TaskActivity.EXTRA_MESSAGE_URL);
-        /*message kovakoodataan tilalle, niin lataa eri videoita*/
-        /* TEMPORAL */ String kovakoodataan = "https://s3.eu-central-1.amazonaws.com/p60v4ow30312-tasks/huuteluu";
-        String html_text = StatusService.StaticStatusService.VideoPlay_HtmlTemplate.replace("#video_src#", kovakoodataan);
+        String url = intent.getStringExtra(TaskActivity.EXTRA_MESSAGE_URL);
+
+        MimeTypeMap mime = MimeTypeMap.getSingleton();
+        String ext = url.substring(url.lastIndexOf(".")).toLowerCase(); //toLowerCase in the (odd) case of the extension being in UpperCase, else MimeType may not recognize it.
+        String type = mime.getMimeTypeFromExtension(ext);
+
+        String html_text;
+        if (type.contains("video")) {
+            html_text = StatusService.StaticStatusService.VideoPlay_HtmlTemplate.replace("#video_src#", url);
+        }
+        else html_text = url;
         webView.loadData(html_text, "text/html; charset=utf-8", "UTF-8"); //NOTE: Only "US-ASCII charset" is allowed/works in the html_text actually (android bug).
     }
 
@@ -121,16 +129,6 @@ public class VideoScreen extends Activity {
                 super.onBackPressed();
             }
         }
-    }
-    
-    //Meidän projektin metodi. Tarvii intenttina passatun URLn. Onko enää edes käytössä?
-    public void playVideo() {
-        Intent intent = getIntent();
-        String message = intent.getStringExtra(TaskActivity.EXTRA_MESSAGE_URL);
-
-        //Video loading code
-        String html_text = StatusService.StaticStatusService.VideoPlay_HtmlTemplate.replace("#video_src#", message);
-        webView.loadData(html_text, "text/html; charset=utf-8", "UTF-8"); //NOTE: Only "US-ASCII charset" is allowed/works in the html_text actually (android bug).
     }
 
      // Stops showing and downloading of a video downloading if back button is pressed.
