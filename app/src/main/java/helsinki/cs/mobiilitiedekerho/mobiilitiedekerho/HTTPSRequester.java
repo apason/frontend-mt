@@ -73,7 +73,7 @@ public class HTTPSRequester extends AsyncTask<String, String, String> {
 
 
     protected void onPostExecute(String result) {
-        act.taskCompleted(result);
+        if (act != null) act.taskCompleted(result);
     }
 
 }
