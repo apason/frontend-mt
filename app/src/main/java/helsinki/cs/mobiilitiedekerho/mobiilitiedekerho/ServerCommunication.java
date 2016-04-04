@@ -97,8 +97,8 @@ public class ServerCommunication {
      * @param taskId:    All answers does link to a certain task -> taskId is the task's id of the task to be answered.
      * @param subUserID: The subUser's id which answer is to be uploaded.
      */
-    public String StartAnswerUpload(String taskId, String subUserID) {
-        return getResponse("StartAnswerUpload", "task_id", taskId, "subuser_id", subUserID);
+    public String StartAnswerUpload(String taskId, String subUserID, String fileType) {
+        return getResponse("StartAnswerUpload", "task_id", taskId, "subuser_id", subUserID, "file_type", fileType);
     }
 
     /**
@@ -251,5 +251,13 @@ public class ServerCommunication {
     public String CheckTokenIntegrity(String token) {
         return getResponse("CheckTokenIntegrity", "auth_token", token);
     }
+    
+    /**
+     * Gets all the adresses of the S3 buckets and its location.
+     */
+    public String GetBuckets(String token) {
+        return getResponse("GetBuckets");
+    }
+    
 }
 

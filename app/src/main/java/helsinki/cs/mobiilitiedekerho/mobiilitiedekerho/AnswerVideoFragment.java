@@ -72,40 +72,47 @@ public class AnswerVideoFragment extends Fragment implements View.OnClickListene
         ll.setOrientation(LinearLayout.HORIZONTAL);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         lp.setMargins(0, 0, 0, 15);
-        StatusService.StaticStatusService.jc.newJson(response);
-        ArrayList<HashMap<String, String>> answers = StatusService.StaticStatusService.jc.getObjects();
+        boolean parsingWorked = StatusService.StaticStatusService.jc.newJson(response);
+        if (parsingWorked && StatusService.StaticStatusService.sc.checkStatus()) {
+            ArrayList<HashMap<String, String>> answers = StatusService.StaticStatusService.jc.getObjects();
 
-        //draws chosen number of taskvideobuttons:
-        Button[] answerbutton = new Button[10];
-        for (int i = 0; i < answers.size(); i++) {
-            if (!answers.get(i).isEmpty()) {
+            //draws chosen number of taskvideobuttons:
+            Button[] answerbutton = new Button[10];
+            for (int i = 0; i < answers.size(); i++) {
+                if (!answers.get(i).isEmpty()) {
 
-                String id = answers.get(i).get("id");
-                //int imageID = getResources().getIdentifier(id, "drawable", getActivity().getApplicationContext().getPackageName());
-                answerbutton[i] = new Button(getContext());
-                //answerbutton[i].setImageResource(imageID);
-                //answerbutton[i].setScaleType(ImageView.ScaleType.FIT_CENTER); // skaalaa vastausvideon thumbnailin, jos erikokoisia
-                answerbutton[i].setOnClickListener(this);
-                answerbutton[i].setLayoutParams(lp);
-                answerbutton[i].setBackgroundColor(Color.RED);
-                answerbutton[i].setText("VASTAUS "+id);
-                final float scale = getContext().getResources().getDisplayMetrics().density;
-                answerbutton[i].setMinimumHeight((int) (50 * scale + 0.5f));
-                answerbutton[i].setMinimumWidth((int) (100 * scale + 0.5f));
+                    String id = answers.get(i).get("id");
+                    //int imageID = getResources().getIdentifier(id, "drawable", getActivity().getApplicationContext().getPackageName());
+                    answerbutton[i] = new Button(getContext());
+                    //answerbutton[i].setImageResource(imageID);
+                    //answerbutton[i].setScaleType(ImageView.ScaleType.FIT_CENTER); // skaalaa vastausvideon thumbnailin, jos erikokoisia
+                    answerbutton[i].setOnClickListener(this);
+                    answerbutton[i].setLayoutParams(lp);
+                    answerbutton[i].setBackgroundColor(Color.RED);
+                    answerbutton[i].setText("VASTAUS "+id);
+                    final float scale = getContext().getResources().getDisplayMetrics().density;
+                    answerbutton[i].setMinimumHeight((int) (50 * scale + 0.5f));
+                    answerbutton[i].setMinimumWidth((int) (100 * scale + 0.5f));
 
-                ((ViewGroup.MarginLayoutParams) answerbutton[i].getLayoutParams()).leftMargin = 7;
-                //TAI: ((MarginLayoutParams) answerbutton[i].getLayoutParams()).leftMargin = 7;
-                answerbutton[i].setId(Integer.parseInt(answers.get(i).get("id")));
-                ll.addView(answerbutton[i], lp);
+                    ((ViewGroup.MarginLayoutParams) answerbutton[i].getLayoutParams()).leftMargin = 7;
+                    //TAI: ((MarginLayoutParams) answerbutton[i].getLayoutParams()).leftMargin = 7;
+                    answerbutton[i].setId(Integer.parseInt(answers.get(i).get("id")));
+                    ll.addView(answerbutton[i], lp);
+                }
             }
         }
+        //TODO else?
+        
     }
 
     //Gets URL from database and calls activity's method to play video in VideoScreen object.
     private void answerURL (String response) {
-        StatusService.StaticStatusService.jc.newJson(response);
-        ArrayList<HashMap<String, String>> answer = StatusService.StaticStatusService.jc.getObjects();
-        answerURL = StatusService.StaticStatusService.s3Location + StatusService.StaticStatusService.answerBucket + "/" + answer.get(0).get("uri");
-        ((TaskActivity) getActivity()).playback(answerURL);
+        boolean parsingWorked = StatusService.StaticStatusService.jc.newJson(response);
+        if (parsingWorked && StatusService.StaticStatusService.sc.checkStatus()) {
+            ArrayList<HashMap<String, String>> answer = StatusService.StaticStatusService.jc.getObjects();
+            answerURL = StatusService.StaticStatusService.s3Location + StatusService.StaticStatusService.answerBucket + "/" + answer.get(0).get("uri");
+            ((TaskActivity) getActivity()).playback(answerURL);
+        }
+        //TODO else?
     }
 }

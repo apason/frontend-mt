@@ -14,18 +14,18 @@ import android.util.Log;
 
 public class MainActivity extends AppCompatActivity {
 
-    AsyncTask hp = null;
-    boolean triedCommunicatingAlready = false;
+    private AsyncTask hp = null;
+    private boolean triedCommunicatingAlready = false;
 
 
     public class GotToken implements TaskCompleted {
         @Override
         public void taskCompleted(String response) {
-            StatusService.StaticStatusService.jc.newJson(response);
+            boolean parsingWorked = StatusService.StaticStatusService.jc.newJson(response);
             Log.i("täällä", "täällä");
-            if (StatusService.StaticStatusService.sc.checkStatus()) {
+            if (parsingWorked && StatusService.StaticStatusService.sc.checkStatus()) {
                 StatusService.StaticStatusService.authToken = StatusService.StaticStatusService.jc.getProperty("auth_token");
-                start();
+                getBuckets();
             }
             else {
                 if (triedCommunicatingAlready) {
@@ -51,24 +51,49 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * A listener hat checks teh response about token integrity.
+     * A listener that checks the response about token integrity.
      * If it is "no good", then it gets an anonymous one.
      */
     public class CheckToken implements TaskCompleted {
         @Override
         public void taskCompleted(String response) {
-            StatusService.StaticStatusService.jc.newJson(response);
+            boolean parsingWorked = StatusService.StaticStatusService.jc.newJson(response);
             Log.i("täällä2", "täällä");
-            if (!StatusService.StaticStatusService.sc.checkStatus()) {
-                String url = StatusService.StaticStatusService.sc.AnonymousSession();
-                hp = new HTTPSRequester(new GotToken()).execute(url);
+            if (parsingWorked) {
+                if (!StatusService.StaticStatusService.sc.checkStatus()) {
+                    String url = StatusService.StaticStatusService.sc.AnonymousSession();
+                    hp = new HTTPSRequester(new GotToken()).execute(url);
+                }
+                else {
+                    StatusService.setLoggedIn(true);
+                    getBuckets();
+                }
             }
-            else {
-                StatusService.setLoggedIn(true);
-                start();
-            }
+            //else {String url = StatusService.StaticStatusService.sc.AnonymousSession(); hp = new HTTPSRequester(new GotToken()).execute(url);} //???
         }
     }
+    
+    
+    /**
+     * A listener that checks if receiving bucket names worked out and takes them to memory for use.
+     */
+    public class GotBuckets implements TaskCompleted {
+        @Override
+        public void taskCompleted(String response) {
+            Log.i("bucketit", response);
+            boolean parsingWorked = StatusService.StaticStatusService.jc.newJson(response);
+            if (parsingWorked && StatusService.StaticStatusService.sc.checkStatus()) {
+                StatusService.StaticStatusService.s3Location = StatusService.StaticStatusService.jc.getProperty("s3Location");
+                StatusService.StaticStatusService.taskBucket = StatusService.StaticStatusService.jc.getProperty("taskBucket");
+                StatusService.StaticStatusService.answerBucket = StatusService.StaticStatusService.jc.getProperty("answerBucket");
+                StatusService.StaticStatusService.graphicsBucket = StatusService.StaticStatusService.jc.getProperty("graphicsBucket");
+            }
+            //else just uses the hard-coded ones.
+            start();
+        }
+    }
+    
+    
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,6 +143,11 @@ public class MainActivity extends AppCompatActivity {
         drawScreen();
     }
 
+    public void getBuckets() {
+        String url = StatusService.StaticStatusService.sc.GetBuckets(StatusService.StaticStatusService.authToken);
+        hp = new HTTPSRequester(new GotBuckets()).execute(url);
+    }
+    
     public void start() {
         // TODO: Maybe some kind of data-preloading.
         drawScreen();

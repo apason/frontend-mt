@@ -34,22 +34,30 @@ public class LoginDialog extends AppCompatActivity {
     AsyncTask hp = null;
 
     public void authenticated(String response) {
-        StatusService.StaticStatusService.jc.newJson(response);
-        //ArrayList<HashMap<String, String>> tasks = StatusService.StaticStatusService.jc.getObjects();
-        //Log.i("status", StatusService.StaticStatusService.jc.getProperty("status"));
-        if (StatusService.StaticStatusService.sc.checkStatus()) {
-            Toast.makeText(this, "Kirjautuminen onnistui!",
-                Toast.LENGTH_LONG).show();
-            StatusService.setLoggedIn(true);
-            this.finish();
-        } else {
-            // If username or password is incorrect empty TextViews and notify user.
+        boolean parsingWorked = StatusService.StaticStatusService.jc.newJson(response);
+        if (parsingWorked && StatusService.StaticStatusService.sc.checkStatus()) {
+            //ArrayList<HashMap<String, String>> tasks = StatusService.StaticStatusService.jc.getObjects();
+            //Log.i("status", StatusService.StaticStatusService.jc.getProperty("status"));
+            if (StatusService.StaticStatusService.sc.checkStatus()) {
+                Toast.makeText(this, "Kirjautuminen onnistui.",
+                    Toast.LENGTH_LONG).show();
+                StatusService.setLoggedIn(true);
+                this.finish();
+            } else {
+                // If username or password is incorrect empty TextViews and notify user.
+                emailTV.setText("");
+                passwordTV.setText("");
+                Toast.makeText(this, "Sähköpostiosoite tai salasana väärin!",
+                    Toast.LENGTH_LONG).show();
+            }
+        }
+        else {
+            // If authentication response "cannot be computed" empty TextViews and notify user.
             emailTV.setText("");
             passwordTV.setText("");
-            Toast.makeText(this, "Sähköpostiosoite tai salasana väärin!",
-                Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Ongelma authenticoimisessa, kokeile uudestaan.!",
+            Toast.LENGTH_LONG).show();
         }
-
     }
 
     @Override

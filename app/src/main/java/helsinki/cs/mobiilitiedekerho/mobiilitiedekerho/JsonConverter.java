@@ -34,17 +34,23 @@ public class JsonConverter {
      * Note: Cleares old data if exists.
      * @param json: JSON String to be parsed.
      */
-    public void newJson(String json) {
+    public boolean newJson(String json) {
+        boolean workedOut = false;
         Log.i("json", json);
+        
         try {
             properties = new HashMap<String, String>();
-
             objects = new ArrayList<HashMap<String, String>>();
+            
             JsonReader reader = new JsonReader(new StringReader(json));
             parseJson(reader);
+            
+            workedOut = true;
         } catch (IOException e) {
             e.printStackTrace();
         }
+        
+        return workedOut;
     }
 
 
