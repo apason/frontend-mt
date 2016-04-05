@@ -2,6 +2,7 @@ package helsinki.cs.mobiilitiedekerho.mobiilitiedekerho;
 
 
 import android.content.Context;
+import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -31,6 +32,10 @@ public class StatusService {
         //Note: These variables declare the resolution of the screen in pixels, in this APP is the landscape orientation (width is the larger).
         protected static int screenWidth;
         protected static int screenHeight;
+
+        // Keeps track of the RadioButtons in UserActivity. Defines who can view the user's videos.
+        // 0 = Only the user himself, 1 = Only registered users, 2 = Anyone
+        protected static int usageRights;
         
         
         protected static ArrayList<Integer> categories;
@@ -67,6 +72,17 @@ public class StatusService {
 
     public static void setScreenHeight(int screenHeight) {
         StaticStatusService.screenHeight = screenHeight;
+    }
+
+    public static void setUsageRights(int i) {
+        StaticStatusService.usageRights = i;
+        FileHandling fh = new FileHandling();
+        fh.saveUsageRights(i);
+    }
+
+    public static int getUsageRights() {
+        FileHandling fh = new FileHandling();
+        return fh.getUsageRights();
     }
 }
 

@@ -20,6 +20,7 @@ public class FileHandling extends AppCompatActivity {
 
 
     String token = "token";
+    String usageRights = "usagerights";
 
 
     /**
@@ -50,6 +51,24 @@ public class FileHandling extends AppCompatActivity {
         editor.putString(token, StatusService.StaticStatusService.authToken);
         Log.i("tokeni", StatusService.StaticStatusService.authToken);
         return editor.commit();
+    }
+
+    public boolean saveUsageRights(int i) {
+        SharedPreferences sharedPref = StatusService.StaticStatusService.context.getSharedPreferences("mobiilitiedekerho", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString(usageRights, Integer.toString(StatusService.StaticStatusService.usageRights));
+        Log.i("usagerights", Integer.toString(StatusService.StaticStatusService.usageRights));
+        return editor.commit();
+    }
+
+    public int getUsageRights() {
+        SharedPreferences prefs = StatusService.StaticStatusService.context.getSharedPreferences("mobiilitiedekerho", Context.MODE_PRIVATE);
+        String rights = prefs.getString(usageRights, null);
+        if (rights == null) {
+            saveUsageRights(0);
+            return 0;
+        } else
+        return Integer.parseInt(rights);
     }
 
     /**
