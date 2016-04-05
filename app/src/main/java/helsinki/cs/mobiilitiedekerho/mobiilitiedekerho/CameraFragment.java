@@ -1,12 +1,8 @@
 package helsinki.cs.mobiilitiedekerho.mobiilitiedekerho;
 
-import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
-import android.net.wifi.WifiConfiguration;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
@@ -20,8 +16,6 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -89,7 +83,7 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
     public void onClick(View v) {
         upload = new Dialog(getActivity());
 
-        upload.setContentView(R.layout.imageupload_fragment);
+        upload.setContentView(R.layout.answer_upload_fragment);
         upload.setTitle("Lisää vastaus tehtävään");
 
         //Create button that after clicking leads the user to record a video using the device's camera

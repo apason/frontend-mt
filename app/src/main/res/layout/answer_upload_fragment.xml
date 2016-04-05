@@ -18,7 +18,7 @@
         android:id="@+id/headerText" android:layout_alignTop="@+id/gridView"
         android:layout_alignLeft="@+id/gridView" android:layout_alignStart="@+id/gridView"
         android:layout_alignRight="@+id/gridView" android:layout_alignEnd="@+id/gridView"
-        android:textColor="#000000" android:textSize="20dp"/>
+        android:textColor="#000000" android:textSize="20dp" android:layout_margin="10dp"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
