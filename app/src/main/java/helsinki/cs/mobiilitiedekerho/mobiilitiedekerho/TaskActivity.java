@@ -27,7 +27,7 @@ public class TaskActivity extends AppCompatActivity {
         AnswerVideoFragment avf = new AnswerVideoFragment();
         TaskVideoFragment tvf = new TaskVideoFragment();
         InfoTextFragment uif = new InfoTextFragment();
-        uif.setTitle("Tehtävän kuvaus tähän");
+        uif.setTitle("Tehtävän kuvaus");
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
@@ -40,6 +40,7 @@ public class TaskActivity extends AppCompatActivity {
         bundle.putString("task", message);
         avf.setArguments(bundle);
         tvf.setArguments(bundle);
+        uif.setArguments(bundle);
 
         transaction.commit();
     }

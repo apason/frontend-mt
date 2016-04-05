@@ -50,10 +50,7 @@ public class AnswerVideoFragment extends Fragment implements View.OnClickListene
 
         //task_id from TaskActivity.java:
         String id = getArguments().getString("task");
-        //TESTIKOMENTO:
-        //String url = StatusService.StaticStatusService.sc.DescribeCategoryTasks("1");
         String url = StatusService.StaticStatusService.sc.DescribeTaskAnswers(id);
-        Log.i("urlit ", url);
         hp = new HTTPSRequester(new AnswerListener()).execute(url);
 
         return view;
@@ -62,7 +59,6 @@ public class AnswerVideoFragment extends Fragment implements View.OnClickListene
     @Override
     public void onClick(View v) {
         int button = v.getId();
-        //String taskVideo ="https://d3kto7252bccha.cloudfront.net/" + a +".mp4";
         String url = StatusService.StaticStatusService.sc.DescribeAnswer(Integer.toString(button));
         hp = new HTTPSRequester(new URLListener()).execute(url);
     }

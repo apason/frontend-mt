@@ -3,21 +3,36 @@ package helsinki.cs.mobiilitiedekerho.mobiilitiedekerho;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.TextView;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class InfoTextFragment extends Fragment implements View.OnClickListener {
 
     private Dialog info = null;
+    private AsyncTask hp;
     ImageButton infoButton;
     View view;
+    TextView textView;
     String title;
+
+    public class InfoTextLoaded implements TaskCompleted {
+        @Override
+        public void taskCompleted(String response) {
+            openLoginDialog(response);
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -28,7 +43,6 @@ public class InfoTextFragment extends Fragment implements View.OnClickListener {
         infoButton =
             (ImageButton) view.findViewById(R.id.info_button);
         infoButton.setOnClickListener(this);
-
         return view;
     }
 
@@ -38,14 +52,25 @@ public class InfoTextFragment extends Fragment implements View.OnClickListener {
 
     // When loginButton is pressed call method openLoginDialog
     @Override
-    public void onClick(View v) { openLoginDialog();
+    public void onClick(View v) {
+        if (!getArguments().getString("task").equals("0")) {
+            String url = StatusService.StaticStatusService.sc.DescribeTask(getArguments().getString("task"));
+            hp = new HTTPSRequester(new InfoTextLoaded()).execute(url);
+        }
     }
 
-    public void openLoginDialog() {
-        info = new Dialog(InfoTextFragment.this.getActivity());
-        // Set GUI of login screen
-        info.setContentView(R.layout.info_text_fragment);
-        info.setTitle(title);
+    public void openLoginDialog(String response) {
+        boolean parsingWorked = StatusService.StaticStatusService.jc.newJson(response);
+        if (parsingWorked && StatusService.StaticStatusService.sc.checkStatus()) {
+            ArrayList<HashMap<String, String>> task = StatusService.StaticStatusService.jc.getObjects();
+            info = new Dialog(InfoTextFragment.this.getActivity());
+            // Set GUI of login screen
+            info.setContentView(R.layout.info_text_fragment);
+            info.setTitle(title);
+            textView = (TextView) info.findViewById(R.id.taskText);
+            textView.setTextSize(20);
+            textView.setText(task.get(0).get("info"));
+        }
 
         // On click of cancel button close the dialog
         Button closePopupButton =
