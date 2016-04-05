@@ -62,14 +62,19 @@ public class InfoTextFragment extends Fragment implements View.OnClickListener {
     public void openLoginDialog(String response) {
         boolean parsingWorked = StatusService.StaticStatusService.jc.newJson(response);
         if (parsingWorked && StatusService.StaticStatusService.sc.checkStatus()) {
-            ArrayList<HashMap<String, String>> task = StatusService.StaticStatusService.jc.getObjects();
+            String taskInfo = StatusService.StaticStatusService.jc.getProperty("info");
             info = new Dialog(InfoTextFragment.this.getActivity());
             // Set GUI of login screen
             info.setContentView(R.layout.info_text_fragment);
             info.setTitle(title);
             textView = (TextView) info.findViewById(R.id.taskText);
             textView.setTextSize(20);
-            textView.setText(task.get(0).get("info"));
+            
+            //Checks whether the task has info defined or not. If not it sets "Ei ole kuvausta tehtävälle." as the task's description.
+            if (taskInfo == null) {
+                textView.setText("Ei ole kuvausta tehtävälle.");
+            }
+            textView.setText(taskInfo);
         }
 
         // On click of cancel button close the dialog
