@@ -12,10 +12,10 @@ public class StatusService {
 
         protected static final String urli = "https://mobiilitiedekerho.duckdns.org:27461/"; //The DNS name of the back-end server. Hard-coded and will always be.
         
-        protected static String s3Location = "https://s3-eu-west-1.amazonaws.com/";
+        protected static String s3Location = "https://s3-eu-central-1.amazonaws.com/";
         protected static String taskBucket = "p60v4ow30312-tasks";
         protected static String answerBucket = "p60v4ow30312-answers";
-        protected static String graphicsBucket = "p60v4ow30312-graphics";
+        protected static String graphicsBucket = "mobiilitiedekerho-graphics";
 
         //protected static final String VideoPlay_HtmlTemplate = "<!DOCTYPE html><head><script>var elem = document.getElementById(\"video\");if (elem.requestFullscreen) {elem.requestFullscreen();} else if (elem.msRequestFullscreen) {elem.msRequestFullscreen();} else if (elem.mozRequestFullScreen) {elem.mozRequestFullScreen();} else if (elem.webkitRequestFullscreen) {elem.webkitRequestFullscreen();}elem.play();</script></head><body><link href=\"//vjs.zencdn.net/5.8/video-js.min.css\" rel=\"stylesheet\"><script src=\"//vjs.zencdn.net/5.8/video.min.js\"></script><video controls id=\"video\" class=\"video-js vjs-default-skin\" width=\"100%\" height=\"100%\" preload=\"auto\" data-setup=\"{}\" autoplay><source src=\"#video_src#\"></video></body>";
         protected static final String VideoPlay_HtmlTemplate = "<!DOCTYPE html><head><script>var elem = document.getElementById(\"video\");if (elem.requestFullscreen) {elem.requestFullscreen();} else if (elem.msRequestFullscreen) {elem.msRequestFullscreen();} else if (elem.mozRequestFullScreen) {elem.mozRequestFullScreen();} else if (elem.webkitRequestFullscreen) {elem.webkitRequestFullscreen();}elem.play();</script></head><body><video controls id=\"video\" width=\"100%\" height=\"100%\" preload=\"auto\" data-setup=\"{}\" autoplay><source src=\"#video_src#\"></video></body>";
