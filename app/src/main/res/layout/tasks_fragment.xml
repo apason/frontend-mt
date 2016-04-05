@@ -11,36 +11,17 @@
 
     </LinearLayout>
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" >
-        <LinearLayout
-            android:id="@+id/tasks"
-            android:orientation="vertical"
-            android:clickable="true"
-            android:layout_marginLeft="150dp"
-            android:layout_width="250dp"
-            android:layout_height="250dp" >
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent" android:layout_height="fill_parent"
+        android:scrollbars="vertical">
 
-        <TableLayout
-            android:id="@+id/columns"
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-            <TableRow
-                android:id="@+id/column1"
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-            </TableRow>
-            <TableRow
-                android:id="@+id/column2"
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-            </TableRow>
-        </TableLayout>
-        </LinearLayout>
+        <RelativeLayout
+            android:id="@+id/tasks"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="horizontal" >
+        </RelativeLayout>
+
     </ScrollView>
 
 </RelativeLayout>
