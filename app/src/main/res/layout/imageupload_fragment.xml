@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <GridView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/gridView"
+        android:layout_alignParentTop="true" android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" android:layout_margin="50dp"
+        android:background="#FFFFFF"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Millaisen vastauksen haluat lähettää?"
+        android:id="@+id/headerText" android:layout_alignTop="@+id/gridView"
+        android:layout_alignLeft="@+id/gridView" android:layout_alignStart="@+id/gridView"
+        android:layout_alignRight="@+id/gridView" android:layout_alignEnd="@+id/gridView"
+        android:textColor="#000000" android:textSize="20dp"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Video"
+        android:id="@+id/textView"
+        android:textColor="#000000" android:textSize="20dp" android:layout_marginTop="40dp"
+        android:layout_below="@+id/headerText" android:layout_alignLeft="@+id/gridView"
+        android:layout_alignStart="@+id/gridView" android:layout_marginLeft="20dp"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Kuva"
+        android:id="@+id/textView2"
+        android:textColor="#000000" android:textSize="20dp" android:layout_alignTop="@+id/textView"
+        android:layout_alignRight="@+id/gridView" android:layout_alignEnd="@+id/gridView"
+        android:layout_marginRight="20dp"/>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Kuvaa uusi"
+        android:id="@+id/newVideoButton" android:layout_centerVertical="true"
+        android:layout_alignLeft="@+id/gridView" android:layout_alignStart="@+id/gridView"/>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Valitse olemassaoleva"
+        android:id="@+id/existingVideoButton" android:layout_below="@+id/newVideoButton"
+        android:layout_alignLeft="@+id/gridView" android:layout_alignStart="@+id/gridView"/>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Kuvaa uusi"
+        android:id="@+id/newImageButton"
+        android:layout_above="@+id/existingVideoButton" android:layout_alignRight="@+id/gridView"
+        android:layout_alignEnd="@+id/gridView"/>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Valitse olemassaoleva"
+        android:id="@+id/existingImageButton" android:layout_below="@+id/newImageButton"
+        android:layout_alignRight="@+id/gridView" android:layout_alignEnd="@+id/gridView"/>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Peruuta"
+        android:id="@+id/cancelButton" android:layout_alignBottom="@+id/gridView"
+        android:layout_centerHorizontal="true"/>
+</RelativeLayout>
