@@ -58,7 +58,6 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void taskCompleted(String response) {
             boolean parsingWorked = StatusService.StaticStatusService.jc.newJson(response);
-            Log.i("täällä2", "täällä");
             if (parsingWorked) {
                 if (!StatusService.StaticStatusService.sc.checkStatus()) {
                     String url = StatusService.StaticStatusService.sc.AnonymousSession();
