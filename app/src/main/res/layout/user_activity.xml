@@ -64,9 +64,4 @@
         android:id="@+id/addsubuserbutton" android:layout_below="@+id/user_agreement_button"
         android:layout_alignParentRight="true" android:layout_alignParentEnd="true"/>
 
-    <FrameLayout
-        android:id="@+id/sub_user_fragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
 </RelativeLayout>

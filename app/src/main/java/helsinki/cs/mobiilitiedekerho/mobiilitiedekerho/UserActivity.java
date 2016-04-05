@@ -8,11 +8,9 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -70,10 +68,13 @@ public class UserActivity extends AppCompatActivity {
         switch(StatusService.getUsageRights()) {
             case 0:
                 a.setChecked(true);
+                break;
             case 1:
                 b.setChecked(true);
+                break;
             case 2:
                 c.setChecked(true);
+                break;
         }
 
         // Add OnClickListener to the logout button
@@ -105,10 +106,8 @@ public class UserActivity extends AppCompatActivity {
         subUserButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SubUserFragment suf = new SubUserFragment();
-                FragmentTransaction ft = getFragmentManager().beginTransaction();
-                ft.add(R.id.sub_user_fragment, suf);
-                ft.commit();
+                Intent intent = new Intent(getApplication(), SubUserActivity.class);
+                startActivity(intent);
             }
         });
 
