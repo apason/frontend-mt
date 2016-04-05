@@ -33,7 +33,7 @@ public class StatusService {
         protected static int screenWidth;
         protected static int screenHeight;
 
-        // int that keeps track of the RadioButtons in UserActivity. Defines who can view the users videos.
+        // Keeps track of the RadioButtons in UserActivity. Defines who can view the user's videos.
         // 0 = Only the user himself, 1 = Only registered users, 2 = Anyone
         protected static int usageRights;
         

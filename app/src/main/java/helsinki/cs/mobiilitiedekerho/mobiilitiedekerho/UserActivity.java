@@ -66,6 +66,7 @@ public class UserActivity extends AppCompatActivity {
         RadioButton b = (RadioButton) findViewById(R.id.registered);
         RadioButton c = (RadioButton) findViewById(R.id.anyone);
 
+        // Check which usage rights the user has determined for his/her videos and set the corresponding RadioButton checked.
         switch(StatusService.getUsageRights()) {
             case 0:
                 a.setChecked(true);
