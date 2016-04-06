@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
         public void taskCompleted(String response) {
             boolean parsingWorked = StatusService.StaticStatusService.jc.newJson(response);
             if (parsingWorked) {
-                if (!StatusService.StaticStatusService.sc.checkStatus()) {
+                if (!StatusService.StaticStatusService.jc.getProperty("status").equals("authenticated")) {
                     String url = StatusService.StaticStatusService.sc.AnonymousSession();
                     hp = new HTTPSRequester(new GotToken()).execute(url);
                 }
