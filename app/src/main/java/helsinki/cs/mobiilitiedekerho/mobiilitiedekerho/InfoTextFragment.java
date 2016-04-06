@@ -71,10 +71,8 @@ public class InfoTextFragment extends Fragment implements View.OnClickListener {
             textView.setTextSize(20);
             
             //Checks whether the task has info defined or not. If not it sets "Ei ole kuvausta tehtävälle." as the task's description.
-            if (taskInfo == null) {
-                textView.setText("Ei ole kuvausta tehtävälle.");
-            }
-            textView.setText(taskInfo);
+            if (taskInfo == null) textView.setText("Ei ole kuvausta tehtävälle.");
+            else textView.setText(taskInfo);
         }
 
         // On click of cancel button close the dialog
