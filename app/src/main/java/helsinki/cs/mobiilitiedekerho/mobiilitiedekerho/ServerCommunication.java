@@ -53,6 +53,7 @@ public class ServerCommunication {
         return state.equals("Success");
     }
 
+    
 
     /**
      * Notices the server so that a anonymous token would be linked to this client.
@@ -80,7 +81,41 @@ public class ServerCommunication {
     public String AuthenticateUser(String email, String password) {
         return getResponse("GetAuthToken", "email", email, "password", password);
     }
+        
+    /**
+     * Check if the token is a valid one that is it hasn't expired.
+     * @param token the auth_token to check.
+     */
+    public String CheckTokenIntegrity(String token) {
+        return getResponse("CheckTokenIntegrity", "auth_token", token);
+    }
+    
+    
+    /**
+     * Get all the info of all the categories. Note: This method is supposed to be used at the Category Menu.
+     */
+    public String DescribeCategories() {
+        return getResponse("DescribeCategories");
+    }
+    
+    /**
+     * Get all the info of the wanted category.
+     *
+     * @param categoryId the id of the category which info is wanted to be retrieved.
+     */
+    public String DescribeCategory(String categoryId) {
+        return getResponse("DescribeCategory", "category_id", categoryId);
+    }
 
+    /**
+     * Get all tasks that are part of to the category.
+     *
+     * @param categoryId the id of the category which task belonging to it are wanted to be retrieved.
+     */
+    public String DescribeCategoryTasks(String categoryId) {
+        return getResponse("DescribeCategoryTasks", "category_id", categoryId);
+    }
+    
     /**
      * Gets the description of the desired task (a task video that is).
      *
@@ -89,6 +124,25 @@ public class ServerCommunication {
     public String DescribeTask(String taskId) {
         return getResponse("DescribeTask", "task_id", taskId);
         //return getResponse("DescribeTask", "task_id", taskId);
+    }
+    
+    /**
+     * Gets all the info of all answers related to the task.
+     *
+     * @param taskId: The task's id of which answers are to be retrieved.
+     */
+    public String DescribeTaskAnswers(String taskId) {
+        return getResponse("DescribeTaskAnswers", "task_id", taskId);
+
+    }
+    
+    /**
+     * Gets the description of the desired answer (that is a user-uploaded video).
+     *
+     * @param answerId: The answer's id of which the description is to be retrieved.
+     */
+    public String DescribeAnswer(String answerId) {
+        return getResponse("DescribeAnswer", "answer_id", answerId);
     }
 
     /**
@@ -111,51 +165,7 @@ public class ServerCommunication {
         return getResponse("EndAnswerUpload", "answer_id", answerId, "upload_status", uploadStatus);
     }
 
-    /**
-     * Gets the description of the desired answer (that is a user-uploaded video).
-     *
-     * @param answerId: The answer's id of which the description is to be retrieved.
-     */
-    public String DescribeAnswer(String answerId) {
-        return getResponse("DescribeAnswer", "answer_id", answerId);
-    }
-
-    /**
-     * Gets all the info of all answers related to the task.
-     *
-     * @param taskId: The task's id of which answers are to be retrieved.
-     */
-    public String DescribeTaskAnswers(String taskId) {
-        return getResponse("DescribeTaskAnswers", "task_id", taskId);
-
-    }
-
-    /**
-     * Get all the info of the wanted category.
-     *
-     * @param categoryId the id of the category which info is wanted to be retrieved.
-     */
-    public String DescribeCategory(String categoryId) {
-        return getResponse("DescribeCategory", "category_id", categoryId);
-    }
-
-    /**
-     * Get all the info of all the categories. Note: This method is supposed to be used at Main Menu.
-     */
-
-    public String DescribeCategories() {
-        return getResponse("DescribeCategories");
-    }
-
-    /**
-     * Get all tasks that are part of to the category.
-     *
-     * @param categoryId the id of the category which task belonging to it are wanted to be retrieved.
-     */
-    public String DescribeCategoryTasks(String categoryId) {
-        return getResponse("DescribeCategoryTasks", "category_id", categoryId);
-    }
-
+    
     /**
      * Creates a new sub user for the current user.
      *
@@ -190,17 +200,18 @@ public class ServerCommunication {
         return getResponse("DescribeSubUserAnswers", "subuser_id", subUserId);
     }
 
-    /**
-     * Get all the likes of a task.
-     *
-     * @param taskId the id of the task of which likes are to be described.
-     */
-    public String DescribeTaskLikes(String taskId) {
-        return getResponse("DescribeTaskLikes", "task_id", taskId);
-    }
+    
+//     /**
+//      * Get all the likes of a task.
+//      *
+//      * @param taskId the id of the task of which likes are to be described.
+//      */
+//     public String DescribeTaskLikes(String taskId) {
+//         return getResponse("DescribeTaskLikes", "task_id", taskId);
+//     }
 
     /**
-     * Get all the likes of a asnwer.
+     * Get all the likes of a answer.
      *
      * @param answerId the id of the answer of which likes are to be described.
      */
@@ -217,6 +228,24 @@ public class ServerCommunication {
         return getResponse("DescribeSubUserLikes", "subuser_id", subUserId);
     }
 
+//     /**
+//      * Like the pointed task
+//      *
+//      * @param taskId the id of the task to be liked.
+//      */
+//     public String LikeTask(String taskId) {
+//         return getResponse("LikeTask", "task_id", taskId);
+//     }
+
+    /**
+     * Like the pointed answer
+     *
+     * @param answerId the id of the answer to be liked.
+     */
+    public String LikeAnswer(String answerId) {
+        return getResponse("LikeAnswer", "answer_id", answerId);
+    }
+
     /**
      * Delete the pointed like.
      *
@@ -225,37 +254,12 @@ public class ServerCommunication {
     public String DeleteLike(String likeId) {
         return getResponse("DeleteLike", "like_id", likeId);
     }
-
-    /**
-     * Like the pointed task
-     *
-     * @param taskId the id of the task to be liked.
-     */
-    public String LikeTask(String taskId) {
-        return getResponse("LikeTask", "task_id", taskId);
-    }
-
-    /**
-     * Like the pointed answer
-     *
-     * @param answerId the id of the asnwer to be liked.
-     */
-    public String LikeAnswer(String answerId) {
-        return getResponse("LikeAnswer", "answer_id", answerId);
-    }
-
-    /**
-     * Check if the token is a valid one that is it hasn't expired.
-     * @param token the auth_token to check.
-     */
-    public String CheckTokenIntegrity(String token) {
-        return getResponse("CheckTokenIntegrity", "auth_token", token);
-    }
+    
     
     /**
-     * Gets all the adresses of the S3 buckets and its location.
+     * Gets all the addresses of the S3 buckets and its location.
      */
-    public String GetBuckets(String token) {
+    public String GetBuckets() {
         return getResponse("GetBuckets");
     }
     
