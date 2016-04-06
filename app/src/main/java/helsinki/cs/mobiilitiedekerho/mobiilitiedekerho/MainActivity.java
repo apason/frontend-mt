@@ -143,7 +143,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void getBuckets() {
-        String url = StatusService.StaticStatusService.sc.GetBuckets(StatusService.StaticStatusService.authToken);
+        String url = StatusService.StaticStatusService.sc.GetBuckets();
         hp = new HTTPSRequester(new GotBuckets()).execute(url);
     }
     
