@@ -22,6 +22,7 @@ public class InfoTextFragment extends Fragment implements View.OnClickListener {
 
     private Dialog info = null;
     private AsyncTask hp;
+    private String taskId;
     ImageButton infoButton;
     View view;
     TextView textView;
@@ -43,6 +44,7 @@ public class InfoTextFragment extends Fragment implements View.OnClickListener {
         infoButton =
             (ImageButton) view.findViewById(R.id.info_button);
         infoButton.setOnClickListener(this);
+        taskId = getArguments().getString("task");
         return view;
     }
 
@@ -53,26 +55,32 @@ public class InfoTextFragment extends Fragment implements View.OnClickListener {
     // When loginButton is pressed call method openLoginDialog
     @Override
     public void onClick(View v) {
-        if (!getArguments().getString("task").equals("0")) {
-            String url = StatusService.StaticStatusService.sc.DescribeTask(getArguments().getString("task"));
-            hp = new HTTPSRequester(new InfoTextLoaded()).execute(url);
-        }
+        String url = StatusService.StaticStatusService.sc.DescribeTask(taskId);
+        hp = new HTTPSRequester(new InfoTextLoaded()).execute(url);
     }
 
     public void openLoginDialog(String response) {
+        info = new Dialog(InfoTextFragment.this.getActivity());
+        info.setContentView(R.layout.info_text_fragment);
+        info.setTitle(title);
+        textView = (TextView) info.findViewById(R.id.taskText);
+        textView.setTextSize(20);
+
+        Log.i("TaskId", response);
         boolean parsingWorked = StatusService.StaticStatusService.jc.newJson(response);
         if (parsingWorked && StatusService.StaticStatusService.sc.checkStatus()) {
-            String taskInfo = StatusService.StaticStatusService.jc.getProperty("info");
-            info = new Dialog(InfoTextFragment.this.getActivity());
-            // Set GUI of login screen
-            info.setContentView(R.layout.info_text_fragment);
-            info.setTitle(title);
-            textView = (TextView) info.findViewById(R.id.taskText);
-            textView.setTextSize(20);
-            
+            String taskInfo = StatusService.StaticStatusService.jc.getProperty("uri");
+            Log.i("taskInfo", taskInfo);
+
+
             //Checks whether the task has info defined or not. If not it sets "Ei ole kuvausta tehtävälle." as the task's description.
             if (taskInfo == null) textView.setText("Ei ole kuvausta tehtävälle.");
             else textView.setText(taskInfo);
+        }
+        //This is for user info - taskId should be set to -1 in MainActivity.java
+        if (taskId.equals("-1")) {
+            info.setTitle("Mobiilitiedekerhon Käyttöehdot");
+            textView.setText("Käyttöehdot tähän");
         }
 
         // On click of cancel button close the dialog

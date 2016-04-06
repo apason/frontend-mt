@@ -156,13 +156,18 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.main_activity);
         LoginFragment lf = new LoginFragment();
         UserVideosFragment uvf = new UserVideosFragment();
-        InfoTextFragment uif = new InfoTextFragment();
-        uif.setTitle("Käyttöehdot ja ohjeet tähän");
+        InfoTextFragment itf = new InfoTextFragment();
+        //taskId is -1 so InfoTextFragment displays user info
+        Bundle bundle = new Bundle();
+        bundle.putString("task", "-1");
+        itf.setArguments(bundle);
+
+        //uif.setTitle("Käyttöehdot ja ohjeet tähän");
         NextPageFragment npf = new NextPageFragment();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.add(R.id.login_button_fragment, lf);
         transaction.add(R.id.user_videos_button_fragment, uvf);
-        transaction.add(R.id.info_button_fragment, uif);
+        transaction.add(R.id.info_button_fragment, itf);
         transaction.add(R.id.next_button_fragment, npf);
         transaction.commit();
     }
