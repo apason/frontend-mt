@@ -82,6 +82,11 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
+        // If user hasn't logged in disable camera functionality.
+        if (!StatusService.loggedIn()) {
+            Intent intent = new Intent(getActivity().getApplicationContext(), LoginDialog.class);
+            startActivity(intent); } else
+
         upload = new Dialog(getActivity());
 
         upload.setContentView(R.layout.answer_upload_fragment);
@@ -189,7 +194,7 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
         });
 
         WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
-        lp.copyFrom(upload.getWindow().getAttributes());
+            lp.copyFrom(upload.getWindow().getAttributes());
         lp.width = WindowManager.LayoutParams.MATCH_PARENT;
         lp.height = WindowManager.LayoutParams.MATCH_PARENT;
         upload.show();
