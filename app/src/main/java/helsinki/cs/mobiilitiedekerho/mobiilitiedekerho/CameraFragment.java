@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -186,6 +187,13 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
                 upload.dismiss();
             }
         });
+
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        lp.copyFrom(upload.getWindow().getAttributes());
+        lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+        lp.height = WindowManager.LayoutParams.MATCH_PARENT;
+        upload.show();
+        upload.getWindow().setAttributes(lp);
     }
 
             public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -284,6 +292,7 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
                                 Toast.LENGTH_LONG).show();
                     }
                 }
+
             }
 
             public void upload(String answerUri) {
