@@ -1,17 +1,15 @@
 package helsinki.cs.mobiilitiedekerho.mobiilitiedekerho;
 
 
-import android.os.AsyncTask;
-import android.util.Log;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
+import android.util.Log;
 
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.MalformedURLException;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 
 /**
@@ -67,12 +65,12 @@ public class S3Download extends AsyncTask<String, Void, String> {
         if (!result.equals("success"))
         act.taskCompleted(result);
 
-        String problems = ""; //A 'list' of images which saving didn't worked out.
+        String problems = ""; //A 'list' of images with which saving didn't work out.
         for (int i = 0 ; i < imageNames.size() ; i++) {
         if (!StatusService.StaticStatusService.fh.saveImage(imageNames.get(i), bitmaps.get(i))){
             Log.i("feilasi", imageNames.get(i));
             problems = problems + imageNames.get(i) +":";
-            //If returns false then it didn't worked out, => only ^ ???
+            //If returns false then it didn't work out, => only ^ ???
         }
         }
         if (problems.equals("")) act.taskCompleted(result);

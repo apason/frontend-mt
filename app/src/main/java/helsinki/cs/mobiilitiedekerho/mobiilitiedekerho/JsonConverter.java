@@ -1,18 +1,12 @@
 package helsinki.cs.mobiilitiedekerho.mobiilitiedekerho;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.util.Log;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 
 import java.io.IOException;
 import java.io.StringReader;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 

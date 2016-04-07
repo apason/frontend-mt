@@ -1,7 +1,6 @@
 package helsinki.cs.mobiilitiedekerho.mobiilitiedekerho;
 
 import android.app.AlertDialog;
-import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
