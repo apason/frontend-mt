@@ -31,11 +31,9 @@ public class UserVideosFragment extends Fragment implements View.OnClickListener
 
     private Dialog list = null;
 
-    public class listener implements TaskCompleted {
+    public class FetchUserVideos implements TaskCompleted {
         @Override
-        public void taskCompleted(String response) {
-            listUserVideos(response);
-        }
+        public void taskCompleted(String response) { openUserVideoDialog(response); }
     }
 
     String url;
@@ -45,53 +43,59 @@ public class UserVideosFragment extends Fragment implements View.OnClickListener
     AsyncTask hp = null;
     ImageButton userVideosButton;
 
-
-    public void listUserVideos(String response) {
-        StatusService.StaticStatusService.jc.newJson(response);
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.user_videos_button_fragment, null);
-
-        /* TODO: DescribeSubUserAnswers(StatusService.StaticStatusService.sc.currentSubUserID)
-        String url = StatusService.StaticStatusService.sc.DescribeSubUserAnswers(StatusService.StaticStatusService.sc.currentSubUserID);
-        hp = new HTTPSRequester(new listener()).execute(url);
-        */
+        userVideosButton =
+                (ImageButton) view.findViewById(R.id.user_videos_button);
+        userVideosButton.setOnClickListener(this);
         return view;
     }
 
     // When loginButton is pressed call method openLoginDialog
     @Override
     public void onClick(View v) {
-        openLoginDialog();
+        String url = StatusService.StaticStatusService.sc.DescribeSubUserAnswers(StatusService.StaticStatusService.currentSubUserID);
+        hp = new HTTPSRequester(new FetchUserVideos()).execute(url);
     }
 
-    public void openLoginDialog() {
+    public void openUserVideoDialog(String response) {
+
         list = new Dialog(UserVideosFragment.this.getActivity());
         // Set GUI of login screen
         list.setContentView(R.layout.user_videos_fragment);
-        list.setTitle("LISTAUS KÄYTTÄJÄN VIDEOISTA TÄHÄN");
+        list.setTitle("ALIKÄYTTÄJÄN VIDEOT :-)");
 
-        // On click of cancel button close the dialog
-        Button closePopupButton =
-            (Button) list.findViewById(R.id.cancel_button);
-        closePopupButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                list.dismiss();
+        boolean parsingWorked = StatusService.StaticStatusService.jc.newJson(response);
+        if (parsingWorked && StatusService.StaticStatusService.sc.checkStatus()) {
+            ArrayList<HashMap<String, String>> uservideos = StatusService.StaticStatusService.jc.getObjects();
+            if (!uservideos.isEmpty()) {
+                for (int i = 0; i < uservideos.size(); i++) {
+                    String uservideo = uservideos.get(i).get("uri");
+                    Log.i("uservideo", uservideo);
+                }
             }
 
-        });
+            // On click of cancel button close the dialog
+            Button closePopupButton =
+                    (Button) list.findViewById(R.id.cancel_button);
+            closePopupButton.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    list.dismiss();
+                }
 
-        // Force the dialog to the right size
-        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
-        lp.copyFrom(list.getWindow().getAttributes());
-        lp.width = WindowManager.LayoutParams.MATCH_PARENT;
-        lp.height = WindowManager.LayoutParams.MATCH_PARENT;
-        list.show();
-        list.getWindow().setAttributes(lp);
+            });
+
+            // Force the dialog to the right size
+            WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+            lp.copyFrom(list.getWindow().getAttributes());
+            lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+            lp.height = WindowManager.LayoutParams.MATCH_PARENT;
+            list.show();
+            list.getWindow().setAttributes(lp);
+        }
     }
 }

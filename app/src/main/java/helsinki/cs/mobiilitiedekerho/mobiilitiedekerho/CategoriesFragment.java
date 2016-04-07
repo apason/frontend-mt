@@ -85,8 +85,8 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
         Bitmap background = BitmapFactory.decodeFile(StatusService.StaticStatusService.context.getFilesDir() + "/" + "category_menu_bg.png");
         Drawable d = new BitmapDrawable(getResources(), background);
         rl.setBackground(d);
-        rl.getLayoutParams().height = 2000;
-        rl.getLayoutParams().width = 3000;
+        rl.getLayoutParams().height = 5000;
+        rl.getLayoutParams().width = 8000;
 
         ImageButton[] categorybutton = new ImageButton[categories.size()];
         for (int i = 0; i < categories.size(); i++) {

@@ -47,7 +47,7 @@ public class JsonConverter {
             
             workedOut = true;
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.e("JSON error", e.toString());
         }
         
         return workedOut;
