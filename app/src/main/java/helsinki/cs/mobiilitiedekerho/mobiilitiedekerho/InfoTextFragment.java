@@ -31,7 +31,7 @@ public class InfoTextFragment extends Fragment implements View.OnClickListener {
     public class InfoTextLoaded implements TaskCompleted {
         @Override
         public void taskCompleted(String response) {
-            openLoginDialog(response);
+            openInfoDialog(response);
         }
     }
 
@@ -59,7 +59,7 @@ public class InfoTextFragment extends Fragment implements View.OnClickListener {
         hp = new HTTPSRequester(new InfoTextLoaded()).execute(url);
     }
 
-    public void openLoginDialog(String response) {
+    public void openInfoDialog(String response) {
         info = new Dialog(InfoTextFragment.this.getActivity());
         info.setContentView(R.layout.info_text_fragment);
         info.setTitle(title);
@@ -69,7 +69,7 @@ public class InfoTextFragment extends Fragment implements View.OnClickListener {
         Log.i("TaskId", response);
         boolean parsingWorked = StatusService.StaticStatusService.jc.newJson(response);
         if (parsingWorked && StatusService.StaticStatusService.sc.checkStatus()) {
-            String taskInfo = StatusService.StaticStatusService.jc.getProperty("uri");
+            String taskInfo = StatusService.StaticStatusService.jc.getProperty("Info");
             Log.i("taskInfo", taskInfo);
 
 

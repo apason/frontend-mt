@@ -2,6 +2,7 @@ package helsinki.cs.mobiilitiedekerho.mobiilitiedekerho;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.wifi.WifiConfiguration;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
@@ -78,7 +79,7 @@ public class SubUserActivity extends AppCompatActivity {
     }
 
     public void saveSubUser(String subuser) {
-        String url = StatusService.StaticStatusService.sc.CreateSubUser(subuser);
+        String url = StatusService.StaticStatusService.sc.CreateSubUser(subuser, StatusService.StaticStatusService.authToken);
         new HTTPSRequester(new SubListener()).execute(url);
     }
 
