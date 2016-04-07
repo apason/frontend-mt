@@ -1,8 +1,6 @@
 package helsinki.cs.mobiilitiedekerho.mobiilitiedekerho;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -14,9 +12,6 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
-
-import java.util.ArrayList;
-import java.util.HashMap;
 
 public class InfoTextFragment extends Fragment implements View.OnClickListener {
 

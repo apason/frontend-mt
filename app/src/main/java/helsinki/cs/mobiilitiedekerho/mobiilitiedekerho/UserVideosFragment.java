@@ -1,31 +1,16 @@
 package helsinki.cs.mobiilitiedekerho.mobiilitiedekerho;
 
 import android.app.Dialog;
-import android.content.Context;
-import android.graphics.Point;
-import android.media.Image;
-import android.net.wifi.WifiConfiguration;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.View.OnClickListener;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
-import android.widget.PopupWindow;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import java.util.ArrayList;
-import java.util.HashMap;
 
 public class UserVideosFragment extends Fragment implements View.OnClickListener {
 

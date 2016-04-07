@@ -2,7 +2,6 @@ package helsinki.cs.mobiilitiedekerho.mobiilitiedekerho;
 
 
 import android.content.Context;
-import android.util.Log;
 
 import java.util.ArrayList;
 

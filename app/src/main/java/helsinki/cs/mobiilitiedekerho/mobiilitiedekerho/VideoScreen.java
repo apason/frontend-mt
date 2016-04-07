@@ -1,22 +1,20 @@
 package helsinki.cs.mobiilitiedekerho.mobiilitiedekerho;
 
 import android.app.Activity;
-
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.util.Log;
 import android.webkit.MimeTypeMap;
 import android.webkit.WebView;
-import android.webkit.WebSettings;
 import android.webkit.WebViewClient;
-//import android.util.Log;
 
-import helsinki.cs.mobiilitiedekerho.mobiilitiedekerho.R; //See http://stackoverflow.com/a/16175711 for more details.
 import name.cpr.VideoEnabledWebChromeClient;
 import name.cpr.VideoEnabledWebView;
+
+//import android.util.Log;
 
 public class VideoScreen extends Activity {
 
