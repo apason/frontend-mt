@@ -2,6 +2,7 @@ package helsinki.cs.mobiilitiedekerho.mobiilitiedekerho;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
@@ -12,6 +13,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+
+
 /**
  * Activity to create new sub-users.
  */
@@ -21,6 +24,7 @@ public class SubUserActivity extends AppCompatActivity {
     static final int REQUEST_IMAGE_CAPTURE = 1;
     ImageView iv;
     String subUserNick;
+    AsyncTask hp = null;
 
     /**
      * A listener that checks if saving sub-user worked out and notifies the user of the result.
@@ -77,7 +81,7 @@ public class SubUserActivity extends AppCompatActivity {
 
     public void saveSubUser(String subuser) {
         String url = StatusService.StaticStatusService.sc.CreateSubUser(subuser, StatusService.StaticStatusService.authToken);
-        new HTTPSRequester(new SubListener()).execute(url);
+        hp = new HTTPSRequester(new SubListener()).execute(url);
     }
 
     /**
