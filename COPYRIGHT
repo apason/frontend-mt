@@ -3,7 +3,9 @@ The project is under copyright of Helsingin Yliopisto with its respecting licens
 
 
 All Java code under app/src/main/java/name/cpr/ is copyright of Cristian Perez under the MIT license.
+(Also VideoScreen is bades in the example activity.)
 Its license can be found in MIT_LICENSE
+(https://github.com/cprcrack/VideoEnabledWebView)
 
 
 
