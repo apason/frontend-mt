@@ -1,0 +1,23 @@
+
+The project is under copyright of Helsingin Yliopisto with its respecting license.
+
+
+All Java code under app/src/main/java/name/cpr/ is copyright of Cristian Perez under the MIT license.
+Its license can be found in MIT_LICENSE
+
+
+
+
+External library copyrights and licenses:
+
+
+
+Files google* and gson* in the directory app/libs are under copyrigtht of: Google Inc.
+Files httpclient* and httpcore* in the directory app/libs are under copyrigtht of: The Apache Software Foundation.
+
+License: Apache License Version 2.0
+The license can be found in the file APACHE_LICENSE
+
+
+Files aws* in the directory app/libs are under copyrigtht of: ~ Amazon Inc.
+see: https://github.com/aws/aws-sdk-android
