@@ -66,11 +66,8 @@ public class InfoTextFragment extends Fragment implements View.OnClickListener {
 
         boolean parsingWorked = StatusService.StaticStatusService.jc.newJson(response);
         if (parsingWorked && StatusService.StaticStatusService.sc.checkStatus()) {
-
             ArrayList<HashMap<String, String>> task = StatusService.StaticStatusService.jc.getObjects();
             String taskInfo = task.get(0).get("info");
-            Log.i("taskInfo", taskInfo);
-
 
             //Checks whether the task has info defined or not. If not it sets "Ei ole kuvausta tehtävälle." as the task's description.
             if (taskInfo == null) textView.setText("Ei ole kuvausta tehtävälle.");

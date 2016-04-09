@@ -48,13 +48,15 @@ public class UserVideosFragment extends Fragment implements View.OnClickListener
     // When loginButton is pressed call method openLoginDialog
     @Override
     public void onClick(View v) {
-        String url = StatusService.StaticStatusService.sc.DescribeSubUserAnswers(StatusService.StaticStatusService.currentSubUserID);
-        Log.i("urli", url);
+
+        //FOR TESTING, REMOVE WHEN SUBUSERS CAN BE CREATED:
+        StatusService.StaticStatusService.currentSubUserID = "1";
+
+        String url = StatusService.StaticStatusService.sc.DescribeSubUserAnswers(StatusService.StaticStatusService.currentSubUserID);  
         hp = new HTTPSRequester(new FetchUserVideos()).execute(url);
     }
 
     public void openUserVideoDialog(String response) {
-        Log.i("viesti", StatusService.StaticStatusService.jc.getProperty("status"));
         if(StatusService.StaticStatusService.currentSubUserID == null) {
             AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
             alert.setTitle("Videolaatikko on tyhjä");
@@ -75,7 +77,6 @@ public class UserVideosFragment extends Fragment implements View.OnClickListener
         boolean parsingWorked = StatusService.StaticStatusService.jc.newJson(response);
         if (parsingWorked && StatusService.StaticStatusService.sc.checkStatus()) {
             ArrayList<HashMap<String, String>> uservideos = StatusService.StaticStatusService.jc.getObjects();
-            Log.i("koko", String.valueOf(uservideos.size()));
             if (!uservideos.isEmpty()) {
                 for (int i = 0; i < uservideos.size(); i++) {
                     String uservideo = uservideos.get(i).get("uri");
