@@ -263,5 +263,11 @@ public class ServerCommunication {
         return getResponse("GetBuckets");
     }
     
+    /**
+     * Notices the server to change user's privacy-level settings.
+     */
+    public String SetPrivacyLevel(String privacyLevel) {
+        return getResponse("SetPrivacyLevel", "privacy_level", privacyLevel);
+    }
 }
 
