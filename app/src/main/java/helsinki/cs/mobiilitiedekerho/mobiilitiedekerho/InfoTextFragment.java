@@ -13,6 +13,9 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 public class InfoTextFragment extends Fragment implements View.OnClickListener {
 
     private Dialog info = null;
@@ -63,14 +66,11 @@ public class InfoTextFragment extends Fragment implements View.OnClickListener {
 
         boolean parsingWorked = StatusService.StaticStatusService.jc.newJson(response);
         if (parsingWorked && StatusService.StaticStatusService.sc.checkStatus()) {
-<<<<<<< HEAD
+
             ArrayList<HashMap<String, String>> task = StatusService.StaticStatusService.jc.getObjects();
             String taskInfo = task.get(0).get("info");
-=======
-            String taskInfo = StatusService.StaticStatusService.jc.getProperty("Info");
             Log.i("taskInfo", taskInfo);
 
->>>>>>> 26578a6a6a1b6e116d5389b1f0c3c1a4245dd3c0
 
             //Checks whether the task has info defined or not. If not it sets "Ei ole kuvausta tehtävälle." as the task's description.
             if (taskInfo == null) textView.setText("Ei ole kuvausta tehtävälle.");
