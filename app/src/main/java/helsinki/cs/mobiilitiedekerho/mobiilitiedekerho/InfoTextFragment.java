@@ -75,8 +75,8 @@ public class InfoTextFragment extends Fragment implements View.OnClickListener {
         }
         //This is for user info - taskId should be set to -1 in MainActivity.java
         if (taskId.equals("-1")) {
-            info.setTitle("Mobiilitiedekerhon Käyttöehdot");
-            textView.setText("Käyttöehdot tähän");
+            info.setTitle("Mobiilitiedekerhon Käyttöohjeet");
+            textView.setText("Käyttöohjeet tähän");
         }
 
         // On click of cancel button close the dialog
