@@ -180,4 +180,10 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, UserActivity.class);
         startActivity(intent);
     }
+
+    public void playback(String uri) {
+        Intent intent = new Intent(this, VideoScreen.class);
+        StatusService.StaticStatusService.url = uri;
+        startActivity(intent);
+    }
 }

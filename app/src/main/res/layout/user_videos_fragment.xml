@@ -9,8 +9,21 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_margin="30dp"
-        android:background="#b9000000"
+        android:background="#FFFFFFFF"
         android:id="@+id/user_videos_popup">
+
+        <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="fill_parent" android:layout_height="fill_parent"
+            android:scrollbars="vertical">
+
+            <RelativeLayout
+                android:id="@+id/uservideos"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:orientation="horizontal" >
+            </RelativeLayout>
+
+        </ScrollView>
 
         <Button
             android:layout_width="150dp"

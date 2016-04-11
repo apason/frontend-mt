@@ -82,7 +82,7 @@ public class TasksFragment extends Fragment implements View.OnClickListener {
         //TODO: else?
     }
 
-    //draws imageebuttons with task video thumbnails
+    //draws imagebuttons with task video thumbnails
     private void drawImages() {
         LinearLayout category = (LinearLayout) view.findViewById(R.id.category_icon);
         Bitmap bm = BitmapFactory.decodeFile(StatusService.StaticStatusService.context.getFilesDir() + "/" + "category_icon" + categoryId);

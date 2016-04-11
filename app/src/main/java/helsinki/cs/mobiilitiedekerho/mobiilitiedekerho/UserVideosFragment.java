@@ -3,6 +3,10 @@ package helsinki.cs.mobiilitiedekerho.mobiilitiedekerho;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -14,6 +18,9 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,6 +28,8 @@ import java.util.HashMap;
 public class UserVideosFragment extends Fragment implements View.OnClickListener {
 
     private Dialog list = null;
+    private ArrayList<HashMap<String, String>> uservideos;
+    public final static String EXTRA_MESSAGE_URL = "helsinki.cs.mobiilitiedekerho.mobiilitiedekerho.CATEGORY";
 
     public class FetchUserVideos implements TaskCompleted {
         @Override
@@ -72,16 +81,13 @@ public class UserVideosFragment extends Fragment implements View.OnClickListener
         list = new Dialog(UserVideosFragment.this.getActivity());
         // Set GUI of login screen
         list.setContentView(R.layout.user_videos_fragment);
-        list.setTitle("ALIKÄYTTÄJÄN VIDEOT :-)");
+        list.setTitle("OMAT VIDEOSI");
 
         boolean parsingWorked = StatusService.StaticStatusService.jc.newJson(response);
         if (parsingWorked && StatusService.StaticStatusService.sc.checkStatus()) {
-            ArrayList<HashMap<String, String>> uservideos = StatusService.StaticStatusService.jc.getObjects();
+            uservideos = StatusService.StaticStatusService.jc.getObjects();
             if (!uservideos.isEmpty()) {
-                for (int i = 0; i < uservideos.size(); i++) {
-                    String uservideo = uservideos.get(i).get("uri");
-                    Log.i("uservideo", uservideo);
-                }
+                drawImages();
             }
 
             // On click of cancel button close the dialog
@@ -102,6 +108,53 @@ public class UserVideosFragment extends Fragment implements View.OnClickListener
             lp.height = WindowManager.LayoutParams.MATCH_PARENT;
             list.show();
             list.getWindow().setAttributes(lp);
+        }
+    }
+
+    //draws buttons with user video thumbnails
+    private void drawImages() {
+
+        RelativeLayout rl = (RelativeLayout) list.findViewById(R.id.uservideos);
+
+        //ImageButton[] videobutton = new Button[uservideos.size()]; <-- use this with thumbnail images
+        Button[] videobutton = new Button[uservideos.size()];
+
+        for (int i = 0; i < uservideos.size(); i++) {
+            try {
+                RelativeLayout.LayoutParams rlp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                //TODO: thumbnail images downloaded from S3
+                //Bitmap bitmap = BitmapFactory.decodeFile(StatusService.StaticStatusService.context.getFilesDir() + "/" + "task_icon" + uservideos.get(i).get("id"));
+                //videobutton[i] = new ImageButton(getContext());
+                videobutton[i] = new Button(getContext());
+                videobutton[i].setHeight(300);
+                videobutton[i].setWidth(400);
+                //videobutton[i].setImageBitmap(bitmap.createScaledBitmap(bitmap, 300, 300, false));
+                videobutton[i].setLayoutParams(rlp);
+
+                //videobutton[i].setId(Integer.parseInt(uservideos.get(i).get("id")));
+                final String url = uservideos.get(i).get("uri");
+                videobutton[i].setOnClickListener(
+                        new OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                //int id = v.getId();
+                                Log.i("urli", url);
+                                String answerURL = StatusService.StaticStatusService.s3Location + StatusService.StaticStatusService.answerBucket + "/" + url;
+                                ((MainActivity) getActivity()).playback(answerURL);
+                            }
+                        }
+                );
+                //taskbutton[i].setBackgroundColor(Color.TRANSPARENT); <-- use this with thumbnail images
+                videobutton[i].setBackgroundColor(Color.BLACK);
+                videobutton[i].setTextColor(Color.WHITE);
+                videobutton[i].setText(uservideos.get(i).get("uri"));
+                rlp.leftMargin = 500*(i%2)+100;
+                rlp.topMargin = 400*((int)i/2)+100;
+                rl.addView(videobutton[i], rlp);
+                //rl.addView(videobutton[i], rlp);
+            } catch (Exception e) {
+                Log.e("Image error", e.toString());
+            }
         }
     }
 }

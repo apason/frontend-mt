@@ -17,9 +17,9 @@ import name.cpr.VideoEnabledWebView;
 
 
 /**
-* This class (activity) is for showing inside a inline webview (task/asnwer)-videos and answer-images to the user.
-* Uses VideoEnabledWebView wrapper/extension of Webview.
-*/
+ * This class (activity) is for showing inside a inline webview (task/asnwer)-videos and answer-images to the user.
+ * Uses VideoEnabledWebView wrapper/extension of Webview.
+ */
 public class VideoScreen extends Activity {
 
     private VideoEnabledWebView webView;
@@ -28,8 +28,8 @@ public class VideoScreen extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
-       super.onCreate(savedInstanceState);
-       setContentView(R.layout.activity_example);
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_example);
 
         // Save the web view
         webView = (VideoEnabledWebView)findViewById(R.id.webView);
@@ -79,29 +79,27 @@ public class VideoScreen extends Activity {
         webView.setWebChromeClient(webChromeClient);
         // Call private class InsideWebViewClient
         webView.setWebViewClient(new InsideWebViewClient());
-        
-        
+
+
         // This code is for making the video to start palying without user interaction, works only in API level 17 or higher (that is android ver. >=4.2).
         // (Older ones actually (usually) doesn't need this either.) 
         // If it is preferable to not autoplay, setting in the html <video> preload="true" makes it start loading before playing. Also then check: http://stackoverflow.com/a/30692993
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN_MR1) {
             webView.getSettings().setMediaPlaybackRequiresUserGesture(false);
         }
-        
-        
-        
+
+
+
         // Video loading code from intent message: URL.
         // It must contain a axtension telling which file-type it is.
-        
-        Intent intent = getIntent();
-        String url = intent.getStringExtra(TaskActivity.EXTRA_MESSAGE_URL);
+        String url = StatusService.StaticStatusService.url;
 
         // From file's' extension it does determine whether it is showing a video or a image.
         MimeTypeMap mime = MimeTypeMap.getSingleton();
         String ext = url.substring(url.lastIndexOf(".")).toLowerCase(); //toLowerCase in the (odd) case of the extension being in UpperCase, else MimeType may not recognize it.
         String type = mime.getMimeTypeFromExtension(ext);
 
-        
+
         String html_text;
         html_text = null;
         if (type == null) { //No file extension or doesn't match any known by the MimeType-class.
@@ -131,7 +129,7 @@ public class VideoScreen extends Activity {
             return true;
         }
     }
-    
+
     @Override
     public void onBackPressed()
     {
@@ -150,14 +148,14 @@ public class VideoScreen extends Activity {
         }
     }
 
-     // Stops showing and downloading the video streamuig if back button is pressed.
-     // And 'resets' the webview.
-     @Override
-     public void onPause() {
-         super.onPause();
-         webView.stopLoading();
-         webView.destroy();
-     }
-     
+    // Stops showing and downloading the video streamuig if back button is pressed.
+    // And 'resets' the webview.
+    @Override
+    public void onPause() {
+        super.onPause();
+        webView.stopLoading();
+        webView.destroy();
+    }
+
 
 }

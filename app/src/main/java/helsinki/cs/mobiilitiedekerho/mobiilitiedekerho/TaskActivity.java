@@ -45,9 +45,9 @@ public class TaskActivity extends AppCompatActivity {
         transaction.commit();
     }
 
-    public void playback (String uri) {
+    public void playback(String uri) {
         Intent intent = new Intent(this, VideoScreen.class);
-        intent.putExtra(EXTRA_MESSAGE_URL, uri);
+        StatusService.StaticStatusService.url = uri;
         startActivity(intent);
     }
 }
