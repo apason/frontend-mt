@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RadioButton;
@@ -65,13 +66,13 @@ public class UserActivity extends AppCompatActivity {
 
         // Check which usage rights the user has determined for his/her videos and set the corresponding RadioButton checked.
         switch(StatusService.getUsageRights()) {
-            case 0:
+            case 1:
                 a.setChecked(true);
                 break;
-            case 1:
+            case 2:
                 b.setChecked(true);
                 break;
-            case 2:
+            case 3:
                 c.setChecked(true);
                 break;
         }
@@ -144,16 +145,43 @@ public class UserActivity extends AppCompatActivity {
         switch(view.getId()) {
             case R.id.onlyme:
                 if (checked)
-                    StatusService.setUsageRights(0);
+                    StatusService.setUsageRights(1);
+                    setPrivacyLevel(1);
                     break;
             case R.id.registered:
                 if (checked)
-                    StatusService.setUsageRights(1);
+                    StatusService.setUsageRights(2);
+                    setPrivacyLevel(2);
                     break;
             case R.id.anyone:
                 if (checked)
-                    StatusService.setUsageRights(2);
+                    StatusService.setUsageRights(3);
+                    setPrivacyLevel(3);
                     break;
+        }
+    }
+
+    public void setPrivacyLevel(int i) {
+        String url = StatusService.StaticStatusService.sc.SetPrivacyLevel(Integer.toString(i));
+        hp = new HTTPSRequester(new UserActivity.PrivacyListener()).execute(url);
+    }
+
+    /**
+     * A listener that checks if saving sub-user worked out and notifies the user of the result.
+     */
+    public class PrivacyListener implements TaskCompleted {
+        @Override
+        public void taskCompleted(String response) {
+            Log.i("subia", response);
+            boolean parsingWorked = StatusService.StaticStatusService.jc.newJson(response);
+            if (parsingWorked && StatusService.StaticStatusService.sc.checkStatus()) {
+                Toast.makeText(UserActivity.this, "Muutokset käyttöoikeuksiin tallennettu.",
+                        Toast.LENGTH_LONG).show();
+            }
+            else {
+                Toast.makeText(UserActivity.this, "Yhteyttä palvelimeen ei saatu. Tekemiäsi muutoksia ei tallennettu.",
+                        Toast.LENGTH_LONG).show();
+            }
         }
     }
 }

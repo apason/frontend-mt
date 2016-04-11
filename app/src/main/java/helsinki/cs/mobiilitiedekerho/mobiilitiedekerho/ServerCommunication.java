@@ -43,7 +43,7 @@ public class ServerCommunication {
 
 
     /**
-     * Check if the status in response is success, that is if everything went allright.
+     * Check if the status in response is success, that is if everything went alright.
      * TODO: If not, then what?
      *
      * @return true if success is the status in the response.
@@ -176,7 +176,7 @@ public class ServerCommunication {
     }
 
     /**
-     * Deletes a subuser pointing to the current user.
+     * Deletes a sub-user pointing to the current user.
      *
      * @param subUserId the id of the subuser to be deleted.
      */
@@ -185,7 +185,7 @@ public class ServerCommunication {
     }
 
     /**
-     * Gets the info of all subusers of this current user.
+     * Gets the info of all sub-users of this current user.
      */
     public String DescribeSubUsers() {
         return getResponse("DescribeSubUsers");
@@ -194,7 +194,7 @@ public class ServerCommunication {
     /**
      * Get all the answers info of the desired subuser.
      *
-     * @param subUserId the id of the subuser which answers belonging to it are wanted to be retrieved.
+     * @param subUserId the id of the sub-user which answers belonging to it are wanted to be retrieved.
      */
     public String DescribeSubUserAnswers(String subUserId) {
         return getResponse("DescribeSubUserAnswers", "subuser_id", subUserId);
