@@ -162,7 +162,6 @@ public class MainActivity extends AppCompatActivity {
         bundle.putString("task", "-1");
         itf.setArguments(bundle);
 
-        //uif.setTitle("Käyttöehdot ja ohjeet tähän");
         NextPageFragment npf = new NextPageFragment();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.add(R.id.login_button_fragment, lf);
