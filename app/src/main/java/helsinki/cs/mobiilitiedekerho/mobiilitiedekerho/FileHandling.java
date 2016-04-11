@@ -65,8 +65,8 @@ public class FileHandling extends AppCompatActivity {
         SharedPreferences prefs = StatusService.StaticStatusService.context.getSharedPreferences("mobiilitiedekerho", Context.MODE_PRIVATE);
         String rights = prefs.getString(usageRights, null);
         if (rights == null) {
-            saveUsageRights(0);
-            return 0;
+            saveUsageRights(1);
+            return 1;
         } else
         return Integer.parseInt(rights);
     }
