@@ -11,10 +11,13 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -85,8 +88,8 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
         Bitmap background = BitmapFactory.decodeFile(StatusService.StaticStatusService.context.getFilesDir() + "/" + "category_menu_bg.png");
         Drawable d = new BitmapDrawable(getResources(), background);
         rl.setBackground(d);
-        rl.getLayoutParams().height = 5000;
-        rl.getLayoutParams().width = 8000;
+        rl.getLayoutParams().height = 6000;
+        rl.getLayoutParams().width = 9000;
 
         ImageButton[] categorybutton = new ImageButton[categories.size()];
         for (int i = 0; i < categories.size(); i++) {
@@ -99,8 +102,8 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
                 categorybutton[i].setOnClickListener(this);
                 categorybutton[i].setBackgroundColor(Color.TRANSPARENT);
                 categorybutton[i].setId(Integer.parseInt(categories.get(i).get("id")));
-                lp.leftMargin = 300*i;
-                lp.topMargin = 300*i;
+                lp.leftMargin = 300*i; //TODO: (categories.get(i).get("x")));
+                lp.topMargin = 300*i; //TODO: (categories.get(i).get("y")));
                 rl.addView(categorybutton[i], lp);
             } catch (Exception e) {
                 Log.e("Image error", e.toString());
@@ -122,4 +125,5 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
         String id = Integer.toString(v.getId());
         ((CategoriesActivity) getActivity()).startCategory(id);
     }
+
 }

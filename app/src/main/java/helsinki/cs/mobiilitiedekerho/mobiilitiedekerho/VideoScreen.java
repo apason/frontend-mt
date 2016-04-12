@@ -95,16 +95,21 @@ public class VideoScreen extends Activity {
         String url = StatusService.StaticStatusService.url;
 
         // From file's' extension it does determine whether it is showing a video or a image.
-        MimeTypeMap mime = MimeTypeMap.getSingleton();
-        String ext = url.substring(url.lastIndexOf(".")).toLowerCase(); //toLowerCase in the (odd) case of the extension being in UpperCase, else MimeType may not recognize it.
-        String type = mime.getMimeTypeFromExtension(ext);
-
+        //MimeTypeMap mime = MimeTypeMap.getSingleton();
+        //String ext = url.substring(url.lastIndexOf(".")).toLowerCase(); //toLowerCase in the (odd) case of the extension being in UpperCase, else MimeType may not recognize it.
+        //String type = mime.getMimeTypeFromExtension(ext);
+        String type = null;
+        String ext = MimeTypeMap.getFileExtensionFromUrl(url);
+        if (ext != null) {
+            type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(ext);
+        }
 
         String html_text;
         html_text = null;
         if (type == null) { //No file extension or doesn't match any known by the MimeType-class.
             // Let's guess that it is a video! TODO: hmmm...
             html_text = StatusService.StaticStatusService.VideoPlay_HtmlTemplate.replace("#video_src#", url);
+
             Log.i("videoscreen", "null-type");
         }
         else {
@@ -113,11 +118,14 @@ public class VideoScreen extends Activity {
                 Log.i("videoscreen-video", html_text);
             }
             else if (type.contains("image")) {
-                html_text = url;
+                webView.getSettings().setBuiltInZoomControls(true);
+                webView.getSettings().setJavaScriptEnabled(true);
+                html_text = "<html><img src='" + url + "' /></html>";
             }
             else ; //TODO: Wrong file extension! Should not happen ever thought.
         }
-        webView.loadData(html_text, "text/html; charset=utf-8", "UTF-8"); //NOTE: Only "US-ASCII charset" is allowed/works in the html_text actually (android bug).
+        //webView.loadData(html_text, "text/html; charset=utf-8", "UTF-8"); //NOTE: Only "US-ASCII charset" is allowed/works in the html_text actually (android bug).
+        webView.loadData(html_text, "text/html", "UTF-8");
     }
 
     private class InsideWebViewClient extends WebViewClient {

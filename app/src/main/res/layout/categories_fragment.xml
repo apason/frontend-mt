@@ -1,27 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
+    -->
     <!--
     android:layout_width="500dp"
     android:layout_height="1000dp">
     -->
 
     <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent" android:layout_height="fill_parent"
-    android:scrollbars="vertical">
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/scrollVertical">
+    <!--android:scrollbars="vertical"-->
+
         <HorizontalScrollView
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent" >
+            android:id="@+id/scrollHorizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
             <!-- android:stretchColumns="1"
              android:background="@drawable/category_background" -->
             <RelativeLayout
                 android:id="@+id/categories"
-                android:layout_width="fill_parent"
+                android:isScrollContainer="true"
                 android:layout_height="fill_parent"
-                android:orientation="horizontal" >
+                android:layout_width="fill_parent"
+                android:adjustViewBounds="true" >
 
             </RelativeLayout>
         </HorizontalScrollView>
     </ScrollView>
-</RelativeLayout>
