@@ -62,6 +62,7 @@ public class VideoScreen extends Activity {
                     attrs.flags |= WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
                     getWindow().setAttributes(attrs);
                     //noinspection all
+
                     getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE);
                 }
                 else
@@ -104,8 +105,7 @@ public class VideoScreen extends Activity {
             type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(ext);
         }
 
-        String html_text;
-        html_text = null;
+        String html_text = null;
         if (type == null) { //No file extension or doesn't match any known by the MimeType-class.
             // Let's guess that it is a video! TODO: hmmm...
             html_text = StatusService.StaticStatusService.VideoPlay_HtmlTemplate.replace("#video_src#", url);
@@ -120,11 +120,13 @@ public class VideoScreen extends Activity {
             else if (type.contains("image")) {
                 webView.getSettings().setBuiltInZoomControls(true);
                 webView.getSettings().setJavaScriptEnabled(true);
+                webView.getSettings().setLoadWithOverviewMode(true);
+                webView.getSettings().setUseWideViewPort(true);
                 html_text = "<html><img src='" + url + "' /></html>";
             }
             else ; //TODO: Wrong file extension! Should not happen ever thought.
         }
-        //webView.loadData(html_text, "text/html; charset=utf-8", "UTF-8"); //NOTE: Only "US-ASCII charset" is allowed/works in the html_text actually (android bug).
+
         webView.loadData(html_text, "text/html", "UTF-8");
     }
 
