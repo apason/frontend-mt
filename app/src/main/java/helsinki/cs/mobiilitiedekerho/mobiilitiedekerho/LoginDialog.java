@@ -28,6 +28,15 @@ public class LoginDialog extends AppCompatActivity {
         }
     }
 
+    public class registerListener implements TaskCompleted {
+        @Override
+        public void taskCompleted(String response) {
+            registered(response);
+        }
+    }
+
+
+
     String url;
     View view;
     TextView emailTV;
@@ -38,43 +47,8 @@ public class LoginDialog extends AppCompatActivity {
 
     private boolean triedCommunicatingAlready = false;
 
-
-    //TODO: When registering is complete, dialog should be closed
-    public class GotToken implements TaskCompleted {
-        @Override
-        public void taskCompleted(String response) {
-            boolean parsingWorked = StatusService.StaticStatusService.jc.newJson(response);
-            if (parsingWorked && StatusService.StaticStatusService.sc.checkStatus()) {
-                StatusService.StaticStatusService.authToken = StatusService.StaticStatusService.jc.getProperty("auth_token");
-                StatusService.StaticStatusService.fh.saveToken();
-            }
-            else {
-                if (triedCommunicatingAlready) {
-                    //Show the user an alert dialog notifying there is a problem with connecting to the server.
-                    /*TODO: show an alert dialog
-                    AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
-                    alert.setTitle("Tietoliikennevirhe");
-                    alert.setMessage("Valitettavasti Mobiilitiedekerho ei saa tällä hetkellä yhteyttä palvelimeen. Yritä myöhemmin uudestaan.");
-                    alert.setNegativeButton("Sulje", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int whichButton) {
-                            dialog.dismiss();
-                        }
-                    });
-                    alert.show();
-                    */
-                }
-                else {
-                    //Try again just in case.
-                    triedCommunicatingAlready = true;
-                    String url = StatusService.StaticStatusService.sc.AnonymousSession();
-                    hp = new HTTPSRequester(new GotToken()).execute(url);
-                }
-            }
-        }
-    }
-
     public void authenticated(String response) {
-        Log.i("responssi", response);
+        Log.i("login response", response);
         boolean parsingWorked = StatusService.StaticStatusService.jc.newJson(response);
         if (parsingWorked && StatusService.StaticStatusService.sc.checkStatus()) {
             //ArrayList<HashMap<String, String>> tasks = StatusService.StaticStatusService.jc.getObjects();
@@ -86,8 +60,7 @@ public class LoginDialog extends AppCompatActivity {
                 Toast.makeText(this, "Kirjautuminen onnistui.",
                     Toast.LENGTH_LONG).show();
                 StatusService.setLoggedIn(true);
-                url = StatusService.StaticStatusService.sc.AuthenticateUser(email, password);
-                hp = new HTTPSRequester(new GotToken()).execute(url);
+                this.finish();
             } else {
                 // If username or password is incorrect empty TextViews and notify user.
                 emailTV.setText("");
@@ -104,6 +77,22 @@ public class LoginDialog extends AppCompatActivity {
             Toast.LENGTH_LONG).show();
         }
     }
+
+    public void registered(String response) {
+        Log.i("register response", response);
+        boolean parsingWorked = StatusService.StaticStatusService.jc.newJson(response);
+        if (parsingWorked && StatusService.StaticStatusService.sc.checkStatus()) {
+            if (StatusService.StaticStatusService.sc.checkStatus()) {
+                Toast.makeText(this, "Rekisteröityminen onnistui. Voit nyt kirjautua luomillasi tunnuksilla sisään.",
+                        Toast.LENGTH_LONG).show();
+            } else {
+                // If there is a problem with registration, notify the user.
+                emailTV.setText("");
+                passwordTV.setText("");
+                Toast.makeText(this, "Ongelma rekisteröitymisessä. Yritä uudelleen.",
+                        Toast.LENGTH_LONG).show();
+            }}}
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -145,7 +134,7 @@ public class LoginDialog extends AppCompatActivity {
                 email = emailTV.getText().toString();
                 password = passwordTV.getText().toString();
                 url = StatusService.StaticStatusService.sc.CreateUser(email, password);
-                hp = new HTTPSRequester(new listener()).execute(url);
+                hp = new HTTPSRequester(new registerListener()).execute(url);
                 emailTV.setText("");
                 passwordTV.setText("");
             }
