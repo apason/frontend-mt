@@ -21,7 +21,7 @@ public class LoginDialog extends AppCompatActivity {
 
     private Dialog login = null;
 
-    public class listener implements TaskCompleted {
+    public class loginListener implements TaskCompleted {
         @Override
         public void taskCompleted(String response) {
             authenticated(response);
@@ -34,7 +34,6 @@ public class LoginDialog extends AppCompatActivity {
             registered(response);
         }
     }
-
 
 
     String url;
@@ -91,7 +90,9 @@ public class LoginDialog extends AppCompatActivity {
                 passwordTV.setText("");
                 Toast.makeText(this, "Ongelma rekisteröitymisessä. Yritä uudelleen.",
                         Toast.LENGTH_LONG).show();
-            }}}
+            }
+        }
+    }
 
 
     @Override
@@ -123,7 +124,7 @@ public class LoginDialog extends AppCompatActivity {
                 password = passwordTV.getText().toString();
                 url = StatusService.StaticStatusService.sc.AuthenticateUser(email, password);
                 Log.i("auturli", url);
-                hp = new HTTPSRequester(new listener()).execute(url);
+                hp = new HTTPSRequester(new loginListener()).execute(url);
             }});
 
         Button registerButton =
