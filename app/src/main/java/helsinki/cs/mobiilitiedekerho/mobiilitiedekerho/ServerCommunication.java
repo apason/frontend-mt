@@ -10,8 +10,6 @@ package helsinki.cs.mobiilitiedekerho.mobiilitiedekerho;
  */
 public class ServerCommunication {
 
-
-
     /**
      * private
      * This method returns the url to be used to communicate with the server.

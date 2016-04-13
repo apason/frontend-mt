@@ -157,9 +157,7 @@ public class LoginDialog extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 finish();
-            }
-
-        });
+            }});
 
         // Force the dialog to the right size
         WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
@@ -169,5 +167,4 @@ public class LoginDialog extends AppCompatActivity {
         login.show();
         login.getWindow().setAttributes(lp);
     }
-
 }
