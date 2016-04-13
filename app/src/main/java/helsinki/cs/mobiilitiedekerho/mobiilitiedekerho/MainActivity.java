@@ -27,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
             boolean parsingWorked = StatusService.StaticStatusService.jc.newJson(response);
             if (parsingWorked && StatusService.StaticStatusService.sc.checkStatus()) {
                 StatusService.StaticStatusService.authToken = StatusService.StaticStatusService.jc.getProperty("auth_token");
+                StatusService.StaticStatusService.fh.saveToken(StatusService.StaticStatusService.jc.getProperty("auth_token"));
                 getBuckets();
             }
             else {

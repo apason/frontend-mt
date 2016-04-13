@@ -39,6 +39,7 @@ public class LoginDialog extends AppCompatActivity {
             //ArrayList<HashMap<String, String>> tasks = StatusService.StaticStatusService.jc.getObjects();
             //Log.i("status", StatusService.StaticStatusService.jc.getProperty("status"));
             if (StatusService.StaticStatusService.sc.checkStatus()) {
+                StatusService.StaticStatusService.authToken = StatusService.StaticStatusService.jc.getProperty("auth_token");
                 Toast.makeText(this, "Kirjautuminen onnistui.",
                     Toast.LENGTH_LONG).show();
                 StatusService.setLoggedIn(true);
@@ -47,7 +48,7 @@ public class LoginDialog extends AppCompatActivity {
                 // If username or password is incorrect empty TextViews and notify user.
                 emailTV.setText("");
                 passwordTV.setText("");
-                Toast.makeText(this, "Sähköpostiosoite tai salasana väärin!",
+                Toast.makeText(this, "Sähköpostiosoite tai salasana väärin.",
                     Toast.LENGTH_LONG).show();
             }
         }
@@ -55,7 +56,7 @@ public class LoginDialog extends AppCompatActivity {
             // If authentication response "cannot be computed" empty TextViews and notify user.
             emailTV.setText("");
             passwordTV.setText("");
-            Toast.makeText(this, "Ongelma authenticoimisessa, kokeile uudestaan.!",
+            Toast.makeText(this, "Ongelma varmentamisessa, kokeile uudestaan.",
             Toast.LENGTH_LONG).show();
         }
     }
@@ -100,9 +101,6 @@ public class LoginDialog extends AppCompatActivity {
                 password = passwordTV.getText().toString();
                 url = StatusService.StaticStatusService.sc.CreateUser(email, password);
                 hp = new HTTPSRequester(new listener()).execute(url);
-
-                Toast.makeText(getApplicationContext(), "Tunnuksesi on nyt rekisteröity ja voit käyttää sitä jatkossa sisäänkirjautumiseen",
-                    Toast.LENGTH_LONG).show();
                 emailTV.setText("");
                 passwordTV.setText("");
             }

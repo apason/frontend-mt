@@ -45,7 +45,7 @@ public class S3Upload extends AsyncTask<String, Void, String> {
         CognitoCachingCredentialsProvider credentialsProvider = new CognitoCachingCredentialsProvider(
             context,
             "LISÄÄ TÄHÄN IDENTITY POOL ID", // Identity Pool ID
-            Regions.EU_WEST_1 // Region
+            Regions.EU_CENTRAL_1 // Region
         );
         // Create an S3 client
         AmazonS3 s3 = new AmazonS3Client(credentialsProvider);
