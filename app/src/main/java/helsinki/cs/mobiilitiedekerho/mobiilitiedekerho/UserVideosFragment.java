@@ -59,7 +59,7 @@ public class UserVideosFragment extends Fragment implements View.OnClickListener
     public void onClick(View v) {
 
         //FOR TESTING, REMOVE WHEN SUBUSERS CAN BE CREATED:
-        StatusService.StaticStatusService.currentSubUserID = "1";
+        //StatusService.StaticStatusService.currentSubUserID = "1";
 
         String url = StatusService.StaticStatusService.sc.DescribeSubUserAnswers(StatusService.StaticStatusService.currentSubUserID);
         hp = new HTTPSRequester(new FetchUserVideos()).execute(url);

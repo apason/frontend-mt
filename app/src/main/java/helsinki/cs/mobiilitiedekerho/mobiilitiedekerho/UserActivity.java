@@ -163,6 +163,7 @@ public class UserActivity extends AppCompatActivity {
 
     public void setPrivacyLevel(int i) {
         String url = StatusService.StaticStatusService.sc.SetPrivacyLevel(Integer.toString(i));
+        Log.i("vika", url);
         hp = new HTTPSRequester(new UserActivity.PrivacyListener()).execute(url);
     }
 

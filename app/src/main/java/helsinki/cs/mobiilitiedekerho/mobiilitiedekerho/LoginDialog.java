@@ -1,10 +1,13 @@
 package helsinki.cs.mobiilitiedekerho.mobiilitiedekerho;
 
 
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
@@ -33,17 +36,57 @@ public class LoginDialog extends AppCompatActivity {
     String password;
     AsyncTask hp = null;
 
+    private boolean triedCommunicatingAlready = false;
+
+
+    //TODO: When registering is complete, dialog should be closed
+    public class GotToken implements TaskCompleted {
+        @Override
+        public void taskCompleted(String response) {
+            boolean parsingWorked = StatusService.StaticStatusService.jc.newJson(response);
+            if (parsingWorked && StatusService.StaticStatusService.sc.checkStatus()) {
+                StatusService.StaticStatusService.authToken = StatusService.StaticStatusService.jc.getProperty("auth_token");
+                StatusService.StaticStatusService.fh.saveToken(StatusService.StaticStatusService.jc.getProperty("auth_token"));
+            }
+            else {
+                if (triedCommunicatingAlready) {
+                    //Show the user an alert dialog notifying there is a problem with connecting to the server.
+                    /*TODO: show an alert dialog
+                    AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
+                    alert.setTitle("Tietoliikennevirhe");
+                    alert.setMessage("Valitettavasti Mobiilitiedekerho ei saa tällä hetkellä yhteyttä palvelimeen. Yritä myöhemmin uudestaan.");
+                    alert.setNegativeButton("Sulje", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            dialog.dismiss();
+                        }
+                    });
+                    alert.show();
+                    */
+                }
+                else {
+                    //Try again just in case.
+                    triedCommunicatingAlready = true;
+                    String url = StatusService.StaticStatusService.sc.AnonymousSession();
+                    hp = new HTTPSRequester(new GotToken()).execute(url);
+                }
+            }
+        }
+    }
+
     public void authenticated(String response) {
+        Log.i("responssi", response);
         boolean parsingWorked = StatusService.StaticStatusService.jc.newJson(response);
         if (parsingWorked && StatusService.StaticStatusService.sc.checkStatus()) {
             //ArrayList<HashMap<String, String>> tasks = StatusService.StaticStatusService.jc.getObjects();
             //Log.i("status", StatusService.StaticStatusService.jc.getProperty("status"));
             if (StatusService.StaticStatusService.sc.checkStatus()) {
                 StatusService.StaticStatusService.authToken = StatusService.StaticStatusService.jc.getProperty("auth_token");
+                Log.i("token", "uusi" + StatusService.StaticStatusService.authToken);
                 Toast.makeText(this, "Kirjautuminen onnistui.",
                     Toast.LENGTH_LONG).show();
                 StatusService.setLoggedIn(true);
-                this.finish();
+                url = StatusService.StaticStatusService.sc.AuthenticateUser(email, password);
+                hp = new HTTPSRequester(new GotToken()).execute(url);
             } else {
                 // If username or password is incorrect empty TextViews and notify user.
                 emailTV.setText("");
@@ -89,6 +132,7 @@ public class LoginDialog extends AppCompatActivity {
                 email = emailTV.getText().toString();
                 password = passwordTV.getText().toString();
                 url = StatusService.StaticStatusService.sc.AuthenticateUser(email, password);
+                Log.i("auturli", url);
                 hp = new HTTPSRequester(new listener()).execute(url);
             }});
 

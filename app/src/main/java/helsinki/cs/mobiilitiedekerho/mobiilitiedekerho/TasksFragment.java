@@ -98,10 +98,13 @@ public class TasksFragment extends Fragment implements View.OnClickListener {
         for (int i = 0; i < tasks.size(); i++) {
             try {
                 RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-                int timer = 0;
-                while (!StatusService.StaticStatusService.fh.checkIfImageExists("task_icon" + tasks.get(i).get("id")) && timer < 100000000) {
-                    timer++;
+                long start = System.currentTimeMillis();
+                long timer = 0;
+
+                while (!StatusService.StaticStatusService.fh.checkIfImageExists("task_icon" + tasks.get(i).get("id")) || timer < 5000) {
+                    timer = System.currentTimeMillis()-start;
                 }
+                Log.i("timer", String.valueOf(System.currentTimeMillis()-start));
                 Bitmap bitmap = BitmapFactory.decodeFile(StatusService.StaticStatusService.context.getFilesDir() + "/" + "task_icon" + tasks.get(i).get("id"));
                 taskbutton[i] = new ImageButton(getContext());
                 taskbutton[i].setImageBitmap(bitmap.createScaledBitmap(bitmap, 300, 300, false));

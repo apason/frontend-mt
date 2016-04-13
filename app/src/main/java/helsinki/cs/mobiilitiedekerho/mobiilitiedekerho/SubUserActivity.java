@@ -81,6 +81,7 @@ public class SubUserActivity extends AppCompatActivity {
 
     public void saveSubUser(String subuser) {
         String url = StatusService.StaticStatusService.sc.CreateSubUser(subuser);
+        Log.i("urli", url);
         hp = new HTTPSRequester(new SubListener()).execute(url);
     }
 
