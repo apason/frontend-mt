@@ -12,6 +12,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.util.Log;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 public class MainActivity extends AppCompatActivity {
 
     private AsyncTask hp = null;
@@ -22,7 +25,6 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void taskCompleted(String response) {
             boolean parsingWorked = StatusService.StaticStatusService.jc.newJson(response);
-            Log.i("täällä", "täällä");
             if (parsingWorked && StatusService.StaticStatusService.sc.checkStatus()) {
                 StatusService.StaticStatusService.authToken = StatusService.StaticStatusService.jc.getProperty("auth_token");
                 getBuckets();
@@ -82,10 +84,11 @@ public class MainActivity extends AppCompatActivity {
             Log.i("bucketit", response);
             boolean parsingWorked = StatusService.StaticStatusService.jc.newJson(response);
             if (parsingWorked && StatusService.StaticStatusService.sc.checkStatus()) {
-                StatusService.StaticStatusService.s3Location = StatusService.StaticStatusService.jc.getProperty("s3Location");
-                StatusService.StaticStatusService.taskBucket = StatusService.StaticStatusService.jc.getProperty("taskBucket");
-                StatusService.StaticStatusService.answerBucket = StatusService.StaticStatusService.jc.getProperty("answerBucket");
-                StatusService.StaticStatusService.graphicsBucket = StatusService.StaticStatusService.jc.getProperty("graphicsBucket");
+                StatusService.StaticStatusService.s3Location = StatusService.StaticStatusService.jc.getProperty("s3_location");
+                Log.i("s3Location", StatusService.StaticStatusService.s3Location);
+                StatusService.StaticStatusService.taskBucket = StatusService.StaticStatusService.jc.getProperty("tasks_bucket");
+                StatusService.StaticStatusService.answerBucket = StatusService.StaticStatusService.jc.getProperty("answers_bucket");
+                StatusService.StaticStatusService.graphicsBucket = StatusService.StaticStatusService.jc.getProperty("graphics_bucket");
             }
             //else just uses the hard-coded ones.
             start();

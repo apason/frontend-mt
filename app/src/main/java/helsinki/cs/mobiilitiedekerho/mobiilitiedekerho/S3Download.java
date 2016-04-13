@@ -41,6 +41,8 @@ public class S3Download extends AsyncTask<String, Void, String> {
 
         try {
         for (int i = 0 ; i < imageNames.size() ; i++) {
+            Log.i("urli", StatusService.StaticStatusService.s3Location + StatusService.StaticStatusService.graphicsBucket + "/" + imageNames.get(i));
+
             URL url = new URL(StatusService.StaticStatusService.s3Location + StatusService.StaticStatusService.graphicsBucket + "/" + imageNames.get(i));
             Log.i("kuvaurli", url.toString());
             urlConnection = (HttpURLConnection) url.openConnection();
@@ -64,7 +66,9 @@ public class S3Download extends AsyncTask<String, Void, String> {
     protected void onPostExecute(String result) {
         if (!result.equals("success"))
         act.taskCompleted(result);
-
+        for (String name: imageNames) {
+            Log.i("kuvanimiS3", name);
+        }
         String problems = ""; //A 'list' of images with which saving didn't work out.
         for (int i = 0 ; i < imageNames.size() ; i++) {
         if (!StatusService.StaticStatusService.fh.saveImage(imageNames.get(i), bitmaps.get(i))){

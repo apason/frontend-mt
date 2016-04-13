@@ -133,9 +133,18 @@ public class JsonConverter {
      * @return returns the value of the field if exists(that is the parameter responded from the server),
      * otherwise null is returned
      */
-    public String getProperty(String key){
-        return properties.get(key);
+    public String getProperty(String key){ return properties.get(key); }
+
+    /**
+     * Returns the value of the parameter/field status from the first HashMapin ArrayList.
+     * Example usage: jc.getObjectKey("id")
+     * @return returns the value of the field if exists(that is the parameter responded from the server),
+     * otherwise null is returned
+     */
+    public String getObjectKey(String key){
+        return objects.get(0).get(key);
     }
+
     /**
      * @return Arraylist of HashMaps containing all OBJECTS
      * (see the JsonResponse convention) of the json.
