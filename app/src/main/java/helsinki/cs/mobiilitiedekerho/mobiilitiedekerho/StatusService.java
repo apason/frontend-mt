@@ -24,10 +24,10 @@ public class StatusService {
         protected static boolean loggedIn;
         protected static String authToken;
 
-        protected static String currentNick; //the not-unique name of the current subuser.
+        protected static String currentNick; //the not-unique name of the current sub-user.
         protected static String currentSubUserID;
     
-        protected static String[] aviableSubUsers; //The IDs of the aviable subusers for the current user. TODO ?: String[] -> ???
+        protected static String[] availableSubUsers; //The IDs of the available sub-users for the current user. TODO ?: String[] -> ???
 
         //Note: These variables declare the resolution of the screen in pixels, in this APP is the landscape orientation (width is the larger).
         protected static int screenWidth;

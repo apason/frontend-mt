@@ -141,9 +141,7 @@ public class UserVideosFragment extends Fragment implements View.OnClickListener
                                 Log.i("urli", url);
                                 String answerURL = StatusService.StaticStatusService.s3Location + StatusService.StaticStatusService.answerBucket + "/" + url;
                                 ((MainActivity) getActivity()).playback(answerURL);
-                            }
-                        }
-                );
+                            }});
                 //taskbutton[i].setBackgroundColor(Color.TRANSPARENT); <-- use this with thumbnail images
                 videobutton[i].setBackgroundColor(Color.BLACK);
                 videobutton[i].setTextColor(Color.WHITE);
