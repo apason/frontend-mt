@@ -46,7 +46,7 @@ public class LoginDialog extends AppCompatActivity {
             boolean parsingWorked = StatusService.StaticStatusService.jc.newJson(response);
             if (parsingWorked && StatusService.StaticStatusService.sc.checkStatus()) {
                 StatusService.StaticStatusService.authToken = StatusService.StaticStatusService.jc.getProperty("auth_token");
-                StatusService.StaticStatusService.fh.saveToken(StatusService.StaticStatusService.jc.getProperty("auth_token"));
+                StatusService.StaticStatusService.fh.saveToken();
             }
             else {
                 if (triedCommunicatingAlready) {
@@ -82,6 +82,7 @@ public class LoginDialog extends AppCompatActivity {
             if (StatusService.StaticStatusService.sc.checkStatus()) {
                 StatusService.StaticStatusService.authToken = StatusService.StaticStatusService.jc.getProperty("auth_token");
                 Log.i("token", "uusi" + StatusService.StaticStatusService.authToken);
+                StatusService.StaticStatusService.fh.saveToken();
                 Toast.makeText(this, "Kirjautuminen onnistui.",
                     Toast.LENGTH_LONG).show();
                 StatusService.setLoggedIn(true);

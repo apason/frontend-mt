@@ -45,7 +45,7 @@ public class FileHandling extends AppCompatActivity {
     * Save the user's token into SharedPreferences with key token for future auto-login.
     * @return true if saving the token worked out.
     */
-    public boolean saveToken (String token) {
+    public boolean saveToken () {
         SharedPreferences sharedPref = StatusService.StaticStatusService.context.getSharedPreferences("mobiilitiedekerho",Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString(token, StatusService.StaticStatusService.authToken);
