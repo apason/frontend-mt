@@ -171,8 +171,8 @@ public class ServerCommunication {
      *
      * @param nick the nick of the subUser to be created.
      */
-    public String CreateSubUser(String nick, String authtoken) {
-        return getResponse("CreateSubUser", "subuser_nick", nick, "auth_token", authtoken);
+    public String CreateSubUser(String nick) {
+        return getResponse("CreateSubUser", "subuser_nick", nick);
     }
 
     /**
