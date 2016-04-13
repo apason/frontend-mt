@@ -124,7 +124,6 @@ public class FileHandling extends AppCompatActivity {
                 savedAccomplished = image.compress(Bitmap.CompressFormat.PNG, 100, stream);
 
             }
-
             workedOut = savedAccomplished;
 
         } catch (Exception e) {

@@ -34,7 +34,7 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
     public class catImgsDownloaded implements TaskCompleted {
         @Override
         public void taskCompleted(String response) {
-            if (response.equals("succes")) categories2(response);
+            if (response.equals("success")) categories2(response);
             else if (response.equals("failure")) categories2(response)/*TODO: Try again?*/;
             else categories2(response);
         }/*TODO: Check which images couldn't be saved and try to do their loading again?*/;
@@ -85,6 +85,13 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
 
     private void drawImages() {
         RelativeLayout rl = (RelativeLayout) view.findViewById(R.id.categories);
+        int timer = 0;
+        while ((!StatusService.StaticStatusService.fh.checkIfImageExists("category_menu_bg.png")) && timer < 10000000) {
+            timer++;
+        }
+
+
+        Log.i("timer", String.valueOf(timer));
         Bitmap background = BitmapFactory.decodeFile(StatusService.StaticStatusService.context.getFilesDir() + "/" + "category_menu_bg.png");
         Drawable d = new BitmapDrawable(getResources(), background);
         rl.setBackground(d);
@@ -95,6 +102,11 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
         for (int i = 0; i < categories.size(); i++) {
             try {
                 RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                timer = 0;
+                while ((!StatusService.StaticStatusService.fh.checkIfImageExists("category_icon" + categories.get(i).get("id"))) && timer < 10000000) {
+                    timer++;
+                }
+                Log.i("timer", String.valueOf(timer));
                 Bitmap bitmap = BitmapFactory.decodeFile(StatusService.StaticStatusService.context.getFilesDir() + "/" + "category_icon" + categories.get(i).get("id"));
                 categorybutton[i] = new ImageButton(getContext());
                 categorybutton[i].setImageBitmap(Bitmap.createScaledBitmap(bitmap, 300, 300, false));
