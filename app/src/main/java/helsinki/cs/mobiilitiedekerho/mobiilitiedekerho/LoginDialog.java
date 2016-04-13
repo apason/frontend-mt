@@ -33,6 +33,8 @@ public class LoginDialog extends AppCompatActivity {
     String password;
     AsyncTask hp = null;
 
+    // Get the response from registering of logging in. If successful save authentication token to
+    // Shared Preferences as well as StatusService.
     public void authenticated(String response) {
         boolean parsingWorked = StatusService.StaticStatusService.jc.newJson(response);
         if (parsingWorked && StatusService.StaticStatusService.sc.checkStatus()) {
@@ -113,9 +115,7 @@ public class LoginDialog extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 finish();
-            }
-
-        });
+            }});
 
         // Force the dialog to the right size
         WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
@@ -125,5 +125,4 @@ public class LoginDialog extends AppCompatActivity {
         login.show();
         login.getWindow().setAttributes(lp);
     }
-
 }
