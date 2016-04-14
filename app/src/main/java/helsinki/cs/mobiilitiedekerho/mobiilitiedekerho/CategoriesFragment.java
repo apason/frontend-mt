@@ -73,24 +73,28 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
 
 
     private void categories2(String response) {
-
+        drawImages();
+        /*
         boolean parsingWorked = StatusService.StaticStatusService.jc.newJson(response);
         if (parsingWorked && StatusService.StaticStatusService.sc.checkStatus()) {
             categories = StatusService.StaticStatusService.jc.getObjects();
             drawImages();
         }
         //TODO else?
-
+        */
     }
 
     private void drawImages() {
         RelativeLayout rl = (RelativeLayout) view.findViewById(R.id.categories);
         long start = System.currentTimeMillis();
         long timer = 0;
-        while ((!StatusService.StaticStatusService.fh.checkIfImageExists("category_menu_bg.png")) || timer < 5000) {
+        while ((!StatusService.StaticStatusService.fh.checkIfImageExists("category_menu_bg.png")) && timer < 5000) {
             timer = System.currentTimeMillis()-start;
+            if (timer % 1000 == 0) Log.i("timer1", String.valueOf(System.currentTimeMillis()-start));
         }
-        Log.i("timer", String.valueOf(timer));
+        timer = System.currentTimeMillis() - start;
+        Log.i("timer2", String.valueOf(timer));
+
         Bitmap background = BitmapFactory.decodeFile(StatusService.StaticStatusService.context.getFilesDir() + "/" + "category_menu_bg.png");
         Drawable d = new BitmapDrawable(getResources(), background);
         rl.setBackground(d);
@@ -103,10 +107,14 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
                 RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
                 start = System.currentTimeMillis();
                 timer = 0;
-                while ((!StatusService.StaticStatusService.fh.checkIfImageExists("category_icon" + categories.get(i).get("id"))) || timer < 5000) {
+                Log.i("onko", String.valueOf(StatusService.StaticStatusService.fh.checkIfImageExists("category_icon" + categories.get(i).get("id"))));
+                while ((!StatusService.StaticStatusService.fh.checkIfImageExists("category_icon" + categories.get(i).get("id"))) && timer < 5000) {
+
                     timer = System.currentTimeMillis() - start;
+                    if (timer % 1000 == 0) Log.i("timer2", String.valueOf(System.currentTimeMillis()-start));
                 }
-                Log.i("timer", String.valueOf(timer));
+                timer = System.currentTimeMillis() - start;
+                Log.i("timer2", String.valueOf(timer));
                 Bitmap bitmap = BitmapFactory.decodeFile(StatusService.StaticStatusService.context.getFilesDir() + "/" + "category_icon" + categories.get(i).get("id"));
                 categorybutton[i] = new ImageButton(getContext());
                 categorybutton[i].setImageBitmap(Bitmap.createScaledBitmap(bitmap, 300, 300, false));

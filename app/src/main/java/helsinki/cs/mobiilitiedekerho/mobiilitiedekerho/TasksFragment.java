@@ -73,6 +73,8 @@ public class TasksFragment extends Fragment implements View.OnClickListener {
     }
     
     private void tasks2(String response) {
+        drawImages();
+        /*
         boolean parsingWorked = StatusService.StaticStatusService.jc.newJson(response);
                 if (parsingWorked && StatusService.StaticStatusService.sc.checkStatus()) {
                     tasks = StatusService.StaticStatusService.jc.getObjects();
@@ -80,6 +82,7 @@ public class TasksFragment extends Fragment implements View.OnClickListener {
                     drawImages();
                 }
         //TODO: else?
+        */
     }
 
     //draws imagebuttons with task video thumbnails
@@ -101,10 +104,15 @@ public class TasksFragment extends Fragment implements View.OnClickListener {
                 long start = System.currentTimeMillis();
                 long timer = 0;
 
-                while (!StatusService.StaticStatusService.fh.checkIfImageExists("task_icon" + tasks.get(i).get("id")) || timer < 5000) {
+                Log.i("onko2", String.valueOf(StatusService.StaticStatusService.fh.checkIfImageExists("task_icon" + tasks.get(i).get("id"))));
+                while (!StatusService.StaticStatusService.fh.checkIfImageExists("task_icon" + tasks.get(i).get("id")) && timer < 5000) {
                     timer = System.currentTimeMillis()-start;
+                    if (timer % 1000 == 0) Log.i("timer", String.valueOf(System.currentTimeMillis()-start));
                 }
-                Log.i("timer", String.valueOf(System.currentTimeMillis()-start));
+
+                timer = System.currentTimeMillis() - start;
+                Log.i("timer2", String.valueOf(timer));
+
                 Bitmap bitmap = BitmapFactory.decodeFile(StatusService.StaticStatusService.context.getFilesDir() + "/" + "task_icon" + tasks.get(i).get("id"));
                 taskbutton[i] = new ImageButton(getContext());
                 taskbutton[i].setImageBitmap(bitmap.createScaledBitmap(bitmap, 300, 300, false));
