@@ -88,12 +88,17 @@ public class TasksFragment extends Fragment implements View.OnClickListener {
     //draws imagebuttons with task video thumbnails
     private void drawImages() {
         LinearLayout category = (LinearLayout) view.findViewById(R.id.category_icon);
+        try {
+            Bitmap bm = BitmapFactory.decodeFile(StatusService.StaticStatusService.context.getFilesDir() + "/" + "category_icon" + categoryId);
+            ImageView categoryImage = new ImageView(getContext());
+            categoryImage.setImageBitmap(Bitmap.createScaledBitmap(bm, 300, 300, false));
+            categoryImage.setBackgroundColor(Color.TRANSPARENT);
+            category.addView(categoryImage);
+        }
+        catch (Exception e) {
+            Log.e("Image error", e.toString());
+        }
 
-        Bitmap bm = BitmapFactory.decodeFile(StatusService.StaticStatusService.context.getFilesDir() + "/" + "category_icon" + categoryId);
-        ImageView categoryImage = new ImageView(getContext());
-        categoryImage.setImageBitmap(Bitmap.createScaledBitmap(bm, 300, 300, false));
-        categoryImage.setBackgroundColor(Color.TRANSPARENT);
-        category.addView(categoryImage);
 
         RelativeLayout rl = (RelativeLayout) view.findViewById(R.id.tasks);
 
