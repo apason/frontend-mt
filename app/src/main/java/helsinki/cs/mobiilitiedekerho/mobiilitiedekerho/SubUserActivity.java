@@ -39,6 +39,14 @@ public class SubUserActivity extends AppCompatActivity {
                         Toast.LENGTH_LONG).show();
                 SubUserActivity.this.onBackPressed();
             }
+            if (StatusService.StaticStatusService.jc.getProperty("status").equals("SubuserQuantityError")) {
+                Toast.makeText(SubUserActivity.this, "Valitettavasti olet jo luonut palveluun enimmäismäärän tiedekerholaisia.",
+                        Toast.LENGTH_LONG).show();
+            }
+            if (StatusService.StaticStatusService.jc.getProperty("status").equals("SubuserDuplicateNickError")) {
+                Toast.makeText(SubUserActivity.this, "Valitettavasti et voi luoda kahta samannimistä tiedekerholaista.",
+                        Toast.LENGTH_LONG).show();
+            }
             else {
                 Toast.makeText(SubUserActivity.this, "Alikäyttäjän luonti ei onnistunut.",
                         Toast.LENGTH_LONG).show();
@@ -96,4 +104,6 @@ public class SubUserActivity extends AppCompatActivity {
             iv.setImageBitmap(imageBitmap);
         }
     }
+
+
 }

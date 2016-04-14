@@ -1,9 +1,7 @@
 package helsinki.cs.mobiilitiedekerho.mobiilitiedekerho;
 
 
-import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -46,6 +44,7 @@ public class LoginDialog extends AppCompatActivity {
 
     private boolean triedCommunicatingAlready = false;
 
+    // Checks whether login was successful and acts accordingly.
     public void authenticated(String response) {
         Log.i("login response", response);
         boolean parsingWorked = StatusService.StaticStatusService.jc.newJson(response);
@@ -77,6 +76,7 @@ public class LoginDialog extends AppCompatActivity {
         }
     }
 
+    // Checks whether registration was successful and acts accordingly.
     public void registered(String response) {
         Log.i("register response", response);
         boolean parsingWorked = StatusService.StaticStatusService.jc.newJson(response);
