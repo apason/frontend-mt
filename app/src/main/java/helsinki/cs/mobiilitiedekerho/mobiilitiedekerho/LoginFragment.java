@@ -28,7 +28,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                 (ImageButton) view.findViewById(R.id.login_icon_button);
         if(StatusService.loggedIn()) {
 
-            loginIconButton.setBackgroundResource(R.drawable.logout_icon);
+            loginIconButton.setBackgroundResource(R.drawable.sub_user_icon_placeholder);
         }else {
             loginIconButton.setBackgroundResource(R.drawable.login_icon);
         }

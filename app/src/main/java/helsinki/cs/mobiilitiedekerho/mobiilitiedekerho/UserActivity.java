@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,6 +22,8 @@ public class UserActivity extends AppCompatActivity {
 
     AsyncTask hp;
     boolean triedCommunicatingAlready = false;
+    String eula;
+
 
     public class GotToken implements TaskCompleted {
         @Override
@@ -60,6 +63,9 @@ public class UserActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.user_activity);
 
+        String url = StatusService.StaticStatusService.sc.GetEULA();
+        hp = new HTTPSRequester(new UserActivity.EULAListener()).execute(url);
+
         RadioButton a = (RadioButton) findViewById(R.id.onlyme);
         RadioButton b = (RadioButton) findViewById(R.id.registered);
         RadioButton c = (RadioButton) findViewById(R.id.anyone);
@@ -77,6 +83,15 @@ public class UserActivity extends AppCompatActivity {
                 break;
         }
 
+        ImageButton subUser1 = (ImageButton) findViewById(R.id.subUser1);
+        subUser1.setBackgroundResource(R.drawable.sub_user_icon_placeholder);
+
+        ImageButton subUser2 = (ImageButton) findViewById(R.id.subUser2);
+        subUser2.setBackgroundResource(R.drawable.sub_user_icon_placeholder);
+
+        ImageButton subUser3 = (ImageButton) findViewById(R.id.subUser3);
+        subUser3.setBackgroundResource(R.drawable.sub_user_icon_placeholder);
+
         // Add OnClickListener to the logout button
         Button logoutButton = (Button) findViewById(R.id.logout_button);
         logoutButton.setOnClickListener(new View.OnClickListener() {
@@ -84,10 +99,10 @@ public class UserActivity extends AppCompatActivity {
             public void onClick(View v) {
                 StatusService.setLoggedIn(false);
                 Toast.makeText(getApplication(), "Olet nyt kirjautunut ulos Mobiilitiedekerhosta", Toast.LENGTH_LONG).show();
-                
+
                 //Removes token from SharedPreferences.
                 StatusService.StaticStatusService.context.getSharedPreferences("mobiilitiedekerho", Context.MODE_PRIVATE).edit().clear().commit();
-                
+
                 String url = StatusService.StaticStatusService.sc.AnonymousSession();
                 hp = new HTTPSRequester(new GotToken()).execute(url);
             }
@@ -117,7 +132,8 @@ public class UserActivity extends AppCompatActivity {
     public void showUserAgreement() {
         AlertDialog.Builder alert = new AlertDialog.Builder(UserActivity.this);
         alert.setTitle("Mobiilitiedekerhon käyttöehdot");
-        alert.setMessage("Tähän voidaan kirjoittaa palvelun käyttöehdot");
+        Log.i("eula", eula);
+        alert.setMessage(eula);
 
         final TextView input = new TextView(UserActivity.this);
         alert.setView(input);
@@ -128,6 +144,14 @@ public class UserActivity extends AppCompatActivity {
             }
         });
         alert.show();
+    }
+
+    public class EULAListener implements TaskCompleted {
+        @Override
+        public void taskCompleted(String response) {
+            StatusService.StaticStatusService.jc.newJson(response);
+            eula = StatusService.StaticStatusService.jc.getProperty("eula");
+        }
     }
     
     public void afterLogout() {
@@ -168,7 +192,7 @@ public class UserActivity extends AppCompatActivity {
     }
 
     /**
-     * A listener that checks if saving sub-user worked out and notifies the user of the result.
+     * A listener that checks if saving the privacy level worked out and notifies the user of the result.
      */
     public class PrivacyListener implements TaskCompleted {
         @Override
@@ -180,8 +204,9 @@ public class UserActivity extends AppCompatActivity {
                         Toast.LENGTH_LONG).show();
             }
             else {
-                Toast.makeText(UserActivity.this, "Yhteyttä palvelimeen ei saatu. Tekemiäsi muutoksia ei tallennettu.",
-                        Toast.LENGTH_LONG).show();
+                //Poistettu käytöstä kunnes privacylevelit implementoitu backissa.
+                //Toast.makeText(UserActivity.this, "Yhteyttä palvelimeen ei saatu. Tekemiäsi muutoksia ei tallennettu.",
+                //        Toast.LENGTH_LONG).show();
             }
         }
     }

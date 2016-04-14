@@ -267,5 +267,9 @@ public class ServerCommunication {
     public String SetPrivacyLevel(String privacyLevel) {
         return getResponse("SetPrivacyLevel", "privacy_level", privacyLevel);
     }
+
+    public String GetEULA() {
+        return getResponse("GetEULA");
+    }
 }
 
