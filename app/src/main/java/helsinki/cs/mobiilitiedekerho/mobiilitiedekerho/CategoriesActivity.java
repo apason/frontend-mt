@@ -42,7 +42,7 @@ public class CategoriesActivity extends AppCompatActivity {
         transaction.commit();
     }
 
-    //Starts CategoryActivity with a particular task chosen
+    //Starts CategoryActivity with the particular task chosen
     public void startCategory(String id) {
         Log.i("kategoria", id);
         Intent intent = new Intent(this, CategoryActivity.class);

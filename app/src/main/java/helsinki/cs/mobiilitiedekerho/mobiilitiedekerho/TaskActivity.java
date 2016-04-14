@@ -21,7 +21,7 @@ public class TaskActivity extends AppCompatActivity {
 
         //get message (task_id) from category activity:
         Intent intent = getIntent();
-        String message = intent.getStringExtra(CategoryActivity.EXTRA_MESSAGE);
+        String taskId = intent.getStringExtra(CategoryActivity.EXTRA_MESSAGE);
 
         CameraFragment cf = new CameraFragment();
         AnswerVideoFragment avf = new AnswerVideoFragment();
@@ -37,7 +37,8 @@ public class TaskActivity extends AppCompatActivity {
         transaction.add(R.id.info_button_fragment, uif);
 
         Bundle bundle = new Bundle();
-        bundle.putString("task", message);
+        bundle.putString("task", taskId);
+        cf.setArguments(bundle);
         avf.setArguments(bundle);
         tvf.setArguments(bundle);
         uif.setArguments(bundle);

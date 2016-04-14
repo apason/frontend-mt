@@ -46,10 +46,11 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
             }
         }
     }
-    
 
     private View view;
-    
+
+    private String taskId;
+
     private static final int VIDEO_CAPTURE = 101;
     private static final int IMAGE_CAPTURE = 102;
     private static final int VIDEO_SAVED = 201;
@@ -58,16 +59,15 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
     private Uri fileUri;
     private File selectedFile;
     private String selectedFileName;
-    private String selectedFileType;
     private String answerID;
 
-    private LoginFragment lf;
     private AsyncTask S3 = null;
     private AsyncTask hp = null;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        taskId = this.getArguments().toString();
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.camera_fragment, container, false);
 
@@ -226,7 +226,7 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
                         //if(selectedFile.exists()) {
                         Log.i("lataa", "lataa");
                         String url = StatusService.StaticStatusService.sc.StartAnswerUpload
-                                ("taskId", StatusService.StaticStatusService.currentSubUserID, selectedFileName.substring(selectedFileName.lastIndexOf(".")).toLowerCase()); //TODO: Check if there is subuser in use! Get task.
+                                (taskId, StatusService.StaticStatusService.currentSubUserID, selectedFileName.substring(selectedFileName.lastIndexOf(".")).toLowerCase()); //TODO: Check if there is subuser in use! Get task.
                         hp = new HTTPSRequester(new GotUrlToUpload()).execute(url);
                         //}
                     }
@@ -241,7 +241,7 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
 
                         if (selectedFile.exists()) {
                             String url = StatusService.StaticStatusService.sc.StartAnswerUpload
-                                    ("taskId", StatusService.StaticStatusService.currentSubUserID, selectedFileName.substring(selectedFileName.lastIndexOf(".")).toLowerCase()); //TODO: Check if there is subuser in use! Get task.
+                                    (taskId, StatusService.StaticStatusService.currentSubUserID, selectedFileName.substring(selectedFileName.lastIndexOf(".")).toLowerCase()); //TODO: Check if there is subuser in use! Get task.
                             hp = new HTTPSRequester(new GotUrlToUpload()).execute(url);
                         }
 
@@ -274,7 +274,7 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
                         //if(selectedFile.exists()) {
                         Log.i("lataa", "lataa");
                         String url = StatusService.StaticStatusService.sc.StartAnswerUpload
-                                ("taskId", StatusService.StaticStatusService.currentSubUserID, selectedFileName.substring(selectedFileName.lastIndexOf(".")).toLowerCase()); //TODO: Check if there is subuser in use! Get task.
+                                (taskId, StatusService.StaticStatusService.currentSubUserID, selectedFileName.substring(selectedFileName.lastIndexOf(".")).toLowerCase()); //TODO: Check if there is subuser in use! Get task.
                         hp = new HTTPSRequester(new GotUrlToUpload()).execute(url);
                         //}
                     }
@@ -287,7 +287,7 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
 
                         if (selectedFile.exists()) {
                             String url = StatusService.StaticStatusService.sc.StartAnswerUpload
-                                    ("taskId", StatusService.StaticStatusService.currentSubUserID, selectedFileName.substring(selectedFileName.lastIndexOf(".")).toLowerCase()); //TODO: Check if there is subuser in use! Get task.
+                                    (taskId, StatusService.StaticStatusService.currentSubUserID, selectedFileName.substring(selectedFileName.lastIndexOf(".")).toLowerCase()); //TODO: Check if there is subuser in use! Get task.
                             hp = new HTTPSRequester(new GotUrlToUpload()).execute(url);
                         }
 
@@ -299,7 +299,6 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
                                 Toast.LENGTH_LONG).show();
                     }
                 }
-
             }
 
             public void upload(String answerUri) {
