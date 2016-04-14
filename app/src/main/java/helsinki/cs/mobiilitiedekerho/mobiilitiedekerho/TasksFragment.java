@@ -6,7 +6,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,19 +14,17 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TableLayout;
-import android.widget.TableRow;
+import android.widget.RelativeLayout;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class TasksFragment extends Fragment implements View.OnClickListener {
 
-
     public class listener implements TaskCompleted {
         @Override
         public void taskCompleted(String response) {
-            tasks2(response);
+            tasks(response);
         }
     }
     
@@ -40,122 +37,99 @@ public class TasksFragment extends Fragment implements View.OnClickListener {
 
     private View view;
     private AsyncTask hp = null;
+    private ArrayList<HashMap<String, String>> tasks;
+    private String categoryId;
 
     private void tasks(String response) {
-        //Tässä jo?, välttämättä ei laitteessa. -> else osaan.
-        LinearLayout ll = (LinearLayout) view.findViewById(R.id.tasks);
-        ll.setOrientation(LinearLayout.HORIZONTAL);
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        //
 
-        StatusService.StaticStatusService.jc.newJson(response);
-        ArrayList<HashMap<String, String>> tasks = StatusService.StaticStatusService.jc.getObjects();
+        boolean parsingWorked = StatusService.StaticStatusService.jc.newJson(response);
+        if (parsingWorked && StatusService.StaticStatusService.sc.checkStatus()) {
+            tasks = StatusService.StaticStatusService.jc.getObjects();
 
-        if (!tasks.isEmpty()) {
-            ArrayList<String> names = new ArrayList<String>();
-            String imageName;
-            for (int i = 0; i < tasks.size(); i++) {
-                imageName = "task-icon" + tasks.get(i).get("id");
-                if(!StatusService.StaticStatusService.fh.checkIfImageExists(imageName)) {
-                    names.add(imageName);
-                }
-                    
-            }
-            
-            
-            //Either all images are in memory or some must be downloaded from S3.
-            if (!names.isEmpty()) {
-                //NOTE: The code works only as simple if S3 has saved the the needed images in a single bucket with the same naming convency.
-                new S3Download(new taskImgsDownloaded(), names).execute();
-            } 
-            else {
-                ImageButton[] taskbutton = new ImageButton[tasks.size()];
+            if (!tasks.isEmpty()) {
+                ArrayList<String> names = new ArrayList<String>();
+                String imageName;
                 for (int i = 0; i < tasks.size(); i++) {
-                    try {
-                        Bitmap bitmap = BitmapFactory.decodeFile(Environment.getDataDirectory() + "/" + "task-icon" + tasks.get(i).get("id"));
-                        
-                        taskbutton[i] = new ImageButton(getContext());
-                        taskbutton[i].setImageBitmap(bitmap);
-                        taskbutton[i].setLayoutParams(lp);
-                        taskbutton[i].setScaleType(ImageView.ScaleType.FIT_CENTER);
-                        taskbutton[i].setOnClickListener(this);
-                        taskbutton[i].setBackgroundColor(Color.TRANSPARENT);
-                        taskbutton[i].setId(Integer.parseInt(tasks.get(i).get("id")));
-                        
-                        //taskbutton[i].setId(i+1);
-                        ll.addView(taskbutton[i], lp);
-                    } catch (Exception e) {
-                        Log.i("kuvavirhe", "");
+                    imageName = "task_icon" + tasks.get(i).get("id");
+                    if(!StatusService.StaticStatusService.fh.checkIfImageExists(imageName)) {
+                        names.add(imageName);
                     }
                 }
+                
+                //Either all images are in memory or some must be downloaded from S3.
+                if (!names.isEmpty()) {
+                    //NOTE: The code works only as simple if S3 has saved the the needed images in a single bucket with the same naming convention.
+                    new S3Download(new taskImgsDownloaded(), names).execute();
+                } 
+                else {
+                    drawImages();
+                }
+            }
+            else {
+                //TODO: Something showing that no tasks belongs to the category.
             }
         }
-        else {
-            //TODO: Something showing that no tasks belongs to the category.
-        }
+        //TODO: else?
     }
     
     private void tasks2(String response) {
+        drawImages();
+        /*
+        boolean parsingWorked = StatusService.StaticStatusService.jc.newJson(response);
+                if (parsingWorked && StatusService.StaticStatusService.sc.checkStatus()) {
+                    tasks = StatusService.StaticStatusService.jc.getObjects();
 
-        LinearLayout category = (LinearLayout) view.findViewById(R.id.category_icon);
-        category.setOrientation(LinearLayout.VERTICAL);
-        //LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        ImageView categoryButton = new ImageView(getContext());
-        String categoryIcon = "category_icon" + getArguments().getString("category");
-        int categoryImageId = getResources().getIdentifier(categoryIcon, "drawable", getActivity().getApplicationContext().getPackageName());
-        categoryButton.setImageResource(categoryImageId);
-        category.addView(categoryButton);
-
-        LinearLayout ll = (LinearLayout) view.findViewById(R.id.tasks);
-        ll.setOrientation(LinearLayout.VERTICAL);
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-
-        StatusService.StaticStatusService.jc.newJson(response);
-        ArrayList<HashMap<String, String>> tasks = StatusService.StaticStatusService.jc.getObjects();
-/*
-        TableLayout tl = (TableLayout) view.findViewById(R.id.columns);
-        TableLayout.LayoutParams trlp = new TableLayout.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableLayout.LayoutParams.WRAP_CONTENT);
-        TableRow tr1 = (TableRow) view.findViewById(R.id.column1);
-        tr1.setOrientation(TableLayout.VERTICAL);
-        TableRow tr2 = (TableRow) view.findViewById(R.id.column2);
-        tr2.setOrientation(TableLayout.VERTICAL);
-        tr1.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT));
-        tr2.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT));
+                    drawImages();
+                }
+        //TODO: else?
         */
-        //tl.addView(tr1);
-        //tl.addView(tr2);
+    }
+
+    //draws imagebuttons with task video thumbnails
+    private void drawImages() {
+        LinearLayout category = (LinearLayout) view.findViewById(R.id.category_icon);
+        try {
+            Bitmap bm = BitmapFactory.decodeFile(StatusService.StaticStatusService.context.getFilesDir() + "/" + "category_icon" + categoryId);
+            ImageView categoryImage = new ImageView(getContext());
+            categoryImage.setImageBitmap(Bitmap.createScaledBitmap(bm, 300, 300, false));
+            categoryImage.setBackgroundColor(Color.TRANSPARENT);
+            category.addView(categoryImage);
+        }
+        catch (Exception e) {
+            Log.e("Image error", e.toString());
+        }
+
+
+        RelativeLayout rl = (RelativeLayout) view.findViewById(R.id.tasks);
 
         ImageButton[] taskbutton = new ImageButton[tasks.size()];
         for (int i = 0; i < tasks.size(); i++) {
-        //for (int i = 0; i < 10; i++) {
             try {
-                //Bitmap bitmap = BitmapFactory.decodeFile(Environment.getDataDirectory() + "/" + "task-icon" + tasks.get(i).get("id"));
-                String image = "task_icon" + tasks.get(i).get("id");
-                //if (i % 2 == 1) image = "task_icon1";
-                //else image = "task_icon2";
-                int imageID = getResources().getIdentifier(image, "drawable", getActivity().getApplicationContext().getPackageName());
+                RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                long start = System.currentTimeMillis();
+                long timer = 0;
+
+                Log.i("onko2", String.valueOf(StatusService.StaticStatusService.fh.checkIfImageExists("task_icon" + tasks.get(i).get("id"))));
+                while (!StatusService.StaticStatusService.fh.checkIfImageExists("task_icon" + tasks.get(i).get("id")) && timer < 5000) {
+                    timer = System.currentTimeMillis()-start;
+                    if (timer % 1000 == 0) Log.i("timer", String.valueOf(System.currentTimeMillis()-start));
+                }
+
+                timer = System.currentTimeMillis() - start;
+                Log.i("timer2", String.valueOf(timer));
+
+                Bitmap bitmap = BitmapFactory.decodeFile(StatusService.StaticStatusService.context.getFilesDir() + "/" + "task_icon" + tasks.get(i).get("id"));
                 taskbutton[i] = new ImageButton(getContext());
-                taskbutton[i].setImageResource(imageID);
+                taskbutton[i].setImageBitmap(bitmap.createScaledBitmap(bitmap, 300, 300, false));
                 taskbutton[i].setLayoutParams(lp);
-                taskbutton[i].setScaleType(ImageView.ScaleType.FIT_CENTER);
                 taskbutton[i].setOnClickListener(this);
                 taskbutton[i].setBackgroundColor(Color.TRANSPARENT);
-                //taskbutton[i].setId(1);
                 taskbutton[i].setId(Integer.parseInt(tasks.get(i).get("id")));
-                ll.addView(taskbutton[i]);
-/*
-                if (i % 2 == 0) {
-                    tr1.addView(taskbutton[i]);
-                    Log.i("onnistui", String.valueOf(i));
-                }
-                else {
-                    tr2.addView(taskbutton[i]);
-                    Log.i("onnistui2", String.valueOf(i));
-
-                }
-                */
+                lp.leftMargin = 400*(i%2)+500;
+                lp.topMargin = 400*((int)i/2);
+                rl.addView(taskbutton[i], lp);
             } catch (Exception e) {
-                Log.i("kuvavirhe", "");
+                Log.e("Image error", e.toString());
             }
         }
     }
@@ -164,7 +138,8 @@ public class TasksFragment extends Fragment implements View.OnClickListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.tasks_fragment, container, false);
 
-        String url = StatusService.StaticStatusService.sc.DescribeCategoryTasks("1");
+        categoryId = getArguments().getString("category");
+        String url = StatusService.StaticStatusService.sc.DescribeCategoryTasks(categoryId);
         hp = new HTTPSRequester(new listener()).execute(url);
 
         return view;

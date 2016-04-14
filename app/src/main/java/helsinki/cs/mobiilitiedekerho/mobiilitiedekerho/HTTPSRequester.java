@@ -4,13 +4,14 @@ package helsinki.cs.mobiilitiedekerho.mobiilitiedekerho;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.net.UnknownHostException;
-import java.net.MalformedURLException;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.IOException;
 
 /**
  * A class for communicating with the back-end server via HTTPS.
@@ -21,9 +22,9 @@ public class HTTPSRequester extends AsyncTask<String, String, String> {
     private TaskCompleted act;
 
     /**
-    * Constructor for HTTPSRequester.
-    * @param act a interface for being able to pass the response for the calling activity.
-    */
+     * Constructor for HTTPSRequester.
+     * @param act a interface for being able to pass the response for the calling activity.
+     */
     public HTTPSRequester(TaskCompleted act){
         this.act = act;
     }
@@ -35,9 +36,10 @@ public class HTTPSRequester extends AsyncTask<String, String, String> {
         try {
 
             URL url = new URL(urli[0]);
-        
+
             urlConnection = (HttpURLConnection) url.openConnection();
-        
+            urlConnection.setConnectTimeout (10000);
+
             //Creates a string (for JsonConverter to be parsed) from the connection's inputStream.
             BufferedReader br = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
             StringBuilder sb = new StringBuilder();
@@ -47,8 +49,9 @@ public class HTTPSRequester extends AsyncTask<String, String, String> {
             }
             br.close();
             return sb.toString();
-        
-        
+        } catch (SocketTimeoutException e) {
+            Log.i("SocketTimeoutException", urli.toString()); //Unable to get response at a reasonable time.
+            e.printStackTrace();
         } catch (MalformedURLException e) {
             Log.i("MalformedURLException", urli.toString());
             e.printStackTrace();
@@ -62,15 +65,16 @@ public class HTTPSRequester extends AsyncTask<String, String, String> {
             Log.i("SomeError", urli.toString());
             e.printStackTrace();
         } finally {
-            urlConnection.disconnect();
+            if (urlConnection != null) urlConnection.disconnect();
         }
-        
+
         return "{\"status\":\"CommunicationWithServerError\"}"; //A problem has been encountered while either calling the API or the response its damaged in some way (strange if data checking...) => Some special precautions to take?
+
     }
-    
-    
+
+
     protected void onPostExecute(String result) {
-        act.taskCompleted(result);
+        if (act != null) act.taskCompleted(result);
     }
 
 }

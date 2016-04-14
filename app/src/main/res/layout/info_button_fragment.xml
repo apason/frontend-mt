@@ -13,13 +13,13 @@
          android:clickable="true"/>
   -->
      <ImageButton android:id="@+id/info_button"
-                  android:layout_width="100dp"
-                  android:layout_height="100dp"
-             android:clickable="true"
-             android:layout_gravity="end"
-             android:background="@drawable/info"
-             android:maxWidth="100dp" android:layout_centerVertical="true"
-             android:layout_alignParentRight="true" android:layout_alignParentEnd="true"
-             android:layout_marginRight="10dp"/>
+         android:layout_width="100dp"
+         android:layout_height="100dp"
+         android:clickable="true"
+         android:layout_gravity="end"
+         android:background="@drawable/info"
+         android:maxWidth="100dp" android:layout_centerVertical="true"
+         android:layout_alignParentRight="true" android:layout_alignParentEnd="true"
+         android:layout_marginRight="10dp"/>
 
 </RelativeLayout>

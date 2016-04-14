@@ -1,46 +1,38 @@
 package helsinki.cs.mobiilitiedekerho.mobiilitiedekerho;
 
 
-import android.app.Activity;
 import android.app.Dialog;
-import android.content.Context;
-import android.graphics.Point;
-import android.media.Image;
-import android.net.wifi.WifiConfiguration;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.LayoutInflater;
-import android.view.View.OnClickListener;
 import android.view.View;
-import android.view.ViewGroup;
+import android.view.View.OnClickListener;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.FrameLayout;
-import android.widget.ImageButton;
-import android.widget.PopupWindow;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 
 public class LoginDialog extends AppCompatActivity {
 
     private Dialog login = null;
 
-    public class listener implements TaskCompleted {
+    public class loginListener implements TaskCompleted {
         @Override
         public void taskCompleted(String response) {
             authenticated(response);
         }
     }
+
+    public class registerListener implements TaskCompleted {
+        @Override
+        public void taskCompleted(String response) {
+            registered(response);
+        }
+    }
+
 
     String url;
     View view;
@@ -49,28 +41,59 @@ public class LoginDialog extends AppCompatActivity {
     String email;
     String password;
     AsyncTask hp = null;
-    ImageButton loginIconButton;
 
+    private boolean triedCommunicatingAlready = false;
+
+    // Checks whether login was successful and acts accordingly.
     public void authenticated(String response) {
-        StatusService.StaticStatusService.jc.newJson(response);
-        //ArrayList<HashMap<String, String>> tasks = StatusService.StaticStatusService.jc.getObjects();
-        //Log.i("status", StatusService.StaticStatusService.jc.getProperty("status"));
-        if (StatusService.StaticStatusService.sc.checkStatus()) {
-            Toast toast = new Toast(this);
-            Toast.makeText(this, "Kirjautuminen onnistui!",
-                Toast.LENGTH_LONG).show();
-            StatusService.setLoggedIn(true);
-            this.finish();
-            //loginIconButton.setBackgroundResource(R.drawable.logout_icon);
-        } else {
-            // If username or password is incorrect empty TextViews and notify user.
+        Log.i("login response", response);
+        boolean parsingWorked = StatusService.StaticStatusService.jc.newJson(response);
+        if (parsingWorked && StatusService.StaticStatusService.sc.checkStatus()) {
+            //ArrayList<HashMap<String, String>> tasks = StatusService.StaticStatusService.jc.getObjects();
+            //Log.i("status", StatusService.StaticStatusService.jc.getProperty("status"));
+            if (StatusService.StaticStatusService.sc.checkStatus()) {
+                StatusService.StaticStatusService.authToken = StatusService.StaticStatusService.jc.getProperty("auth_token");
+                Log.i("token", "uusi" + StatusService.StaticStatusService.authToken);
+                StatusService.StaticStatusService.fh.saveToken();
+                Toast.makeText(this, "Kirjautuminen onnistui.",
+                    Toast.LENGTH_LONG).show();
+                StatusService.setLoggedIn(true);
+                this.finish();
+            } else {
+                // If username or password is incorrect empty TextViews and notify user.
+                emailTV.setText("");
+                passwordTV.setText("");
+                Toast.makeText(this, "Sähköpostiosoite tai salasana väärin.",
+                    Toast.LENGTH_LONG).show();
+            }
+        }
+        else {
+            // If authentication response "cannot be computed" empty TextViews and notify user.
             emailTV.setText("");
             passwordTV.setText("");
-            Toast.makeText(this, "Sähköpostiosoite tai salasana väärin!",
-                Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Ongelma varmentamisessa, kokeile uudestaan.",
+            Toast.LENGTH_LONG).show();
         }
-
     }
+
+    // Checks whether registration was successful and acts accordingly.
+    public void registered(String response) {
+        Log.i("register response", response);
+        boolean parsingWorked = StatusService.StaticStatusService.jc.newJson(response);
+        if (parsingWorked && StatusService.StaticStatusService.sc.checkStatus()) {
+            if (StatusService.StaticStatusService.sc.checkStatus()) {
+                Toast.makeText(this, "Rekisteröityminen onnistui. Voit nyt kirjautua luomillasi tunnuksilla sisään.",
+                        Toast.LENGTH_LONG).show();
+            } else {
+                // If there is a problem with registration, notify the user.
+                emailTV.setText("");
+                passwordTV.setText("");
+                Toast.makeText(this, "Ongelma rekisteröitymisessä. Yritä uudelleen.",
+                        Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,7 +123,8 @@ public class LoginDialog extends AppCompatActivity {
                 email = emailTV.getText().toString();
                 password = passwordTV.getText().toString();
                 url = StatusService.StaticStatusService.sc.AuthenticateUser(email, password);
-                hp = new HTTPSRequester(new listener()).execute(url);
+                Log.i("auturli", url);
+                hp = new HTTPSRequester(new loginListener()).execute(url);
             }});
 
         Button registerButton =
@@ -111,10 +135,7 @@ public class LoginDialog extends AppCompatActivity {
                 email = emailTV.getText().toString();
                 password = passwordTV.getText().toString();
                 url = StatusService.StaticStatusService.sc.CreateUser(email, password);
-                hp = new HTTPSRequester(new listener()).execute(url);
-
-                Toast.makeText(getApplicationContext(), "Tunnuksesi on nyt rekisteröity ja voit kirjautua sillä sisään",
-                    Toast.LENGTH_LONG).show();
+                hp = new HTTPSRequester(new registerListener()).execute(url);
                 emailTV.setText("");
                 passwordTV.setText("");
             }
@@ -127,10 +148,7 @@ public class LoginDialog extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 finish();
-                //login.dismiss();
-            }
-
-        });
+            }});
 
         // Force the dialog to the right size
         WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
@@ -140,5 +158,4 @@ public class LoginDialog extends AppCompatActivity {
         login.show();
         login.getWindow().setAttributes(lp);
     }
-
 }

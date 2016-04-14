@@ -1,17 +1,15 @@
 package helsinki.cs.mobiilitiedekerho.mobiilitiedekerho;
 
 
-import android.os.AsyncTask;
-import android.util.Log;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
+import android.util.Log;
 
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.MalformedURLException;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 
 /**
@@ -29,50 +27,58 @@ public class S3Download extends AsyncTask<String, Void, String> {
     * Constructor for S3Download.
     * @param act a interface for being able to pass the response for the calling activity.
     * @param imageNames the names of the images to be downloaded, note that they are the names which how they are saved to memory and how saved to S3.
+    * Note (@return): "succes" if all went right, "failure" communication with S3 failed and if only some image couldn't be saved then their names in a string in format: "name:name:", that is name is the failed one and ":" a separator.
     */
     public S3Download(TaskCompleted act, ArrayList<String> imageNames){
         this.act = act;
         this.imageNames = imageNames;
         bitmaps = new ArrayList<Bitmap>();
     }
-    
-    
+
+
     protected String doInBackground(String... urls) {
         HttpURLConnection urlConnection = null;
-        
+
         try {
-            for (int i = 0 ; i < imageNames.size() ; i++) {
-                URL url = new URL(StatusService.StaticStatusService.s3Location + StatusService.StaticStatusService.graphicsBucket + "/" + imageNames.get(i));
-                urlConnection = (HttpURLConnection) url.openConnection();
-                bitmaps.add(BitmapFactory.decodeStream(urlConnection.getInputStream()));
-            }
-            return "success";
-        } catch (MalformedURLException e) {
-            Log.i("MalformedURLException", "");
-            e.printStackTrace();
-        } catch (IOException e) {
-            Log.i("IOException", "");
-            e.printStackTrace();
-        } catch (Exception e) {
-            Log.i("SomeError", "");
-            e.printStackTrace();
-        } finally {
-            urlConnection.disconnect();
+        for (int i = 0 ; i < imageNames.size() ; i++) {
+            Log.i("urli", StatusService.StaticStatusService.s3Location + StatusService.StaticStatusService.graphicsBucket + "/" + imageNames.get(i));
+
+            URL url = new URL(StatusService.StaticStatusService.s3Location + StatusService.StaticStatusService.graphicsBucket + "/" + imageNames.get(i));
+            Log.i("kuvaurli", url.toString());
+            urlConnection = (HttpURLConnection) url.openConnection();
+            bitmaps.add(BitmapFactory.decodeStream(urlConnection.getInputStream()));
         }
-        
+        return "success";
+        } catch (MalformedURLException e) {
+        Log.e("MalformedURLException", e.toString());
+        } catch (IOException e) {
+        Log.e("IOException", e.toString());
+        } catch (Exception e) {
+        Log.e("SomeError", e.toString());
+        } finally {
+        if (urlConnection != null) urlConnection.disconnect();
+        }
+
         return "failure";
     }
-    
-    /*
-    protected void onPostExecute(String result) throws IOException {
-    	if (!result.equals("success"))
-    		act.taskCompleted(result);
-    	
-        for (int i = 0 ; i < imageNames.size() ; i++) {
-            StatusService.StaticStatusService.fh.saveImage(imageNames.get(i), bitmaps.get(i));
-        }
-        
+
+
+    protected void onPostExecute(String result) {
+        if (!result.equals("success"))
         act.taskCompleted(result);
+        for (String name: imageNames) {
+            Log.i("kuvanimiS3", name);
+        }
+        String problems = ""; //A 'list' of images with which saving didn't work out.
+        for (int i = 0 ; i < imageNames.size() ; i++) {
+        if (!StatusService.StaticStatusService.fh.saveImage(imageNames.get(i), bitmaps.get(i))){
+            Log.i("feilasi", imageNames.get(i));
+            problems = problems + imageNames.get(i) +":";
+            //If returns false then it didn't work out, => only ^ ???
+        }
+        }
+        if (problems.equals("")) act.taskCompleted(result);
+        else act.taskCompleted("problems");
     }
-    */
+
 }

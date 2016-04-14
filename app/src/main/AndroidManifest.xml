@@ -19,8 +19,8 @@
                   android:screenOrientation="sensorLandscape">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
+
             </intent-filter>
         </activity>
         <activity
@@ -64,11 +64,16 @@
         </activity>
         <activity
             android:name=".LoginDialog"
-            android:screenOrientation="sensorLandscape" />
+            android:screenOrientation="sensorLandscape"
+            android:parentActivityName=".MainActivity"/>
         <service
             android:name="com.amazonaws.mobileconnectors.s3.transferutility.TransferService"
             android:enabled="true" />
+        <activity
+            android:name=".SubUserActivity"
+            android:screenOrientation="sensorLandscape" />
     </application>
+
 
     <uses-feature android:name="android.hardware.camera"
                   android:required="false" />

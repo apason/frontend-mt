@@ -2,15 +2,11 @@ package helsinki.cs.mobiilitiedekerho.mobiilitiedekerho;
 
 import android.util.Log;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 
 import java.io.IOException;
 import java.io.StringReader;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -32,24 +28,29 @@ public class JsonConverter {
      * Note: Cleares old data if exists.
      * @param json: JSON String to be parsed.
      */
-    public void newJson(String json) {
+    public boolean newJson(String json) {
+        boolean workedOut = false;
         Log.i("json", json);
+        
         try {
             properties = new HashMap<String, String>();
-
             objects = new ArrayList<HashMap<String, String>>();
+            
             JsonReader reader = new JsonReader(new StringReader(json));
             parseJson(reader);
+            
+            workedOut = true;
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.e("JSON error", e.toString());
         }
-
+        
+        return workedOut;
     }
 
 
     private void parseJson(JsonReader reader) throws IOException
     {
-        //json object allways starts with "{"
+        //json object always starts with "{"
         reader.beginObject();
 
         while (reader.hasNext()) {
@@ -132,9 +133,18 @@ public class JsonConverter {
      * @return returns the value of the field if exists(that is the parameter responded from the server),
      * otherwise null is returned
      */
-    public String getProperty(String key){
-        return properties.get(key);
+    public String getProperty(String key){ return properties.get(key); }
+
+    /**
+     * Returns the value of the parameter/field status from the first HashMapin ArrayList.
+     * Example usage: jc.getObjectKey("id")
+     * @return returns the value of the field if exists(that is the parameter responded from the server),
+     * otherwise null is returned
+     */
+    public String getObjectKey(String key){
+        return objects.get(0).get(key);
     }
+
     /**
      * @return Arraylist of HashMaps containing all OBJECTS
      * (see the JsonResponse convention) of the json.
