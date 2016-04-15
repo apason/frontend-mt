@@ -53,7 +53,7 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
                 if (!StatusService.StaticStatusService.fh.checkIfImageExists("category_menu_bg.png")) names.add("category_menu_bg.png");
 
                 for (int i = 0; i < categories.size(); i++) {
-                    String imageName = "category_icon" + categories.get(i).get("id");
+                    String imageName = "category_icon_id_" + categories.get(i).get("id") + ".png";
                     if (!StatusService.StaticStatusService.fh.checkIfImageExists(imageName)) {
                         names.add(imageName);
                     }
@@ -90,10 +90,7 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
         long timer = 0;
         while ((!StatusService.StaticStatusService.fh.checkIfImageExists("category_menu_bg.png")) && timer < 5000) {
             timer = System.currentTimeMillis()-start;
-            if (timer % 1000 == 0) Log.i("timer1", String.valueOf(System.currentTimeMillis()-start));
         }
-        timer = System.currentTimeMillis() - start;
-        Log.i("timer2", String.valueOf(timer));
 
         Bitmap background = BitmapFactory.decodeFile(StatusService.StaticStatusService.context.getFilesDir() + "/" + "category_menu_bg.png");
         Drawable d = new BitmapDrawable(getResources(), background);
@@ -107,15 +104,10 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
                 RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
                 start = System.currentTimeMillis();
                 timer = 0;
-                Log.i("onko", String.valueOf(StatusService.StaticStatusService.fh.checkIfImageExists("category_icon" + categories.get(i).get("id"))));
-                while ((!StatusService.StaticStatusService.fh.checkIfImageExists("category_icon" + categories.get(i).get("id"))) && timer < 5000) {
-
+                while (!StatusService.StaticStatusService.fh.checkIfImageExists("category_icon_id_" + categories.get(i).get("id") + ".png") && timer < 5000) {
                     timer = System.currentTimeMillis() - start;
-                    if (timer % 1000 == 0) Log.i("timer2", String.valueOf(System.currentTimeMillis()-start));
                 }
-                timer = System.currentTimeMillis() - start;
-                Log.i("timer2", String.valueOf(timer));
-                Bitmap bitmap = BitmapFactory.decodeFile(StatusService.StaticStatusService.context.getFilesDir() + "/" + "category_icon" + categories.get(i).get("id"));
+                Bitmap bitmap = BitmapFactory.decodeFile(StatusService.StaticStatusService.context.getFilesDir() + "/" + "category_icon_id_" + categories.get(i).get("id") +".png");
                 categorybutton[i] = new ImageButton(getContext());
                 categorybutton[i].setImageBitmap(Bitmap.createScaledBitmap(bitmap, 300, 300, false));
                 categorybutton[i].setLayoutParams(lp);
@@ -145,5 +137,37 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
         String id = Integer.toString(v.getId());
         ((CategoriesActivity) getActivity()).startCategory(id);
     }
+/*
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        float curX, curY;
+        float mx = event.getX();
+        float my = event.getY();
+        ScrollView vScroll = (ScrollView) view.findViewById(R.id.scrollVertical);
+        HorizontalScrollView hScroll = (HorizontalScrollView) view.findViewById(R.id.scrollVertical);
 
+        switch (event.getAction()) {
+
+            case MotionEvent.ACTION_DOWN:
+                mx = event.getX();
+                my = event.getY();
+                break;
+            case MotionEvent.ACTION_MOVE:
+                curX = event.getX();
+                curY = event.getY();
+                vScroll.scrollBy((int) (mx - curX), (int) (my - curY));
+                hScroll.scrollBy((int) (mx - curX), (int) (my - curY));
+                mx = curX;
+                my = curY;
+                break;
+            case MotionEvent.ACTION_UP:
+                curX = event.getX();
+                curY = event.getY();
+                vScroll.scrollBy((int) (mx - curX), (int) (my - curY));
+                hScroll.scrollBy((int) (mx - curX), (int) (my - curY));
+                break;
+        }
+        super.onTouchEvent(event);
+    }
+*/
 }

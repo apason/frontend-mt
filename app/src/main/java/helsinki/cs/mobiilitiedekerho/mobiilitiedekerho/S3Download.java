@@ -70,6 +70,8 @@ public class S3Download extends AsyncTask<String, Void, String> {
             Log.i("kuvanimiS3", name);
         }
         String problems = ""; //A 'list' of images with which saving didn't work out.
+
+        //TODO: should remove files not found from S3 from the ArrayList imageNames
         for (int i = 0 ; i < imageNames.size() ; i++) {
         if (!StatusService.StaticStatusService.fh.saveImage(imageNames.get(i), bitmaps.get(i))){
             Log.i("feilasi", imageNames.get(i));
