@@ -24,6 +24,9 @@ import java.util.HashMap;
 
 public class CategoriesFragment extends Fragment implements View.OnClickListener {
 
+private boolean triedAlready = false;
+private ArrayList<String> names; //Save images to be downloaded & saved for error checking.
+
     public class categorieslistener implements TaskCompleted {
         @Override
         public void taskCompleted(String response) {
@@ -34,10 +37,28 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
     public class catImgsDownloaded implements TaskCompleted {
         @Override
         public void taskCompleted(String response) {
-            if (response.equals("success")) categories2(response);
-            else if (response.equals("failure")) categories2(response)/*TODO: Try again?*/;
-            else categories2(response);
-        }/*TODO: Check which images couldn't be saved and try to do their loading again?*/;
+            if (response.equals("success")) drawImages(); //All went right, proceed to draw images.
+            else checkErrors(response);
+        }
+    }
+    
+    public class restOfImgsDownloaded implements TaskCompleted {
+        @Override
+        public void taskCompleted(String response) {
+        	if (response.equals("success")) drawImages(); //All went right this time, proceed to draw images.
+        	else if (response.equals("failure")) {
+        		//This is actually a communication error. TODO: Should try again?
+        	}
+        	else {
+        		//Could not get the rest (or all) of the images (that is the ones that couldn't be gotten before)
+        		// TODO: What to do? Notice the user or just skip these categories?
+        		
+        		// if it desired to just skip the categories in question, implement the code below.
+        		// String[] tg = response.split(":");
+        		// Remove from names the ones in tg.
+        		// (Finally in drawImages() do not read the ones not supposed to be read... :D)
+        	}
+        }
     }
 
     private View view;
@@ -49,7 +70,7 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
         if (parsingWorked && StatusService.StaticStatusService.sc.checkStatus()) {
             categories = StatusService.StaticStatusService.jc.getObjects();
             if (!categories.isEmpty()) {
-                ArrayList<String> names = new ArrayList<String>();
+                names = new ArrayList<String>();
                 if (!StatusService.StaticStatusService.fh.checkIfImageExists("category_menu_bg.png")) names.add("category_menu_bg.png");
 
                 for (int i = 0; i < categories.size(); i++) {
@@ -67,30 +88,46 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
                     drawImages();
                 }
             }
-            //TODO else?
+            //TODO: There is no tasks in the category, show some dialog.
         }
     }
 
 
-    private void categories2(String response) {
-        drawImages();
-        /*
-        boolean parsingWorked = StatusService.StaticStatusService.jc.newJson(response);
-        if (parsingWorked && StatusService.StaticStatusService.sc.checkStatus()) {
-            categories = StatusService.StaticStatusService.jc.getObjects();
-            drawImages();
+    private void checkErrors(String response) {
+        // Communicating with S3 failed, try again.
+        if (response.equals("failure")) {
+            if (!triedAlready) {
+                triedAlready = true;
+                new S3Download(new catImgsDownloaded(), names).execute();
+            }
+            else {
+            	//TODO: Show that some graphics could not be downloaded from S3 to user in some way.
+            }
         }
-        //TODO else?
-        */
+        // Some images could not be downloaded & saved, try again them.
+        else {
+            ArrayList<String> toGetAgain = new ArrayList<String>();
+            
+            String[] tg = response.split(":");
+            for (int i = 0 ; i < tg.length ; i++) {
+            	toGetAgain.add(tg[i]);
+            }
+            
+            new S3Download(new catImgsDownloaded(), names).execute();
+        }
     }
 
     private void drawImages() {
         RelativeLayout rl = (RelativeLayout) view.findViewById(R.id.categories);
+        
+        // WHAT, busy wait?!!? TODO: Fix something this is no good.
         long start = System.currentTimeMillis();
         long timer = 0;
         while ((!StatusService.StaticStatusService.fh.checkIfImageExists("category_menu_bg.png")) && timer < 5000) {
             timer = System.currentTimeMillis()-start;
         }
+        // WHATTTTTTEEE HECK!
+        
 
         Bitmap background = BitmapFactory.decodeFile(StatusService.StaticStatusService.context.getFilesDir() + "/" + "category_menu_bg.png");
         Drawable d = new BitmapDrawable(getResources(), background);
@@ -137,7 +174,7 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
         String id = Integer.toString(v.getId());
         ((CategoriesActivity) getActivity()).startCategory(id);
     }
-/*
+/* Rip scrolling in fragments.
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         float curX, curY;
