@@ -21,6 +21,7 @@ public class CategoryActivity extends AppCompatActivity {
         setContentView(R.layout.category_layout);
 
         TasksFragment tf = new TasksFragment();
+        HomeButtonFragment hbf = new HomeButtonFragment();
         Intent intent = getIntent();
         String categoryId = intent.getStringExtra(CategoriesActivity.EXTRA_MESSAGE_CATEGORY);
         Bundle bundle = new Bundle();
@@ -28,6 +29,7 @@ public class CategoryActivity extends AppCompatActivity {
         tf.setArguments(bundle);
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.add(R.id.tasks_fragment, tf);
+        transaction.add(R.id.home_button_fragment, hbf);
         transaction.commit();
     }
 

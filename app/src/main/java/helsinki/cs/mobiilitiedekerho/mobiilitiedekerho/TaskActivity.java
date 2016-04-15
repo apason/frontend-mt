@@ -27,6 +27,7 @@ public class TaskActivity extends AppCompatActivity {
         AnswerVideoFragment avf = new AnswerVideoFragment();
         TaskVideoFragment tvf = new TaskVideoFragment();
         InfoTextFragment uif = new InfoTextFragment();
+        HomeButtonFragment hbf = new HomeButtonFragment();
         uif.setTitle("Tehtävän kuvaus");
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -35,6 +36,7 @@ public class TaskActivity extends AppCompatActivity {
         transaction.add(R.id.camera_fragment, cf);
         transaction.add(R.id.answer_video_fragment, avf);
         transaction.add(R.id.info_button_fragment, uif);
+        transaction.add(R.id.home_button_fragment, hbf);
 
         Bundle bundle = new Bundle();
         bundle.putString("task", taskId);

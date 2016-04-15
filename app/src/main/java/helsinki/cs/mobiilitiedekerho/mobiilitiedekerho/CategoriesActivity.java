@@ -37,8 +37,10 @@ public class CategoriesActivity extends AppCompatActivity {
 
         LoginFragment lf = new LoginFragment();
         CategoriesFragment cf = new CategoriesFragment();
+        HomeButtonFragment hbf = new HomeButtonFragment();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.add(R.id.categories_fragment, cf);
+        transaction.add(R.id.home_button_fragment, hbf);
         transaction.commit();
     }
 
