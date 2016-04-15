@@ -126,9 +126,9 @@ public class VideoScreen extends Activity {
             }
             else ; //TODO: Wrong file extension! Should not happen ever thought.
         }
-        Log.i("html_text", html_text);
-        webView.loadData(html_text, "text/html", "UTF-8");
-        //TODO: lisää charset UTF-8
+        
+        //NOTE: Only "US-ASCII charset" is allowed/works in the html_text actually (android bug).
+        webView.loadData(html_text, "text/html; charset=utf-8", "UTF-8");
     }
 
     private class InsideWebViewClient extends WebViewClient {

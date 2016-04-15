@@ -50,7 +50,7 @@ public class TasksFragment extends Fragment implements View.OnClickListener {
                 ArrayList<String> names = new ArrayList<String>();
                 String imageName;
                 for (int i = 0; i < tasks.size(); i++) {
-                    imageName = "task_icon" + tasks.get(i).get("id");
+                    imageName = "task_icon_id_" + tasks.get(i).get("id") + ".png";
                     if(!StatusService.StaticStatusService.fh.checkIfImageExists(imageName)) {
                         names.add(imageName);
                     }
@@ -89,7 +89,7 @@ public class TasksFragment extends Fragment implements View.OnClickListener {
     private void drawImages() {
         LinearLayout category = (LinearLayout) view.findViewById(R.id.category_icon);
         try {
-            Bitmap bm = BitmapFactory.decodeFile(StatusService.StaticStatusService.context.getFilesDir() + "/" + "category_icon" + categoryId);
+            Bitmap bm = BitmapFactory.decodeFile(StatusService.StaticStatusService.context.getFilesDir() + "/" + "category_icon_id_" + categoryId + ".png");
             ImageView categoryImage = new ImageView(getContext());
             categoryImage.setImageBitmap(Bitmap.createScaledBitmap(bm, 300, 300, false));
             categoryImage.setBackgroundColor(Color.TRANSPARENT);
@@ -109,16 +109,11 @@ public class TasksFragment extends Fragment implements View.OnClickListener {
                 long start = System.currentTimeMillis();
                 long timer = 0;
 
-                Log.i("onko2", String.valueOf(StatusService.StaticStatusService.fh.checkIfImageExists("task_icon" + tasks.get(i).get("id"))));
-                while (!StatusService.StaticStatusService.fh.checkIfImageExists("task_icon" + tasks.get(i).get("id")) && timer < 5000) {
+                while (!StatusService.StaticStatusService.fh.checkIfImageExists("task_icon_id_" + tasks.get(i).get("id") + ".png") && timer < 5000) {
                     timer = System.currentTimeMillis()-start;
-                    if (timer % 1000 == 0) Log.i("timer", String.valueOf(System.currentTimeMillis()-start));
                 }
 
-                timer = System.currentTimeMillis() - start;
-                Log.i("timer2", String.valueOf(timer));
-
-                Bitmap bitmap = BitmapFactory.decodeFile(StatusService.StaticStatusService.context.getFilesDir() + "/" + "task_icon" + tasks.get(i).get("id"));
+                Bitmap bitmap = BitmapFactory.decodeFile(StatusService.StaticStatusService.context.getFilesDir() + "/" + "task_icon_id_" + tasks.get(i).get("id") + ".png");
                 taskbutton[i] = new ImageButton(getContext());
                 taskbutton[i].setImageBitmap(bitmap.createScaledBitmap(bitmap, 300, 300, false));
                 taskbutton[i].setLayoutParams(lp);
