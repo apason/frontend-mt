@@ -84,8 +84,8 @@ public class MainActivity extends AppCompatActivity {
             if (parsingWorked && StatusService.StaticStatusService.sc.checkStatus()) {
                 StatusService.StaticStatusService.s3Location = StatusService.StaticStatusService.jc.getProperty("s3_location");
                 Log.i("s3Location", StatusService.StaticStatusService.s3Location);
-                StatusService.StaticStatusService.taskBucket = StatusService.StaticStatusService.jc.getProperty("tasks_bucket");
                 StatusService.StaticStatusService.answerBucket = StatusService.StaticStatusService.jc.getProperty("answers_bucket");
+                StatusService.StaticStatusService.taskBucket = StatusService.StaticStatusService.jc.getProperty("tasks_bucket");
                 StatusService.StaticStatusService.graphicsBucket = StatusService.StaticStatusService.jc.getProperty("graphics_bucket");
             }
             //else just uses the hard-coded ones.

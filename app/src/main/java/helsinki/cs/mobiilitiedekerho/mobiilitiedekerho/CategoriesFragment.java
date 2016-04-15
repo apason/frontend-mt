@@ -22,7 +22,7 @@ import android.widget.ScrollView;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class CategoriesFragment extends Fragment implements View.OnClickListener {
+public class CategoriesFragment extends Fragment  {
 
     public class categorieslistener implements TaskCompleted {
         @Override
@@ -144,6 +144,38 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
     public void onClick(View v) {
         String id = Integer.toString(v.getId());
         ((CategoriesActivity) getActivity()).startCategory(id);
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        float curX, curY;
+        float mx = event.getX();
+        float my = event.getY();
+        ScrollView vScroll = (ScrollView) view.findViewById(R.id.scrollVertical);
+        HorizontalScrollView hScroll = (HorizontalScrollView) view.findViewById(R.id.scrollVertical);
+
+        switch (event.getAction()) {
+
+            case MotionEvent.ACTION_DOWN:
+                mx = event.getX();
+                my = event.getY();
+                break;
+            case MotionEvent.ACTION_MOVE:
+                curX = event.getX();
+                curY = event.getY();
+                vScroll.scrollBy((int) (mx - curX), (int) (my - curY));
+                hScroll.scrollBy((int) (mx - curX), (int) (my - curY));
+                mx = curX;
+                my = curY;
+                break;
+            case MotionEvent.ACTION_UP:
+                curX = event.getX();
+                curY = event.getY();
+                vScroll.scrollBy((int) (mx - curX), (int) (my - curY));
+                hScroll.scrollBy((int) (mx - curX), (int) (my - curY));
+                break;
+        }
+        super.onTouchEvent(event);
     }
 
 }
