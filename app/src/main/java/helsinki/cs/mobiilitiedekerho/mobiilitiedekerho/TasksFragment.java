@@ -20,6 +20,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class TasksFragment extends Fragment implements View.OnClickListener {
+	
+	private boolean triedAlready = false;
+	private ArrayList<String> names; //Save images to be downloaded & saved for error checking.
 
     public class listener implements TaskCompleted {
         @Override
@@ -31,7 +34,27 @@ public class TasksFragment extends Fragment implements View.OnClickListener {
     public class taskImgsDownloaded implements TaskCompleted {
         @Override
         public void taskCompleted(String response) {
-            tasks2(response);
+            if (response.equals("success")) drawImages(); //All went right, proceed to draw images.
+            else checkErrors(response);
+        }
+    }
+    
+    public class restOfImgsDownloaded implements TaskCompleted {
+        @Override
+        public void taskCompleted(String response) {
+        	if (response.equals("success")) drawImages(); //All went right this time, proceed to draw images.
+        	else if (response.equals("failure")) {
+        		//This is actually a communication error. TODO: Should try again?
+        	}
+        	else {
+        		//Could not get the rest (or all) of the images (that is the ones that couldn't be gotten before)
+        		// TODO: What to do? Notice the user or just skip these tasks?
+        		
+        		// if it desired to just skip the tasks in question, implement the code below.
+        		// String[] tg = response.split(":");
+        		// Remove from names the ones in tg.
+        		// (Finally in drawImages() do not read the ones not supposed to be read... :D)
+        	}
         }
     }
 
@@ -47,7 +70,7 @@ public class TasksFragment extends Fragment implements View.OnClickListener {
             tasks = StatusService.StaticStatusService.jc.getObjects();
 
             if (!tasks.isEmpty()) {
-                ArrayList<String> names = new ArrayList<String>();
+                names = new ArrayList<String>();
                 String imageName;
                 for (int i = 0; i < tasks.size(); i++) {
                     imageName = "task_icon_id_" + tasks.get(i).get("id") + ".png";
@@ -72,17 +95,28 @@ public class TasksFragment extends Fragment implements View.OnClickListener {
         //TODO: else?
     }
     
-    private void tasks2(String response) {
-        drawImages();
-        /*
-        boolean parsingWorked = StatusService.StaticStatusService.jc.newJson(response);
-                if (parsingWorked && StatusService.StaticStatusService.sc.checkStatus()) {
-                    tasks = StatusService.StaticStatusService.jc.getObjects();
-
-                    drawImages();
-                }
-        //TODO: else?
-        */
+    private void checkErrors(String response) {
+        // Communicating with S3 failed, try again.
+        if (response.equals("failure")) {
+            if (!triedAlready) {
+                triedAlready = true;
+                new S3Download(new taskImgsDownloaded(), names).execute();
+            }
+            else {
+            	//TODO: Show that some graphics could not be downloaded from S3 to user in some way.
+            }
+        }
+        // Some images could not be downloaded & saved, try again them.
+        else {
+            ArrayList<String> toGetAgain = new ArrayList<String>();
+            
+            String[] tg = response.split(":");
+            for (int i = 0 ; i < tg.length ; i++) {
+            	toGetAgain.add(tg[i]);
+            }
+            
+            new S3Download(new restOfImgsDownloaded(), names).execute();
+        }
     }
 
     //draws imagebuttons with task video thumbnails

@@ -24,8 +24,8 @@ import java.util.HashMap;
 
 public class CategoriesFragment extends Fragment implements View.OnClickListener {
 
-private boolean triedAlready = false;
-private ArrayList<String> names; //Save images to be downloaded & saved for error checking.
+    private boolean triedAlready = false;
+    private ArrayList<String> names; //Save images to be downloaded & saved for error checking.
 
     public class categorieslistener implements TaskCompleted {
         @Override
@@ -113,7 +113,7 @@ private ArrayList<String> names; //Save images to be downloaded & saved for erro
             	toGetAgain.add(tg[i]);
             }
             
-            new S3Download(new catImgsDownloaded(), names).execute();
+            new S3Download(new restOfImgsDownloaded(), names).execute();
         }
     }
 
