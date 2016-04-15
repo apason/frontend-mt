@@ -203,9 +203,8 @@ public class UserActivity extends AppCompatActivity {
                         Toast.LENGTH_LONG).show();
             }
             else {
-                //Poistettu käytöstä kunnes privacylevelit implementoitu backissa.
-                //Toast.makeText(UserActivity.this, "Yhteyttä palvelimeen ei saatu. Tekemiäsi muutoksia ei tallennettu.",
-                //        Toast.LENGTH_LONG).show();
+                Toast.makeText(UserActivity.this, "Yhteyttä palvelimeen ei saatu. Tekemiäsi muutoksia ei tallennettu.",
+                        Toast.LENGTH_LONG).show();
             }
         }
     }

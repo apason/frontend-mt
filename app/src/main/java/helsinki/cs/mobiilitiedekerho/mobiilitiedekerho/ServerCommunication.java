@@ -271,5 +271,9 @@ public class ServerCommunication {
     public String GetEULA() {
         return getResponse("GetEULA");
     }
+
+    public String GetInstructions() {
+        return getResponse("GetInstructions");
+    }
 }
 

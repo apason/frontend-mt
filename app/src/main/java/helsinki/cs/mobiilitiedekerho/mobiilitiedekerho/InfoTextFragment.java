@@ -25,6 +25,7 @@ public class InfoTextFragment extends Fragment implements View.OnClickListener {
     View view;
     TextView textView;
     String title;
+    String instructionsText;
 
     public class InfoTextLoaded implements TaskCompleted {
         @Override
@@ -36,6 +37,10 @@ public class InfoTextFragment extends Fragment implements View.OnClickListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        //String url = StatusService.StaticStatusService.sc.GetInstructions();
+        //hp = new HTTPSRequester(new instructionsListener()).execute(url);
+
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.info_button_fragment, null);
         // Add onClickListener to the login button
@@ -76,7 +81,8 @@ public class InfoTextFragment extends Fragment implements View.OnClickListener {
         //This is for user info - taskId should be set to -1 in MainActivity.java
         if (taskId.equals("-1")) {
             info.setTitle("Mobiilitiedekerhon Käyttöohjeet");
-            textView.setText("Käyttöohjeet tähän");
+            //textView.setText(instructionsText);
+            textView.setText("Käyttöohjeet tähän.");
         }
 
         // On click of cancel button close the dialog
@@ -98,6 +104,16 @@ public class InfoTextFragment extends Fragment implements View.OnClickListener {
         info.show();
         info.getWindow().setAttributes(lp);
     }
+    // Poistettu kunnes GetInstructions implementoitu backissa
+    /*
+    public class instructionsListener implements TaskCompleted {
+        @Override
+        public void taskCompleted(String response) {
+            StatusService.StaticStatusService.jc.newJson(response);
+            instructionsText = StatusService.StaticStatusService.jc.getProperty("eula");
+        }
+    }
+    */
 
 
 }
