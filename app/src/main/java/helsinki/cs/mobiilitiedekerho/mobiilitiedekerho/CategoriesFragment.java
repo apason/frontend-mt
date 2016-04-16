@@ -26,6 +26,7 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
 
     private boolean triedAlready = false;
     private ArrayList<String> names; //Save images to be downloaded & saved for error checking.
+    private ArrayList<String> urls; //Save urls to be used for downloading for error checking.
 
     public class categorieslistener implements TaskCompleted {
         @Override
@@ -45,19 +46,19 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
     public class restOfImgsDownloaded implements TaskCompleted {
         @Override
         public void taskCompleted(String response) {
-        	if (response.equals("success")) drawImages(); //All went right this time, proceed to draw images.
-        	else if (response.equals("failure")) {
-        		//This is actually a communication error. TODO: Should try again?
-        	}
-        	else {
-        		//Could not get the rest (or all) of the images (that is the ones that couldn't be gotten before)
-        		// TODO: What to do? Notice the user or just skip these categories?
-        		
-        		// if it desired to just skip the categories in question, implement the code below.
-        		// String[] tg = response.split(":");
-        		// Remove from names the ones in tg.
-        		// (Finally in drawImages() do not read the ones not supposed to be read... :D)
-        	}
+            if (response.equals("success")) drawImages(); //All went right this time, proceed to draw images.
+            else if (response.equals("failure")) {
+            //This is actually a communication error. TODO: Should try again?
+            }
+            else {
+                //Could not get the rest (or all) of the images (that is the ones that couldn't be gotten before)
+                // TODO: What to do? Notice the user or just skip these categories?
+
+                // if it desired to just skip the categories in question, implement the code below.
+                // String[] tg = response.split(":");
+                // Remove from names the ones in tg.
+                // (Finally in drawImages() do not read the ones not supposed to be read... :D)
+            }
         }
     }
 
@@ -70,26 +71,32 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
         if (parsingWorked && StatusService.StaticStatusService.sc.checkStatus()) {
             categories = StatusService.StaticStatusService.jc.getObjects();
             if (!categories.isEmpty()) {
-                names = new ArrayList<String>();
-                if (!StatusService.StaticStatusService.fh.checkIfImageExists("category_menu_bg.png")) names.add("category_menu_bg.png");
+                names = new ArrayList<String>(); //Names of the images to be saved.
+                urls = new ArrayList<String>(); // The urls to be retrieved.
+                if (!StatusService.StaticStatusService.fh.checkIfImageExists("category_menu_bg.png")) {
+                    names.add("category_menu_bg.png");
+                    urls.add("category_menu_bg.png"); //TODO: Get the url from server, the calling activity has it, pass it to this activity!
+                }
 
                 for (int i = 0; i < categories.size(); i++) {
                     String imageName = "category_icon_id_" + categories.get(i).get("id") + ".png";
                     if (!StatusService.StaticStatusService.fh.checkIfImageExists(imageName)) {
                         names.add(imageName);
+                        urls.add(categories.get(i).get("url"));
                     }
                 }
 
                 //Either all images are in memory or some must be downloaded from S3.
                 if (!names.isEmpty()) {
-                    //NOTE: The code works only as simple if S3 has saved the the needed images in a single bucket with the same naming convency.
-                    new S3Download(new catImgsDownloaded(), names).execute();
+                    //NOTE: saves the images to memery only based in hard-coded text + ID.
+                    new S3Download(new catImgsDownloaded(), names, urls).execute();
                 } else {
                     drawImages();
                 }
             }
             //TODO: There is no tasks in the category, show some dialog.
         }
+        //TODO: else?
     }
 
 
@@ -98,22 +105,27 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
         if (response.equals("failure")) {
             if (!triedAlready) {
                 triedAlready = true;
-                new S3Download(new catImgsDownloaded(), names).execute();
+                new S3Download(new catImgsDownloaded(), names, urls).execute();
             }
             else {
             	//TODO: Show that some graphics could not be downloaded from S3 to user in some way.
             }
         }
+        else if (response.equals("'ImageNames' and 'urlss' don't match in size")) {
+            // This really should not happen except for an error when calling. In that case fix that.
+        }
         // Some images could not be downloaded & saved, try again them.
         else {
             ArrayList<String> toGetAgain = new ArrayList<String>();
+            ArrayList<String> urlsAgain = new ArrayList<String>();
             
             String[] tg = response.split(":");
             for (int i = 0 ; i < tg.length ; i++) {
-            	toGetAgain.add(tg[i]);
+                toGetAgain.add(names.get(Integer.valueOf(tg[i])));
+                urlsAgain.add(urls.get(Integer.valueOf(tg[i])));
             }
             
-            new S3Download(new restOfImgsDownloaded(), names).execute();
+            new S3Download(new restOfImgsDownloaded(), toGetAgain, urlsAgain).execute();
         }
     }
 
