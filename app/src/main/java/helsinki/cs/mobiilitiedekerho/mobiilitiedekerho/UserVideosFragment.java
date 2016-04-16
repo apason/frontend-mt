@@ -30,22 +30,22 @@ public class UserVideosFragment extends Fragment implements View.OnClickListener
     private Dialog list = null;
     private ArrayList<HashMap<String, String>> uservideos;
     public final static String EXTRA_MESSAGE_URL = "helsinki.cs.mobiilitiedekerho.mobiilitiedekerho.CATEGORY";
+    private String url;
+    private View view;
+    private String email;
+    private String password;
+    private ImageButton userVideosButton;
+    
+    private AsyncTask hp = null;
 
     public class FetchUserVideos implements TaskCompleted {
         @Override
         public void taskCompleted(String response) { openUserVideoDialog(response); }
     }
 
-    String url;
-    View view;
-    String email;
-    String password;
-    AsyncTask hp = null;
-    ImageButton userVideosButton;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.user_videos_button_fragment, null);
         userVideosButton =

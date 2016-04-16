@@ -21,6 +21,7 @@ public class HTTPSRequester extends AsyncTask<String, String, String> {
 
     private TaskCompleted act;
 
+    
     /**
      * Constructor for HTTPSRequester.
      * @param act a interface for being able to pass the response for the calling activity.
@@ -28,11 +29,11 @@ public class HTTPSRequester extends AsyncTask<String, String, String> {
     public HTTPSRequester(TaskCompleted act){
         this.act = act;
     }
+    
 
-    HttpURLConnection urlConnection = null;
-
-    //TODO: Problem handling.
     protected String doInBackground(String... urli) {
+        HttpURLConnection urlConnection = null;
+        
         try {
 
             URL url = new URL(urli[0]);

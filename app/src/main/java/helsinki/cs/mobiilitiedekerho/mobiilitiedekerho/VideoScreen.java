@@ -22,8 +22,20 @@ import name.cpr.VideoEnabledWebView;
  */
 public class VideoScreen extends Activity {
 
+
     private VideoEnabledWebView webView;
     private VideoEnabledWebChromeClient webChromeClient;
+    
+    
+    private class InsideWebViewClient extends WebViewClient {
+        @Override
+        // Force links to be opened inside WebView and not in Default Browser
+        // Thanks http://stackoverflow.com/a/33681975/1815624
+        public boolean shouldOverrideUrlLoading(WebView view, String url) {
+            view.loadUrl(url);
+            return true;
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -129,16 +141,6 @@ public class VideoScreen extends Activity {
         
         //NOTE: Only "US-ASCII charset" is allowed/works in the html_text actually (android bug).
         webView.loadData(html_text, "text/html; charset=utf-8", "UTF-8");
-    }
-
-    private class InsideWebViewClient extends WebViewClient {
-        @Override
-        // Force links to be opened inside WebView and not in Default Browser
-        // Thanks http://stackoverflow.com/a/33681975/1815624
-        public boolean shouldOverrideUrlLoading(WebView view, String url) {
-            view.loadUrl(url);
-            return true;
-        }
     }
 
     @Override

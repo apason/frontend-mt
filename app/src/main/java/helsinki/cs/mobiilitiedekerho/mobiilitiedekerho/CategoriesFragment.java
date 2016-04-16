@@ -24,10 +24,17 @@ import java.util.HashMap;
 
 public class CategoriesFragment extends Fragment implements View.OnClickListener {
 
+    private View view;
+
     private boolean triedAlready = false;
+    private ArrayList<HashMap<String, String>> categories;
     private ArrayList<String> names; //Save images to be downloaded & saved for error checking.
     private ArrayList<String> urls; //Save urls to be used for downloading for error checking.
+    
+    private AsyncTask hp = null;
 
+    
+    
     public class categorieslistener implements TaskCompleted {
         @Override
         public void taskCompleted(String response) {
@@ -61,10 +68,16 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
             }
         }
     }
-
-    private View view;
-    private AsyncTask hp = null;
-    private ArrayList<HashMap<String, String>> categories;
+    
+    
+    
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        view = inflater.inflate(R.layout.categories_fragment, container, false);
+        String url = StatusService.StaticStatusService.sc.DescribeCategories();
+        hp = new HTTPSRequester(new categorieslistener()).execute(url);
+        return view;
+    }
 
     private void categories(String response) {
         boolean parsingWorked = StatusService.StaticStatusService.jc.newJson(response);
@@ -173,19 +186,11 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.categories_fragment, container, false);
-        String url = StatusService.StaticStatusService.sc.DescribeCategories();
-        hp = new HTTPSRequester(new categorieslistener()).execute(url);
-        return view;
-    }
-
-    @Override
     public void onClick(View v) {
         String id = Integer.toString(v.getId());
         ((CategoriesActivity) getActivity()).startCategory(id);
     }
+    
 /* Rip scrolling in fragments.
     @Override
     public boolean onTouchEvent(MotionEvent event) {

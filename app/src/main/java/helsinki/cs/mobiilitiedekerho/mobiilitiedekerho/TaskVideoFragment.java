@@ -15,17 +15,17 @@ import java.util.HashMap;
 
 public class TaskVideoFragment extends Fragment implements View.OnClickListener {
 
+    private View view;
+    VideoView videoView;
+    private AsyncTask hp;
+    private String taskURL;
+
     public class Listener implements TaskCompleted {
         @Override
         public void taskCompleted(String response) {
             task(response);
         }
     }
-
-    View view;
-    VideoView videoView;
-    AsyncTask hp;
-    String taskURL;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

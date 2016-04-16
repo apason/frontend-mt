@@ -17,6 +17,12 @@ import java.util.HashMap;
 
 public class AnswerVideoFragment extends Fragment implements View.OnClickListener {
 
+    private View view;
+    private VideoView videoView;
+    private AsyncTask hp;
+    private String answerURL;
+
+    
     public class AnswerListener implements TaskCompleted {
         @Override
         public void taskCompleted(String response) {
@@ -31,11 +37,7 @@ public class AnswerVideoFragment extends Fragment implements View.OnClickListene
         }
     }
 
-    View view;
-    VideoView videoView;
-    AsyncTask hp;
-    String answerURL;
-
+    
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

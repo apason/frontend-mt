@@ -14,12 +14,11 @@ import android.widget.ImageButton;
  */
 public class HomeButtonFragment extends Fragment {
 
-    View view;
+    private View view;
 
     // Draw the contents of home_button_fragment.xml to screen and set onclicklistener for home_button
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.home_button_fragment, null);
 
         ImageButton homeButton =

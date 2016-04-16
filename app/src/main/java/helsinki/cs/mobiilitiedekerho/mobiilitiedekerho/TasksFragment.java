@@ -21,10 +21,19 @@ import java.util.HashMap;
 
 public class TasksFragment extends Fragment implements View.OnClickListener {
 
+
+    private View view;
+    
+    private String categoryId;
+    
     private boolean triedAlready = false;
+    private ArrayList<HashMap<String, String>> tasks;
     private ArrayList<String> names; //Save images to be downloaded & saved for error checking.
     private ArrayList<String> urls; //Save urls to be used for downloading for error checking.
+    
+    private AsyncTask hp = null;
 
+    
     public class listener implements TaskCompleted {
         @Override
         public void taskCompleted(String response) {
@@ -58,11 +67,17 @@ public class TasksFragment extends Fragment implements View.OnClickListener {
             }
         }
     }
+    
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        view = inflater.inflate(R.layout.tasks_fragment, container, false);
 
-    private View view;
-    private AsyncTask hp = null;
-    private ArrayList<HashMap<String, String>> tasks;
-    private String categoryId;
+        categoryId = getArguments().getString("category");
+        String url = StatusService.StaticStatusService.sc.DescribeCategoryTasks(categoryId);
+        hp = new HTTPSRequester(new listener()).execute(url);
+
+        return view;
+    }
 
     private void tasks(String response) {
 
@@ -168,17 +183,6 @@ public class TasksFragment extends Fragment implements View.OnClickListener {
                 Log.e("Image error", e.toString());
             }
         }
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.tasks_fragment, container, false);
-
-        categoryId = getArguments().getString("category");
-        String url = StatusService.StaticStatusService.sc.DescribeCategoryTasks(categoryId);
-        hp = new HTTPSRequester(new listener()).execute(url);
-
-        return view;
     }
 
     @Override

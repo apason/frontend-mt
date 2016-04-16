@@ -10,12 +10,11 @@ import android.widget.ImageButton;
 // Fragment that creates an arrow button to screen, currently clicking changes view from front page to next page
 public class NextPageFragment extends Fragment implements View.OnClickListener {
 
-    View view;
+    private View view;
 
     // Draw the contents of next_button_fragment.xml to screen and add onclicklistener to next_button
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.next_button_fragment, null);
 
         ImageButton nextButton =

@@ -21,11 +21,11 @@ public class InfoTextFragment extends Fragment implements View.OnClickListener {
     private Dialog info = null;
     private AsyncTask hp;
     private String taskId;
-    ImageButton infoButton;
-    View view;
-    TextView textView;
-    String title;
-    String instructionsText;
+    private ImageButton infoButton;
+    private View view;
+    private TextView textView;
+    private String title;
+    private String instructionsText;
 
     public class InfoTextLoaded implements TaskCompleted {
         @Override
@@ -104,6 +104,7 @@ public class InfoTextFragment extends Fragment implements View.OnClickListener {
         info.show();
         info.getWindow().setAttributes(lp);
     }
+    
     // Poistettu kunnes GetInstructions implementoitu backissa
     /*
     public class instructionsListener implements TaskCompleted {

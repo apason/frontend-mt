@@ -21,9 +21,10 @@ import android.widget.Toast;
  */
 public class UserActivity extends AppCompatActivity {
 
-    AsyncTask hp;
-    boolean triedCommunicatingAlready = false;
-    String eula;
+
+    private AsyncTask hp;
+    private boolean triedCommunicatingAlready = false;
+    private String eula;
 
 
     public class GotToken implements TaskCompleted {
@@ -57,7 +58,35 @@ public class UserActivity extends AppCompatActivity {
             }
         }
     }
+    
+    public class EULAListener implements TaskCompleted {
+        @Override
+        public void taskCompleted(String response) {
+            StatusService.StaticStatusService.jc.newJson(response);
+            eula = StatusService.StaticStatusService.jc.getProperty("eula");
+        }
+    }
+    
+    /**
+     * A listener that checks if saving the privacy level worked out and notifies the user of the result.
+     */
+    public class PrivacyListener implements TaskCompleted {
+        @Override
+        public void taskCompleted(String response) {
+            Log.i("subia", response);
+            boolean parsingWorked = StatusService.StaticStatusService.jc.newJson(response);
+            if (parsingWorked && StatusService.StaticStatusService.sc.checkStatus()) {
+                Toast.makeText(UserActivity.this, "Muutokset käyttöoikeuksiin tallennettu.",
+                        Toast.LENGTH_LONG).show();
+            }
+            else {
+                Toast.makeText(UserActivity.this, "Yhteyttä palvelimeen ei saatu. Tekemiäsi muutoksia ei tallennettu.",
+                        Toast.LENGTH_LONG).show();
+            }
+        }
+    }
 
+    
     // Draw content of user_activity.xml to the screen
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -144,14 +173,6 @@ public class UserActivity extends AppCompatActivity {
         });
         alert.show();
     }
-
-    public class EULAListener implements TaskCompleted {
-        @Override
-        public void taskCompleted(String response) {
-            StatusService.StaticStatusService.jc.newJson(response);
-            eula = StatusService.StaticStatusService.jc.getProperty("eula");
-        }
-    }
     
     public void afterLogout() {
         Intent intent = new Intent(getApplication(), MainActivity.class);
@@ -188,24 +209,5 @@ public class UserActivity extends AppCompatActivity {
         String url = StatusService.StaticStatusService.sc.SetPrivacyLevel(Integer.toString(i));
         Log.i("vika", url);
         hp = new HTTPSRequester(new UserActivity.PrivacyListener()).execute(url);
-    }
-
-    /**
-     * A listener that checks if saving the privacy level worked out and notifies the user of the result.
-     */
-    public class PrivacyListener implements TaskCompleted {
-        @Override
-        public void taskCompleted(String response) {
-            Log.i("subia", response);
-            boolean parsingWorked = StatusService.StaticStatusService.jc.newJson(response);
-            if (parsingWorked && StatusService.StaticStatusService.sc.checkStatus()) {
-                Toast.makeText(UserActivity.this, "Muutokset käyttöoikeuksiin tallennettu.",
-                        Toast.LENGTH_LONG).show();
-            }
-            else {
-                Toast.makeText(UserActivity.this, "Yhteyttä palvelimeen ei saatu. Tekemiäsi muutoksia ei tallennettu.",
-                        Toast.LENGTH_LONG).show();
-            }
-        }
     }
 }
