@@ -20,44 +20,44 @@ public class UpdateData {
         }
     }
 
-        public void cases (String response) {
-            StatusService.StaticStatusService.jc.newJson(response);
-            ArrayList<HashMap<String, String>> data = StatusService.StaticStatusService.jc.getObjects();
-            String str_result = "";
-            /*
-            while (!str_result.contains("objects")) {
-                try {
-                    str_result = hp.get().toString();
-                    Log.i("tulos", str_result);
-                } catch (Exception e) {
-                    Log.i("virhe", "virhe");
-                }
-            }
-            */
-            switch (pointer) {
-                /*
-                case 0: {
-                    StatusService.StaticStatusService.categories = new int[data.size()];
-                    for (int i = 0; i < data.size(); i++) {
-                        StatusService.StaticStatusService.categories[i] = Integer.parseInt(data.get(i).get("id"));
-                    }
-                    break;
-                }
-
-                case 1: {
-                    StatusService.StaticStatusService.task[categoryId] = new int [data.size()];
-                    for (HashMap<String, String> task : data) {
-                        StatusService.StaticStatusService.task[categoryId].add(Integer.parseInt(task.get("id")));
-                        categoryId++;
-                        Log.i("categoryId", Integer.toString(categoryId));
-                    }
-                    updateTasks();
-                    break;
-                }
-                */
-                //case 2: download missing images
+    public void cases (String response) {
+        StatusService.StaticStatusService.jc.newJson(response);
+        ArrayList<HashMap<String, String>> data = StatusService.StaticStatusService.jc.getObjects();
+        String str_result = "";
+        /*
+        while (!str_result.contains("objects")) {
+            try {
+                str_result = hp.get().toString();
+                Log.i("tulos", str_result);
+            } catch (Exception e) {
+                Log.i("virhe", "virhe");
             }
         }
+        */
+        switch (pointer) {
+            /*
+            case 0: {
+                StatusService.StaticStatusService.categories = new int[data.size()];
+                for (int i = 0; i < data.size(); i++) {
+                    StatusService.StaticStatusService.categories[i] = Integer.parseInt(data.get(i).get("id"));
+                }
+                break;
+            }
+
+            case 1: {
+                StatusService.StaticStatusService.task[categoryId] = new int [data.size()];
+                for (HashMap<String, String> task : data) {
+                    StatusService.StaticStatusService.task[categoryId].add(Integer.parseInt(task.get("id")));
+                    categoryId++;
+                    Log.i("categoryId", Integer.toString(categoryId));
+                }
+                updateTasks();
+                break;
+            }
+            */
+            //case 2: download missing images
+        }
+    }
 
 
     public void updateCategories() {

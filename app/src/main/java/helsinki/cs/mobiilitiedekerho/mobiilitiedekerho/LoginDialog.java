@@ -18,6 +18,14 @@ import android.widget.Toast;
 public class LoginDialog extends AppCompatActivity {
 
     private Dialog login = null;
+    private View view;
+    private TextView emailTV;
+    private TextView passwordTV;
+    private String url;
+    private String email;
+    private String password;
+    
+    private AsyncTask hp = null;
 
     public class loginListener implements TaskCompleted {
         @Override
@@ -33,14 +41,6 @@ public class LoginDialog extends AppCompatActivity {
         }
     }
 
-
-    String url;
-    View view;
-    TextView emailTV;
-    TextView passwordTV;
-    String email;
-    String password;
-    AsyncTask hp = null;
 
     private boolean triedCommunicatingAlready = false;
 
@@ -142,8 +142,7 @@ public class LoginDialog extends AppCompatActivity {
         });
 
         // On click of cancel button close the dialog
-        Button closePopupButton =
-            (Button) login.findViewById(R.id.cancel_button);
+        Button closePopupButton = (Button) login.findViewById(R.id.cancel_button);
         closePopupButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {

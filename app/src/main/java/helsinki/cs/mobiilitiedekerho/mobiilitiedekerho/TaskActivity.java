@@ -10,7 +10,7 @@ import android.view.Window;
 public class TaskActivity extends AppCompatActivity {
 
     public final static String EXTRA_MESSAGE_URL = "helsinki.cs.mobiilitiedekerho.mobiilitiedekerho.CATEGORY";
-    VideoScreen vs;
+    
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

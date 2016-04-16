@@ -19,8 +19,8 @@ import java.io.IOException;
 public class FileHandling extends AppCompatActivity {
 
 
-    String token = "token";
-    String usageRights = "usagerights";
+    private String token = "token";
+    private String usageRights = "usagerights";
 
 
     /**

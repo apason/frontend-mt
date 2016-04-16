@@ -27,14 +27,16 @@ import java.util.HashMap;
 
 public class UserVideosFragment extends Fragment implements View.OnClickListener {
 
+	
+	public final static String EXTRA_MESSAGE_URL = "helsinki.cs.mobiilitiedekerho.mobiilitiedekerho.CATEGORY";
+	
     private Dialog list = null;
-    private ArrayList<HashMap<String, String>> uservideos;
-    public final static String EXTRA_MESSAGE_URL = "helsinki.cs.mobiilitiedekerho.mobiilitiedekerho.CATEGORY";
-    private String url;
     private View view;
+    private ImageButton userVideosButton;
+    private ArrayList<HashMap<String, String>> uservideos;
+    private String url;
     private String email;
     private String password;
-    private ImageButton userVideosButton;
     
     private AsyncTask hp = null;
 
@@ -91,8 +93,7 @@ public class UserVideosFragment extends Fragment implements View.OnClickListener
             }
 
             // On click of cancel button close the dialog
-            Button closePopupButton =
-                    (Button) list.findViewById(R.id.cancel_button);
+            Button closePopupButton = (Button) list.findViewById(R.id.cancel_button);
             closePopupButton.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -134,14 +135,14 @@ public class UserVideosFragment extends Fragment implements View.OnClickListener
                 //videobutton[i].setId(Integer.parseInt(uservideos.get(i).get("id")));
                 final String url = uservideos.get(i).get("uri");
                 videobutton[i].setOnClickListener(
-                        new OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                //int id = v.getId();
-                                Log.i("urli", url);
-                                String answerURL = StatusService.StaticStatusService.s3Location + StatusService.StaticStatusService.answerBucket + "/" + url;
-                                ((MainActivity) getActivity()).playback(answerURL);
-                            }});
+                    new OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            //int id = v.getId();
+                            Log.i("urli", url);
+                            String answerURL = StatusService.StaticStatusService.s3Location + StatusService.StaticStatusService.answerBucket + "/" + url;
+                            ((MainActivity) getActivity()).playback(answerURL);
+                        }});
                 //taskbutton[i].setBackgroundColor(Color.TRANSPARENT); <-- use this with thumbnail images
                 videobutton[i].setBackgroundColor(Color.BLACK);
                 videobutton[i].setTextColor(Color.WHITE);

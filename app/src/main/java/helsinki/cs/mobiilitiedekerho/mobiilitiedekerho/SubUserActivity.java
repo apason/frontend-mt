@@ -20,12 +20,15 @@ import android.widget.Toast;
  */
 public class SubUserActivity extends AppCompatActivity {
 
-    View view;
-    static final int REQUEST_IMAGE_CAPTURE = 1;
-    ImageView iv;
-    String subUserNick;
-    AsyncTask hp = null;
+    private View view;
+    private static final int REQUEST_IMAGE_CAPTURE = 1;
+    private ImageView iv;
+    
+    private String subUserNick;
+    
+    private AsyncTask hp = null;
 
+    
     /**
      * A listener that checks if saving sub-user worked out and notifies the user of the result.
      */

@@ -23,13 +23,11 @@ public class TasksFragment extends Fragment implements View.OnClickListener {
 
 
     private View view;
-    
     private String categoryId;
-    
-    private boolean triedAlready = false;
     private ArrayList<HashMap<String, String>> tasks;
     private ArrayList<String> names; //Save images to be downloaded & saved for error checking.
     private ArrayList<String> urls; //Save urls to be used for downloading for error checking.
+    private boolean triedAlready = false;
     
     private AsyncTask hp = null;
 

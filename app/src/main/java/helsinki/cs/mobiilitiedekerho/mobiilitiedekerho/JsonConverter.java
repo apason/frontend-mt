@@ -155,7 +155,7 @@ public class JsonConverter {
     }
 
     /**
-     * Returns first (or only) returned object.
+     * @return first (or only) returned object.
      * Note that return value can be null.
      */
     public HashMap<String, String> getObject(){

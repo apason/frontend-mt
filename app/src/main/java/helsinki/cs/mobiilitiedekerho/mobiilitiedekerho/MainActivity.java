@@ -18,6 +18,10 @@ public class MainActivity extends AppCompatActivity {
     private boolean triedCommunicatingAlready = false;
 
 
+    /**
+     * A listener that checks if the client got the anonymous token right.
+     * If it went wrong after trying again it does notify the user about a problem with communication with the server.
+     */
     public class GotToken implements TaskCompleted {
         @Override
         public void taskCompleted(String response) {

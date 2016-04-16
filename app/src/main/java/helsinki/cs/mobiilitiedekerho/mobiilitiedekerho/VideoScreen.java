@@ -60,6 +60,7 @@ public class VideoScreen extends Activity {
 //                 // Your code...
 //             }
 //         };
+        
         webChromeClient.setOnToggledFullscreen(new VideoEnabledWebChromeClient.ToggledFullscreenCallback()
         {
             @Override
@@ -89,6 +90,7 @@ public class VideoScreen extends Activity {
 
             }
         });
+        
         webView.setWebChromeClient(webChromeClient);
         // Call private class InsideWebViewClient
         webView.setWebViewClient(new InsideWebViewClient());
