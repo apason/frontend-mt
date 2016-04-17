@@ -104,7 +104,7 @@ public class UserActivity extends AppCompatActivity {
         RadioButton c = (RadioButton) findViewById(R.id.anyone);
 
         // Check which usage rights the user has determined for his/her videos and set the corresponding RadioButton checked.
-        switch(StatusService.getUsageRights()) {
+        switch(StatusService.StaticStatusService.fh.getUsageRights()) {
             case 1:
                 a.setChecked(true);
                 break;
@@ -192,23 +192,25 @@ public class UserActivity extends AppCompatActivity {
         switch(view.getId()) {
             case R.id.onlyme:
                 if (checked)
-                    StatusService.setUsageRights(1);
                     setPrivacyLevel(1);
                     break;
             case R.id.registered:
                 if (checked)
-                    StatusService.setUsageRights(2);
                     setPrivacyLevel(2);
                     break;
             case R.id.anyone:
                 if (checked)
-                    StatusService.setUsageRights(3);
                     setPrivacyLevel(3);
                     break;
         }
     }
 
     public void setPrivacyLevel(int i) {
+    
+        //Saves the privacy level for later use.
+        StatusService.setUsageRights(i);
+        StatusService.StaticStatusService.fh.saveUsageRights(i);
+    
         String url = StatusService.StaticStatusService.sc.SetPrivacyLevel(Integer.toString(i));
         Log.i("vika", url);
         hp = new HTTPSRequester(new UserActivity.PrivacyListener()).execute(url);

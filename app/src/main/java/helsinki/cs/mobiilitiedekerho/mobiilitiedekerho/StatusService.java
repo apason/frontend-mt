@@ -76,13 +76,10 @@ public class StatusService {
 
     public static void setUsageRights(int i) {
         StaticStatusService.usageRights = i;
-        FileHandling fh = new FileHandling();
-        fh.saveUsageRights(i);
     }
 
     public static int getUsageRights() {
-        FileHandling fh = new FileHandling();
-        return fh.getUsageRights();
+        return StaticStatusService.usageRights;
     }
 }
 
