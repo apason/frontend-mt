@@ -30,9 +30,9 @@ public class UserActivity extends AppCompatActivity {
     public class GotToken implements TaskCompleted {
         @Override
         public void taskCompleted(String response) {
-            StatusService.StaticStatusService.jc.newJson(response);
-
-            if (StatusService.StaticStatusService.sc.checkStatus()) {
+            boolean parsingWorked = StatusService.StaticStatusService.jc.newJson(response);
+            
+            if (parsingWorked && StatusService.StaticStatusService.sc.checkStatus()) {
                 StatusService.StaticStatusService.authToken = StatusService.StaticStatusService.jc.getProperty("auth_token");
                 afterLogout();
             }
@@ -62,8 +62,11 @@ public class UserActivity extends AppCompatActivity {
     public class EULAListener implements TaskCompleted {
         @Override
         public void taskCompleted(String response) {
-            StatusService.StaticStatusService.jc.newJson(response);
-            eula = StatusService.StaticStatusService.jc.getProperty("eula");
+            boolean parsingWorked = StatusService.StaticStatusService.jc.newJson(response);
+            if (parsingWorked && StatusService.StaticStatusService.sc.checkStatus()) {
+                eula = StatusService.StaticStatusService.jc.getProperty("eula");
+            }
+            else eula = "Ongelma käyttöehtojen lataamisessa."; //Jotta ei crassha null viitteeseen.
         }
     }
     

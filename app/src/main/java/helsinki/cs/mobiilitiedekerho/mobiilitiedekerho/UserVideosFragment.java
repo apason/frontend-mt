@@ -27,9 +27,9 @@ import java.util.HashMap;
 
 public class UserVideosFragment extends Fragment implements View.OnClickListener {
 
-	
-	public final static String EXTRA_MESSAGE_URL = "helsinki.cs.mobiilitiedekerho.mobiilitiedekerho.CATEGORY";
-	
+
+    public final static String EXTRA_MESSAGE_URL = "helsinki.cs.mobiilitiedekerho.mobiilitiedekerho.CATEGORY";
+
     private Dialog list = null;
     private View view;
     private ImageButton userVideosButton;
@@ -42,7 +42,9 @@ public class UserVideosFragment extends Fragment implements View.OnClickListener
 
     public class FetchUserVideos implements TaskCompleted {
         @Override
-        public void taskCompleted(String response) { openUserVideoDialog(response); }
+        public void taskCompleted(String response) {
+            openUserVideoDialog(response);
+        }
     }
 
 
