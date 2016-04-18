@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -55,8 +56,10 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
         public void taskCompleted(String response) {
             boolean parsingWorked = StatusService.StaticStatusService.jc.newJson(response);
             Log.i("upataan", "uppaus on yeeeeah");
+            Log.i("uppausresponssi", response);
             if (parsingWorked && StatusService.StaticStatusService.sc.checkStatus()) {
                 String answerUri = StatusService.StaticStatusService.jc.getProperty("answer_uri");
+                Log.i("vastausuri", answerUri);
                 answerID = StatusService.StaticStatusService.jc.getProperty("answer_id");
                 upload(answerUri);
             }
@@ -66,7 +69,9 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
     
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        taskId = this.getArguments().toString();
+        //taskId = this.getArguments().toString();
+        taskId = getArguments().getString("task");
+        Log.i("taski2", taskId);
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.camera_fragment, container, false);
 
@@ -112,8 +117,15 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
                     // Creates a file for saving the shot video VID + timestamp + .mp4 TODO: Check if possible to use WebM in device, NEVER expect that the recorded video is of a certain format.
                     // TODO: the name should contain task.
                     String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+
+                    //Log.i("filuuuu", );
                     selectedFile = new File(mediaStorageDirectory.getPath() + File.separator +
                             "VID_" + timeStamp + ".mp4");
+                    try {
+                        selectedFile.createNewFile();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                     selectedFileName = selectedFile.getName();
 
                     // Create a new Intent to shoot video and save the result to the file specified earlier
@@ -160,6 +172,11 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
                     String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
                     selectedFile = new File(mediaStorageDirectory.getPath() + File.separator +
                             "IID_" + timeStamp + ".JPEG");
+                    try {
+                        selectedFile.createNewFile();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                     selectedFileName = selectedFile.getName();
 
                     // Create a new Intent to shoot image and save the result to the file specified earlier
@@ -216,6 +233,11 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
                 selectedFileName = "VID_" + timeStamp + ".mp4";
 
                 selectedFile = new File(selectedVideoLocation.getLastPathSegment(), selectedFileName);
+                try {
+                    selectedFile.createNewFile();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
 
                 Log.i("filename", selectedFileName);
                 Log.i("location", selectedVideoLocation.toString());
@@ -223,11 +245,7 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
 
                 // Initialize the Amazon Cognito credentials provider
                 //if(selectedFile.exists()) {
-                Log.i("lataa", "lataa");
-                String url = StatusService.StaticStatusService.sc.StartAnswerUpload
-                        (taskId, StatusService.StaticStatusService.currentSubUserID, selectedFileName.substring(selectedFileName.lastIndexOf(".")).toLowerCase()); //TODO: Check if there is subuser in use! Get task.
-                hp = new HTTPSRequester(new GotUrlToUpload()).execute(url);
-                //}
+                createUrl();
             }
         }
         // Result handler for videos from the camera
@@ -239,9 +257,7 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
                 // Initialize the Amazon Cognito credentials provider
 
                 if (selectedFile.exists()) {
-                    String url = StatusService.StaticStatusService.sc.StartAnswerUpload
-                            (taskId, StatusService.StaticStatusService.currentSubUserID, selectedFileName.substring(selectedFileName.lastIndexOf(".")).toLowerCase()); //TODO: Check if there is subuser in use! Get task.
-                    hp = new HTTPSRequester(new GotUrlToUpload()).execute(url);
+                    createUrl();
                 }
 
             } else if (resultCode == TaskActivity.RESULT_CANCELED) {
@@ -271,10 +287,7 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
 
                 // Initialize the Amazon Cognito credentials provider
                 //if(selectedFile.exists()) {
-                Log.i("lataa", "lataa");
-                String url = StatusService.StaticStatusService.sc.StartAnswerUpload
-                        (taskId, StatusService.StaticStatusService.currentSubUserID, selectedFileName.substring(selectedFileName.lastIndexOf(".")).toLowerCase()); //TODO: Check if there is subuser in use! Get task.
-                hp = new HTTPSRequester(new GotUrlToUpload()).execute(url);
+                createUrl();
                 //}
             }
         } else if (requestCode == IMAGE_CAPTURE) {
@@ -285,9 +298,7 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
                 // Initialize the Amazon Cognito credentials provider
 
                 if (selectedFile.exists()) {
-                    String url = StatusService.StaticStatusService.sc.StartAnswerUpload
-                            (taskId, StatusService.StaticStatusService.currentSubUserID, selectedFileName.substring(selectedFileName.lastIndexOf(".")).toLowerCase()); //TODO: Check if there is subuser in use! Get task.
-                    hp = new HTTPSRequester(new GotUrlToUpload()).execute(url);
+                    createUrl();
                 }
 
             } else if (resultCode == TaskActivity.RESULT_CANCELED) {
@@ -297,6 +308,18 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
                 Toast.makeText(CameraFragment.this.getActivity(), "Kuvan ottaminen epäonnistui.",
                         Toast.LENGTH_LONG).show();
             }
+        }
+    }
+
+    private void createUrl() {
+        if (StatusService.StaticStatusService.currentSubUserID != null) {
+            String url = StatusService.StaticStatusService.sc.StartAnswerUpload
+                    (taskId, StatusService.StaticStatusService.currentSubUserID, selectedFileName.substring(selectedFileName.lastIndexOf(".")).toLowerCase().substring(1));
+            hp = new HTTPSRequester(new GotUrlToUpload()).execute(url);
+        }
+        else {
+            Toast.makeText(CameraFragment.this.getActivity(), "Sinun on valittava tai luotava käyttäjä lähettääksesi vastauksen",
+                    Toast.LENGTH_LONG).show();
         }
     }
 

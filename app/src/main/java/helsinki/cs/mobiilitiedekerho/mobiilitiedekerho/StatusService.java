@@ -25,7 +25,7 @@ public class StatusService {
         protected static String authToken;
 
         protected static String currentNick; //the not-unique name of the current sub-user.
-        protected static String currentSubUserID;
+        protected static String currentSubUserID = "1"; //TODO: Remove this when subuser can be chosen
     
         protected static String[] availableSubUsers; //The IDs of the available sub-users for the current user. TODO ?: String[] -> ???
 

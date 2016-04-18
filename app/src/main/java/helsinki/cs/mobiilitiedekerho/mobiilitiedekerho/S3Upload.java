@@ -44,8 +44,9 @@ public class S3Upload extends AsyncTask<String, Void, String> {
     protected String doInBackground(String... selectedFileName) {
         CognitoCachingCredentialsProvider credentialsProvider = new CognitoCachingCredentialsProvider(
             context,
-            "LISÄÄ TÄHÄN IDENTITY POOL ID", // Identity Pool ID
-                Regions.EU_CENTRAL_1 // Region
+                "LISÄÄ TÄHÄN IDENTITY POOL ID", // Identity Pool ID
+                //Regions.EU_CENTRAL_1 // Region
+                Regions.EU_WEST_1
         );
         // Create an S3 client
         AmazonS3 s3 = new AmazonS3Client(credentialsProvider);
@@ -66,6 +67,7 @@ public class S3Upload extends AsyncTask<String, Void, String> {
         
         metadata.setContentType(type);
         metadata.setContentDisposition("inline");
+
 
         
         TransferUtility transferUtility = new TransferUtility(s3, context);

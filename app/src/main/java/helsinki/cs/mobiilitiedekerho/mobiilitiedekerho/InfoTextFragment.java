@@ -97,7 +97,6 @@ public class InfoTextFragment extends Fragment implements View.OnClickListener {
         if (taskId.equals("-1")) {
             info.setTitle("Mobiilitiedekerhon Käyttöohjeet");
             textView.setText(instructionsText);
-            textView.setText("Käyttöohjeet tähän.");
         }
 
         // On click of cancel button close the dialog
