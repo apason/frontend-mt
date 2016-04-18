@@ -62,6 +62,7 @@ public class UserActivity extends AppCompatActivity {
     public class EULAListener implements TaskCompleted {
         @Override
         public void taskCompleted(String response) {
+            Log.i("voi eula", response);
             boolean parsingWorked = StatusService.StaticStatusService.jc.newJson(response);
             if (parsingWorked && StatusService.StaticStatusService.sc.checkStatus()) {
                 eula = StatusService.StaticStatusService.jc.getProperty("eula");

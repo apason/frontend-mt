@@ -75,6 +75,7 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.categories_fragment, container, false);
         String url = StatusService.StaticStatusService.sc.DescribeCategories();
+        Log.i("urli", url);
         hp = new HTTPSRequester(new categorieslistener()).execute(url);
         return view;
     }
@@ -92,10 +93,11 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
                 }
 
                 for (int i = 0; i < categories.size(); i++) {
-                    String imageName = "category_icon_id_" + categories.get(i).get("id") + ".png";
-                    if (!StatusService.StaticStatusService.fh.checkIfImageExists(imageName)) {
-                        names.add(imageName);
-                        urls.add(categories.get(i).get("url"));
+                    //String imageName = "category_icon_id_" + categories.get(i).get("id") + ".png";
+                    if (!StatusService.StaticStatusService.fh.checkIfImageExists(categories.get(i).get("icon_uri"))) {
+                        Log.i("nimet", categories.get(i).get("icon_uri"));
+                        names.add(categories.get(i).get("icon_uri"));
+                        urls.add(categories.get(i).get("icon_uri"));
                     }
                 }
 
@@ -176,8 +178,8 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
                 categorybutton[i].setOnClickListener(this);
                 categorybutton[i].setBackgroundColor(Color.TRANSPARENT);
                 categorybutton[i].setId(Integer.parseInt(categories.get(i).get("id")));
-                lp.leftMargin = 300*i; //TODO: (categories.get(i).get("x")));
-                lp.topMargin = 300*i; //TODO: (categories.get(i).get("y")));
+                lp.leftMargin = Integer.parseInt(categories.get(i).get("coordinate_x"));
+                lp.topMargin = Integer.parseInt(categories.get(i).get("coordinate_y"));
                 rl.addView(categorybutton[i], lp);
             } catch (Exception e) {
                 Log.e("Image error", e.toString());

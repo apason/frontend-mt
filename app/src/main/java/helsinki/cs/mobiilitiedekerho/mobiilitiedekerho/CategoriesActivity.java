@@ -35,7 +35,6 @@ public class CategoriesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.categories_activity);
 
-        LoginFragment lf = new LoginFragment();
         CategoriesFragment cf = new CategoriesFragment();
         HomeButtonFragment hbf = new HomeButtonFragment();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -46,7 +45,6 @@ public class CategoriesActivity extends AppCompatActivity {
 
     //Starts CategoryActivity with the particular task chosen
     public void startCategory(String id) {
-        Log.i("kategoria", id);
         Intent intent = new Intent(this, CategoryActivity.class);
         intent.putExtra(EXTRA_MESSAGE_CATEGORY, id);
         startActivity(intent);

@@ -78,7 +78,7 @@ public class TasksFragment extends Fragment implements View.OnClickListener {
     }
 
     private void tasks(String response) {
-
+        Log.i("responssi", response);
         boolean parsingWorked = StatusService.StaticStatusService.jc.newJson(response);
         if (parsingWorked && StatusService.StaticStatusService.sc.checkStatus()) {
             tasks = StatusService.StaticStatusService.jc.getObjects();
@@ -88,9 +88,10 @@ public class TasksFragment extends Fragment implements View.OnClickListener {
                 urls = new ArrayList<String>(); // The urls to be retrieved.
                 String imageName;
                 for (int i = 0; i < tasks.size(); i++) {
-                    imageName = "task_icon_id_" + tasks.get(i).get("id") + ".png";
-                    if(!StatusService.StaticStatusService.fh.checkIfImageExists(imageName)) {
-                        names.add(imageName);
+                    //imageName = "task_icon_id_" + tasks.get(i).get("id") + ".png";
+                    if(!StatusService.StaticStatusService.fh.checkIfImageExists(tasks.get(i).get("icon_uri"))) {
+                        names.add(tasks.get(i).get("icon_uri"));
+                        urls.add(tasks.get(i).get("icon_uri"));
                     }
                 }
 

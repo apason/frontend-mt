@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,6 +48,7 @@ public class AnswerVideoFragment extends Fragment implements View.OnClickListene
         //task_id from TaskActivity.java:
         String id = getArguments().getString("task");
         String url = StatusService.StaticStatusService.sc.DescribeTaskAnswers(id);
+        Log.i("urli", url);
         hp = new HTTPSRequester(new AnswerListener()).execute(url);
 
         return view;
@@ -60,6 +62,7 @@ public class AnswerVideoFragment extends Fragment implements View.OnClickListene
     }
 
     private void answers(String response) {
+        Log.i("responssi", response);
         LinearLayout ll = (LinearLayout) view.findViewById(R.id.answers);
         ll.setOrientation(LinearLayout.HORIZONTAL);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
