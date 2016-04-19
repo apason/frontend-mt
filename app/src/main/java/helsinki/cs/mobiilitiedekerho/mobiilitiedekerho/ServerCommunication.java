@@ -253,7 +253,6 @@ public class ServerCommunication {
         return getResponse("DeleteLike", "like_id", likeId);
     }
     
-    
     /**
      * Gets all the addresses of the S3 buckets and its location.
      */
@@ -263,15 +262,30 @@ public class ServerCommunication {
     
     /**
      * Notices the server to change user's privacy-level settings.
+     * @param privacyLevel the privacyLevel to become the users privacyLevel.
      */
     public String SetPrivacyLevel(String privacyLevel) {
         return getResponse("SetPrivacyLevel", "privacy_level", privacyLevel);
     }
-
+    
+    /**
+     * Notices the server to change user's pin or set it if there wasn't one already.
+     * @param pin the pin to become the users pin. To stop children from messing up some things.
+     */
+    public String SetPin(String pin) {
+        return getResponse("SetPrivacyLevel", "pin", pin);
+    }
+    
+    /**
+    * Gets the EULA as a String from the server.
+    */
     public String GetEULA() {
         return getResponse("GetEULA");
     }
 
+    /**
+    * Gets the instructions as a String from the server.
+    */
     public String GetInstructions() {
         return getResponse("GetInstructions");
     }
