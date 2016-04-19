@@ -81,6 +81,8 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
     }
 
     private void categories(String response) {
+        Log.i("responssi", response);
+
         boolean parsingWorked = StatusService.StaticStatusService.jc.newJson(response);
         if (parsingWorked && StatusService.StaticStatusService.sc.checkStatus()) {
             categories = StatusService.StaticStatusService.jc.getObjects();
@@ -165,22 +167,26 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
         ImageButton[] categorybutton = new ImageButton[categories.size()];
         for (int i = 0; i < categories.size(); i++) {
             try {
-                RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-                start = System.currentTimeMillis();
-                timer = 0;
-                while (!StatusService.StaticStatusService.fh.checkIfImageExists("category_icon_id_" + categories.get(i).get("id") + ".png") && timer < 5000) {
-                    timer = System.currentTimeMillis() - start;
+
+                if (true) {
+                    RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                    start = System.currentTimeMillis();
+                    timer = 0;
+                    while (!StatusService.StaticStatusService.fh.checkIfImageExists("category_icon_id_" + categories.get(i).get("id") + ".png") && timer < 5000) {
+                        timer = System.currentTimeMillis() - start;
+                    }
+
+                    Bitmap bitmap = BitmapFactory.decodeFile(StatusService.StaticStatusService.context.getFilesDir() + "/" + "category_icon_id_" + categories.get(i).get("id") + ".png");
+                    categorybutton[i] = new ImageButton(getContext());
+                    categorybutton[i].setImageBitmap(Bitmap.createScaledBitmap(bitmap, 300, 300, false));
+                    categorybutton[i].setLayoutParams(lp);
+                    categorybutton[i].setOnClickListener(this);
+                    categorybutton[i].setBackgroundColor(Color.TRANSPARENT);
+                    categorybutton[i].setId(Integer.parseInt(categories.get(i).get("id")));
+                    lp.leftMargin = Integer.parseInt(categories.get(i).get("coordinate_x"));
+                    lp.topMargin = Integer.parseInt(categories.get(i).get("coordinate_y"));
+                    rl.addView(categorybutton[i], lp);
                 }
-                Bitmap bitmap = BitmapFactory.decodeFile(StatusService.StaticStatusService.context.getFilesDir() + "/" + "category_icon_id_" + categories.get(i).get("id") +".png");
-                categorybutton[i] = new ImageButton(getContext());
-                categorybutton[i].setImageBitmap(Bitmap.createScaledBitmap(bitmap, 300, 300, false));
-                categorybutton[i].setLayoutParams(lp);
-                categorybutton[i].setOnClickListener(this);
-                categorybutton[i].setBackgroundColor(Color.TRANSPARENT);
-                categorybutton[i].setId(Integer.parseInt(categories.get(i).get("id")));
-                lp.leftMargin = Integer.parseInt(categories.get(i).get("coordinate_x"));
-                lp.topMargin = Integer.parseInt(categories.get(i).get("coordinate_y"));
-                rl.addView(categorybutton[i], lp);
             } catch (Exception e) {
                 Log.e("Image error", e.toString());
             }

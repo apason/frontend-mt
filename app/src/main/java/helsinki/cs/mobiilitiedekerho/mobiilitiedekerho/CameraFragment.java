@@ -33,7 +33,7 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
     private static final int IMAGE_CAPTURE = 102;
     private static final int VIDEO_SAVED = 201;
     private static final int IMAGE_SAVED = 202;
-    
+
     private Uri fileUri;
     private File selectedFile;
     private String selectedFileName;
@@ -50,7 +50,7 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
             new HTTPSRequester(null).execute(url);
         }
     }
-    
+
     public class GotUrlToUpload implements TaskCompleted {
         @Override
         public void taskCompleted(String response) {
@@ -66,7 +66,7 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
         }
     }
 
-    
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         //taskId = this.getArguments().toString();
@@ -225,22 +225,8 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
         if (requestCode == VIDEO_SAVED) {
             if (resultCode == TaskActivity.RESULT_OK) {
 
-                // Get the selected file's Uri, name and the file itself
-                Uri selectedVideoLocation = data.getData();
-
-                // Mikä ihme kovakoodattu tiesdosto tämä on?
-                String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-                selectedFileName = "VID_" + timeStamp + ".mp4";
-
-                selectedFile = new File(selectedVideoLocation.getLastPathSegment(), selectedFileName);
-                try {
-                    selectedFile.createNewFile();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
                 Log.i("filename", selectedFileName);
-                Log.i("location", selectedVideoLocation.toString());
+                //Log.i("location", selectedVideoLocation.toString());
                 Log.i("file", selectedFile.getName());
 
                 // Initialize the Amazon Cognito credentials provider
@@ -272,17 +258,8 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
         else if (requestCode == IMAGE_SAVED) {
             if (resultCode == TaskActivity.RESULT_OK) {
 
-                // Get the selected file's Uri, name and the file itself
-                Uri selectedVideoLocation = data.getData();
-
-                // Mikä ihme kovakoodattu tiesdosto tämä on? D: Tein samantyylinsen kun näemmäs tämä oikeasti ei toimi kuten pitää...
-                String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-                selectedFileName = "VID_" + timeStamp + ".JPEG";
-
-                selectedFile = new File(selectedVideoLocation.getLastPathSegment(), selectedFileName);
-
                 Log.i("filename", selectedFileName);
-                Log.i("location", selectedVideoLocation.toString());
+                //Log.i("location", selectedVideoLocation.toString());
                 Log.i("file", selectedFile.getName());
 
                 // Initialize the Amazon Cognito credentials provider
@@ -313,8 +290,14 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
 
     private void createUrl() {
         if (StatusService.StaticStatusService.currentSubUserID != null) {
+            String Ftype;
+            try {
+                Ftype = selectedFileName.substring(selectedFileName.lastIndexOf(".")).toLowerCase().substring(1);
+            } catch (Exception e) {
+                Ftype = "fail";
+            }
             String url = StatusService.StaticStatusService.sc.StartAnswerUpload
-                    (taskId, StatusService.StaticStatusService.currentSubUserID, selectedFileName.substring(selectedFileName.lastIndexOf(".")).toLowerCase().substring(1));
+                    (taskId, StatusService.StaticStatusService.currentSubUserID, Ftype);
             hp = new HTTPSRequester(new GotUrlToUpload()).execute(url);
         }
         else {
