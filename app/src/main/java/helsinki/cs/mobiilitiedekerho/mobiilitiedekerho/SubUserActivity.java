@@ -62,6 +62,9 @@ public class SubUserActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         // Inflate the layout for this activity
         super.onCreate(savedInstanceState);
+
+        new ConnectionCheck().conMgr(this);
+
         setContentView(R.layout.sub_user_activity);
 
         final EditText subuserNickField = (EditText) findViewById(R.id.nickname_field);
@@ -107,6 +110,4 @@ public class SubUserActivity extends AppCompatActivity {
             iv.setImageBitmap(imageBitmap);
         }
     }
-
-
 }

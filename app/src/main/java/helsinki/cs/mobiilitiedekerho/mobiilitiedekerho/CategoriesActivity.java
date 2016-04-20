@@ -19,19 +19,8 @@ public class CategoriesActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         //Cheks if there is an internet connection available. Note:  isConnectedOrConnecting () is true if connection is being established, but hasn't already.
-        ConnectivityManager conMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        boolean internetConnectionAvailable = conMgr.getActiveNetworkInfo() != null && conMgr.getActiveNetworkInfo().isAvailable() && conMgr.getActiveNetworkInfo().isConnected();
-        if (!internetConnectionAvailable) {
-            AlertDialog.Builder alert = new AlertDialog.Builder(CategoriesActivity.this);
-            alert.setTitle("Tietoliikennevirhe");
-            alert.setMessage("Laite ei ole yhteydessä internetiin. Suurinta osaa Mobiilitiedekerhon toiminnoista ei voi käyttää ilman toimivaa verkkoyhteyttä");
-            alert.setNegativeButton("Sulje", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int whichButton) {
-                    dialog.dismiss();
-                }
-            });
-            alert.show();
-        }
+        new ConnectionCheck().conMgr(this);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.categories_activity);
 
@@ -48,5 +37,21 @@ public class CategoriesActivity extends AppCompatActivity {
         Intent intent = new Intent(this, CategoryActivity.class);
         intent.putExtra(EXTRA_MESSAGE_CATEGORY, id);
         startActivity(intent);
+    }
+
+    @Override
+    public void onResume() {  // Refreshes screen when returning to this page, after eg. logging in or out
+        super.onResume();
+        new ConnectionCheck().conMgr(this);
+        drawScreen();
+    }
+
+    public void drawScreen() {
+        CategoriesFragment cf = new CategoriesFragment();
+        HomeButtonFragment hbf = new HomeButtonFragment();
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.add(R.id.categories_fragment, cf);
+        transaction.add(R.id.home_button_fragment, hbf);
+        transaction.commit();
     }
 }
