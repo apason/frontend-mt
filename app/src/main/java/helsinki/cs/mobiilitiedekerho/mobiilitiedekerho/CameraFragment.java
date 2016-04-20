@@ -222,70 +222,17 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         // Result handler for videos from the gallery
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == VIDEO_SAVED) {
             if (resultCode == TaskActivity.RESULT_OK) {
-
-                Log.i("filename", selectedFileName);
-                //Log.i("location", selectedVideoLocation.toString());
-                Log.i("file", selectedFile.getName());
-
-                // Initialize the Amazon Cognito credentials provider
-                //if(selectedFile.exists()) {
-                createUrl();
-            }
-        }
-        // Result handler for videos from the camera
-        else if (requestCode == VIDEO_CAPTURE) {
-            if (resultCode == TaskActivity.RESULT_OK) {
-                //Toast t = Toast.makeText(CameraFragment.this.getContext(), "Video has been saved to:\n" +
-                //        data.getData(), Toast.LENGTH_LONG);
-                //t.show();-->
-                // Initialize the Amazon Cognito credentials provider
-
                 if (selectedFile.exists()) {
                     createUrl();
                 }
-
-            } else if (resultCode == TaskActivity.RESULT_CANCELED) {
-                Toast.makeText(CameraFragment.this.getActivity(), "Videon ottaminen peruttu.",
+            } else if ((requestCode == VIDEO_CAPTURE || requestCode == IMAGE_CAPTURE) && resultCode == TaskActivity.RESULT_CANCELED) {
+                Toast.makeText(CameraFragment.this.getActivity(), "Kuvaaminen peruttu.",
                         Toast.LENGTH_LONG).show();
             } else {
-                Toast.makeText(CameraFragment.this.getActivity(), "Videon ottaminen epäonnistui.",
+                Toast.makeText(CameraFragment.this.getActivity(), "Kuvaaminen epäonnistui.",
                         Toast.LENGTH_LONG).show();
             }
-        }
-        // Result handler for iamges from the gallery
-        else if (requestCode == IMAGE_SAVED) {
-            if (resultCode == TaskActivity.RESULT_OK) {
-
-                Log.i("filename", selectedFileName);
-                //Log.i("location", selectedVideoLocation.toString());
-                Log.i("file", selectedFile.getName());
-
-                // Initialize the Amazon Cognito credentials provider
-                //if(selectedFile.exists()) {
-                createUrl();
-                //}
-            }
-        } else if (requestCode == IMAGE_CAPTURE) {
-            if (resultCode == TaskActivity.RESULT_OK) {
-                //Toast t = Toast.makeText(CameraFragment.this.getContext(), "Video has been saved to:\n" +
-                //        data.getData(), Toast.LENGTH_LONG);
-                //t.show();-->
-                // Initialize the Amazon Cognito credentials provider
-
-                if (selectedFile.exists()) {
-                    createUrl();
-                }
-
-            } else if (resultCode == TaskActivity.RESULT_CANCELED) {
-                Toast.makeText(CameraFragment.this.getActivity(), "Kuvan ottaminen peruttu.",
-                        Toast.LENGTH_LONG).show();
-            } else {
-                Toast.makeText(CameraFragment.this.getActivity(), "Kuvan ottaminen epäonnistui.",
-                        Toast.LENGTH_LONG).show();
-            }
-        }
     }
 
     private void createUrl() {
