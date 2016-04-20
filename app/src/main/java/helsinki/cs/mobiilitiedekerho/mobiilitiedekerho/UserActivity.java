@@ -95,6 +95,9 @@ public class UserActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        new ConnectionCheck().conMgr(getApplicationContext());
+
         setContentView(R.layout.user_activity);
 
         String url = StatusService.StaticStatusService.sc.GetEULA();

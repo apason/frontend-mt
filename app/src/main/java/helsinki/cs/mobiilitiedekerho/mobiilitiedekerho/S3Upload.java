@@ -44,8 +44,9 @@ public class S3Upload extends AsyncTask<String, Void, String> {
     protected String doInBackground(String... selectedFileName) {
         CognitoCachingCredentialsProvider credentialsProvider = new CognitoCachingCredentialsProvider(
             context,
-                "LISÄÄ TÄHÄN IDENTITY POOL ID", // Identity Pool ID
+                //"LISÄÄ TÄHÄN IDENTITY POOL ID", // Identity Pool ID
                  // Identity Pool ID
+                "eu-west-1:f153a6ae-5412-4972-8079-ef5b11eba1c8",
                 Regions.EU_WEST_1
                 //Regions.EU_CENTRAL_1 // Region
                 //Regions.EU_WEST_1

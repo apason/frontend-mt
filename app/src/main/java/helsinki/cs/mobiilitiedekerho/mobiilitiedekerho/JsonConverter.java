@@ -23,7 +23,7 @@ public class JsonConverter {
     //this is for first level properties and object list names only!
     private String key;
 
-    
+
     /**
      * Parses the wanted JSON string and stores the retrieved data for later use.
      * Note: Cleares old data if exists.
@@ -32,19 +32,19 @@ public class JsonConverter {
     public boolean newJson(String json) {
         boolean workedOut = false;
         Log.i("json", json);
-        
+
         try {
             properties = new HashMap<String, String>();
             objects = new ArrayList<HashMap<String, String>>();
-            
+
             JsonReader reader = new JsonReader(new StringReader(json));
             parseJson(reader);
-            
+
             workedOut = true;
         } catch (IOException e) {
             Log.e("JSON error", e.toString());
         }
-        
+
         return workedOut;
     }
 

@@ -43,7 +43,7 @@ public class InfoTextFragment extends Fragment implements View.OnClickListener {
             if (parsingWorked && StatusService.StaticStatusService.sc.checkStatus()) {
                 instructionsText = StatusService.StaticStatusService.jc.getProperty("instructions");
             }
-            else instructionsText = "Ongelma ohjeiden lataamisessa."; //Jotta ei crassha null viitteeseen.
+            else instructionsText = "Ongelma ohjeiden lataamisessa.";
         }
     }
 
@@ -90,7 +90,7 @@ public class InfoTextFragment extends Fragment implements View.OnClickListener {
             String taskInfo = task.get(0).get("info");
 
             //Checks whether the task has info defined or not. If not it sets "Ei ole kuvausta tehtävälle." as the task's description.
-            if (taskInfo == null) textView.setText("Ei ole kuvausta tehtävälle.");
+            if (taskInfo == null) textView.setText("Tehtävälle ei ole kuvausta.");
             else textView.setText(taskInfo);
         }
         //This is for user info - taskId should be set to -1 in MainActivity.java
@@ -106,9 +106,7 @@ public class InfoTextFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onClick(View v) {
                 info.dismiss();
-            }
-
-        });
+            }});
 
         // Force the dialog to the right size
         WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
