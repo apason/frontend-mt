@@ -103,20 +103,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //Checks if there is an internet connection available. Note:  isConnectedOrConnecting () is true if connection is being established, but hasn't already.
-        ConnectivityManager conMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        boolean internetConnectionAvailable = conMgr.getActiveNetworkInfo() != null && conMgr.getActiveNetworkInfo().isAvailable() && conMgr.getActiveNetworkInfo().isConnected();
-        if (!internetConnectionAvailable) {
-            AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
-            alert.setTitle("Tietoliikennevirhe");
-            alert.setMessage("Laite ei ole yhteydessä internetiin. Suurinta osaa Mobiilitiedekerhon toiminnoista ei voi käyttää ilman toimivaa verkkoyhteyttä");
-            alert.setNegativeButton("Sulje", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int whichButton) {
-                    dialog.dismiss();
-                }
-            });
-            alert.show();
-        }
+        new ConnectionCheck().conMgr(this);
 
         new StatusService();
         StatusService.StaticStatusService.context = getApplicationContext(); //needed for saving files to internal memory.
@@ -142,8 +129,9 @@ public class MainActivity extends AppCompatActivity {
 
 
     @Override
-    public void onResume() {  // Refreshes screen when returned to the front page, after eg. logging in or out
+    public void onResume() {  // Refreshes screen when returning to this page, after eg. logging in or out
         super.onResume();
+        new ConnectionCheck().conMgr(this);
         drawScreen();
     }
 

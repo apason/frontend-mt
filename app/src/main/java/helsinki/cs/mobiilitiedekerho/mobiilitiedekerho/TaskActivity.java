@@ -17,6 +17,9 @@ public class TaskActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         // Draw components described in activity_main.xml on screen
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+
+        new ConnectionCheck().conMgr(getApplicationContext());
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.task_activity);
 
@@ -54,5 +57,25 @@ public class TaskActivity extends AppCompatActivity {
         Intent intent = new Intent(this, VideoScreen.class);
         StatusService.StaticStatusService.url = uri;
         startActivity(intent);
+    }
+
+    @Override
+    public void onResume() {  // Refreshes screen when returning to this page, after eg. logging in or out
+        super.onResume();
+        new ConnectionCheck().conMgr(this);
+        drawScreen();
+    }
+
+    public void drawScreen() {
+        CameraFragment cf = new CameraFragment();
+        AnswerVideoFragment avf = new AnswerVideoFragment();
+        TaskVideoFragment tvf = new TaskVideoFragment();
+        InfoTextFragment uif = new InfoTextFragment();
+        uif.setTitle("Tehtävän kuvaus");
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.add(R.id.task_video_fragment, tvf);
+        transaction.add(R.id.camera_fragment, cf);
+        transaction.add(R.id.answer_video_fragment, avf);
+        transaction.add(R.id.info_button_fragment, uif);
     }
 }

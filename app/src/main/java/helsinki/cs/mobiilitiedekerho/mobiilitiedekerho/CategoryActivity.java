@@ -18,7 +18,10 @@ public class CategoryActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.category_layout);
+
+        new ConnectionCheck().conMgr(this);
 
         TasksFragment tf = new TasksFragment();
         HomeButtonFragment hbf = new HomeButtonFragment();
@@ -38,6 +41,22 @@ public class CategoryActivity extends AppCompatActivity {
         Intent intent = new Intent(this, TaskActivity.class);
         intent.putExtra(EXTRA_MESSAGE, id);
         startActivity(intent);
+    }
+
+    @Override
+    public void onResume() {  // Refreshes screen when returning to this page, after eg. logging in or out
+        super.onResume();
+        new ConnectionCheck().conMgr(this);
+        drawScreen();
+    }
+
+    public void drawScreen() {
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        TasksFragment tf = new TasksFragment();
+        HomeButtonFragment hbf = new HomeButtonFragment();
+        transaction.add(R.id.tasks_fragment, tf);
+        transaction.add(R.id.home_button_fragment, hbf);
+        transaction.commit();
     }
 
 }
