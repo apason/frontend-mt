@@ -69,6 +69,13 @@ public class ServerCommunication {
     public String CreateUser(String email, String password) {
         return getResponse("CreateUser", "user_email", email, "user_password", password);
     }
+    
+    /**
+     * Gets all the info related to the current user in use. (Privacy-level, pin, password, etc.)
+     */
+    public String DescribeUser() {
+        return getResponse("DescribeUser");
+    }
 
     /**
      * This does authenticate the user and get a hash for it.
