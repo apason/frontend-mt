@@ -52,7 +52,12 @@ public class CategoryActivity extends AppCompatActivity {
 
     public void drawScreen() {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        Intent intent = getIntent();
+        Bundle bundle = new Bundle();
+        String categoryId = intent.getStringExtra(CategoriesActivity.EXTRA_MESSAGE_CATEGORY);
+        bundle.putString("category", categoryId);
         TasksFragment tf = new TasksFragment();
+        tf.setArguments(bundle);
         HomeButtonFragment hbf = new HomeButtonFragment();
         transaction.add(R.id.tasks_fragment, tf);
         transaction.add(R.id.home_button_fragment, hbf);
