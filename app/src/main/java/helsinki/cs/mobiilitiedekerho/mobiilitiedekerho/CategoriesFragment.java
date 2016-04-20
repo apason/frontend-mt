@@ -105,7 +105,7 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
 
                 //Either all images are in memory or some must be downloaded from S3.
                 if (!names.isEmpty()) {
-                    //NOTE: saves the images to memery only based in hard-coded text + ID.
+                    //NOTE: saves the images to memory only based in hard-coded text + ID.
                     new S3Download(new catImgsDownloaded(), names, urls).execute();
                 } else {
                     drawImages();
