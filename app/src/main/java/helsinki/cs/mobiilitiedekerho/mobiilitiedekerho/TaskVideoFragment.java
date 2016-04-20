@@ -1,12 +1,18 @@
 package helsinki.cs.mobiilitiedekerho.mobiilitiedekerho;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.VideoView;
 
 import java.util.ArrayList;
@@ -32,10 +38,25 @@ public class TaskVideoFragment extends Fragment implements View.OnClickListener 
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.task_video_fragment, container, false);
 
-        Button tbutton =
-            (Button) view.findViewById(R.id.taskbutton);
-        tbutton.setOnClickListener(this);
+        String id = getArguments().getString("task");
+        LinearLayout category = (LinearLayout) view.findViewById(R.id.taskbutton);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 
+        Log.i("leveys", Integer.toString(category.getLayoutParams().height));
+        Log.i("leveys", Integer.toString(category.getLayoutParams().width));
+
+        try {
+            Bitmap bm = BitmapFactory.decodeFile(StatusService.StaticStatusService.context.getFilesDir() + "/" + "task_icon_id_" + id + ".png");
+            ImageView categoryImage = new ImageView(getContext());
+            categoryImage.setImageBitmap(Bitmap.createScaledBitmap(bm, 500, 500, false));
+            categoryImage.setBackgroundColor(Color.TRANSPARENT);
+            category.addView(categoryImage);
+            //categoryImage.setLayoutParams(lp);
+            category.setOnClickListener(this);
+        }
+        catch (Exception e) {
+            Log.e("Image error", e.toString());
+        }
         return view;
     }
 
@@ -48,8 +69,6 @@ public class TaskVideoFragment extends Fragment implements View.OnClickListener 
         // String taskVideo = ServiceCommunication.DescribeTask(id);
         String url = StatusService.StaticStatusService.sc.DescribeTask(id);
         hp = new HTTPSRequester(new Listener()).execute(url);
-        //String taskURL = "http://download.wavetlan.com/SVV/Media/HTTP/H264/Talkinghead_Media/H264_test1_Talkinghead_mp4_480x360.mp4";
-
     }
 
     private void task(String response) {

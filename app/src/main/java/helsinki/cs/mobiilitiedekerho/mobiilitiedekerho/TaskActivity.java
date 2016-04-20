@@ -41,7 +41,6 @@ public class TaskActivity extends AppCompatActivity {
 
         Bundle bundle = new Bundle();
         bundle.putString("task", taskId);
-        Log.i("taski1", taskId);
         cf.setArguments(bundle);
         avf.setArguments(bundle);
         tvf.setArguments(bundle);

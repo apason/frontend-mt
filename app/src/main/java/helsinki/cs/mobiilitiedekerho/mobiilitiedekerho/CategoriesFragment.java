@@ -30,11 +30,11 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
     private ArrayList<HashMap<String, String>> categories;
     private ArrayList<String> names; //Save images to be downloaded & saved for error checking.
     private ArrayList<String> urls; //Save urls to be used for downloading for error checking.
-    
+
     private AsyncTask hp = null;
 
-    
-    
+
+
     public class categorieslistener implements TaskCompleted {
         @Override
         public void taskCompleted(String response) {
@@ -49,13 +49,13 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
             else checkErrors(response);
         }
     }
-    
+
     public class restOfImgsDownloaded implements TaskCompleted {
         @Override
         public void taskCompleted(String response) {
             if (response.equals("success")) drawImages(); //All went right this time, proceed to draw images.
             else if (response.equals("failure")) {
-            //This is actually a communication error. TODO: Should try again?
+                //This is actually a communication error. TODO: Should try again?
             }
             else {
                 //Could not get the rest (or all) of the images (that is the ones that couldn't be gotten before)
@@ -68,9 +68,9 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
             }
         }
     }
-    
-    
-    
+
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.categories_fragment, container, false);
@@ -79,10 +79,14 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
         hp = new HTTPSRequester(new categorieslistener()).execute(url);
         return view;
     }
-
+/*
+    @Override
+    public void onResume() {  // Refreshes screen when returned to the front page, after eg. logging in or out
+        super.onResume();
+        drawImages();
+    }
+*/
     private void categories(String response) {
-        Log.i("responssi", response);
-
         boolean parsingWorked = StatusService.StaticStatusService.jc.newJson(response);
         if (parsingWorked && StatusService.StaticStatusService.sc.checkStatus()) {
             categories = StatusService.StaticStatusService.jc.getObjects();
@@ -125,7 +129,7 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
                 new S3Download(new catImgsDownloaded(), names, urls).execute();
             }
             else {
-            	//TODO: Show that some graphics could not be downloaded from S3 to user in some way.
+                //TODO: Show that some graphics could not be downloaded from S3 to user in some way.
             }
         }
         else if (response.equals("'ImageNames' and 'urlss' don't match in size")) {
@@ -135,20 +139,20 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
         else {
             ArrayList<String> toGetAgain = new ArrayList<String>();
             ArrayList<String> urlsAgain = new ArrayList<String>();
-            
+
             String[] tg = response.split(":");
             for (int i = 0 ; i < tg.length ; i++) {
                 toGetAgain.add(names.get(Integer.valueOf(tg[i])));
                 urlsAgain.add(urls.get(Integer.valueOf(tg[i])));
             }
-            
+
             new S3Download(new restOfImgsDownloaded(), toGetAgain, urlsAgain).execute();
         }
     }
 
     private void drawImages() {
         RelativeLayout rl = (RelativeLayout) view.findViewById(R.id.categories);
-        
+
         // WHAT, busy wait?!!? TODO: Fix something this is no good.
         long start = System.currentTimeMillis();
         long timer = 0;
@@ -156,7 +160,7 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
             timer = System.currentTimeMillis()-start;
         }
         // WHATTTTTTEEE HECK!
-        
+
 
         Bitmap background = BitmapFactory.decodeFile(StatusService.StaticStatusService.context.getFilesDir() + "/" + "category_menu_bg.png");
         Drawable d = new BitmapDrawable(getResources(), background);
@@ -167,7 +171,7 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
         ImageButton[] categorybutton = new ImageButton[categories.size()];
         for (int i = 0; i < categories.size(); i++) {
             try {
-
+                //TODO: check if category icon is enabled
                 if (true) {
                     RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
                     start = System.currentTimeMillis();
