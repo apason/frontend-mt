@@ -35,6 +35,29 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
 
 
 
+    public class CategoryMenuBGDownload implement TaskCompleted {
+        @Override
+        public void taskCompleted(String response) {
+            boolean parsingWorked = StatusService.StaticStatusService.jc.newJson(response);
+            if (parsingWorked && StatusService.StaticStatusService.sc.checkStatus()) {
+                new S3Download(new CategoryMenuBGDownloaded(), category_menu_bg.png, StatusService.StaticStatusService.jc.getObject().get("category_menu_bg_uri")).execute();
+            }
+            else ; //TODO: PROOOBLEEEMMM
+        }
+    }
+
+    public class CategoryMenuBGDownloaded implement TaskCompleted {
+        @Override
+        public void taskCompleted(String response) {
+            if (response.equals("success")) {
+                String url = StatusService.StaticStatusService.sc.DescribeCategories();
+                hp = new HTTPSRequester(new categorieslistener()).execute(url);
+            }
+            else ; //TODO: Try again or something.
+        }
+    }
+
+
     public class categorieslistener implements TaskCompleted {
         @Override
         public void taskCompleted(String response) {
@@ -74,9 +97,7 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.categories_fragment, container, false);
-        String url = StatusService.StaticStatusService.sc.DescribeCategories();
-        Log.i("urli", url);
-        hp = new HTTPSRequester(new categorieslistener()).execute(url);
+        this.menuBG();
         return view;
     }
 /*
@@ -86,6 +107,18 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
         drawImages();
     }
 */
+
+    private void menuBG(String response) {
+        if (StatusService.StaticStatusService.fh.checkIfImageExists("category_menu_bg.png")) {
+            String url = StatusService.StaticStatusService.sc.DescribeCategories();
+            hp = new HTTPSRequester(new categorieslistener()).execute(url);
+        }
+        else {
+            String url = StatusService.StaticStatusService.sc.GetCategoryMenuBG();
+            hp = new HTTPSRequester(new CategoryMenuBGDownload()).execute(url);
+        }
+    }
+
     private void categories(String response) {
         boolean parsingWorked = StatusService.StaticStatusService.jc.newJson(response);
         if (parsingWorked && StatusService.StaticStatusService.sc.checkStatus()) {
@@ -93,10 +126,6 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
             if (!categories.isEmpty()) {
                 names = new ArrayList<String>(); //Names of the images to be saved.
                 urls = new ArrayList<String>(); // The urls to be retrieved.
-                if (!StatusService.StaticStatusService.fh.checkIfImageExists("category_menu_bg.png")) {
-                    names.add("category_menu_bg.png");
-                    urls.add("category_menu_bg.png"); //TODO: Get the url from server, the calling activity has it, pass it to this activity!
-                }
 
                 for (int i = 0; i < categories.size(); i++) {
                     //String imageName = "category_icon_id_" + categories.get(i).get("id") + ".png";
