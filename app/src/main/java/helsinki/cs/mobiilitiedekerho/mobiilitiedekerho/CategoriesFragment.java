@@ -100,9 +100,9 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
 
                 for (int i = 0; i < categories.size(); i++) {
                     //String imageName = "category_icon_id_" + categories.get(i).get("id") + ".png";
-                    if (!StatusService.StaticStatusService.fh.checkIfImageExists(categories.get(i).get("icon_uri"))) {
+                    if (!StatusService.StaticStatusService.fh.checkIfImageExists("category_icon_id_"+ categories.get(i).get("id") + ".png") {
                         Log.i("nimet", categories.get(i).get("icon_uri"));
-                        names.add(categories.get(i).get("icon_uri"));
+                        names.add("category_icon_id_"+ categories.get(i).get("id") + ".png");
                         urls.add(categories.get(i).get("icon_uri"));
                     }
                 }
@@ -174,11 +174,14 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
                 //TODO: check if category icon is enabled
                 if (true) {
                     RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                    
+                    // WHAT, busy wait?!!? TODO: Fix something this is no good.
                     start = System.currentTimeMillis();
                     timer = 0;
                     while (!StatusService.StaticStatusService.fh.checkIfImageExists("category_icon_id_" + categories.get(i).get("id") + ".png") && timer < 5000) {
                         timer = System.currentTimeMillis() - start;
                     }
+                    // WHATTTTTTEEE HECK!
 
                     Bitmap bitmap = BitmapFactory.decodeFile(StatusService.StaticStatusService.context.getFilesDir() + "/" + "category_icon_id_" + categories.get(i).get("id") + ".png");
                     categorybutton[i] = new ImageButton(getContext());

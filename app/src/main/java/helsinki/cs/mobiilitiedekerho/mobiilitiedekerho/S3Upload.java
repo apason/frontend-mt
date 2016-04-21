@@ -35,12 +35,12 @@ public class S3Upload extends AsyncTask<String, Void, String> {
     
     protected String doInBackground(String... urli) {
         try {
-        	URL url = new URL(urli[0]);
-        	
+            URL url = new URL(urli[0]);
+
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setDoOutput(true);
             connection.setRequestMethod("PUT");
-            
+
             //# Sets the metadata to the file to be uploaded.
             MimeTypeMap mime = MimeTypeMap.getSingleton();
             //TODO: There is no need for the extension part ".type" actually (except for Windows) so possibly there could be a viable file without its type written in the file's name.
@@ -50,7 +50,7 @@ public class S3Upload extends AsyncTask<String, Void, String> {
             String type = mime.getMimeTypeFromExtension(ext); //Gets the Mime type corresponding to the extension. E.G: mp4 -> video/mp4
             connection.setRequestProperty("Content-Type", type); // Very important ! It won't work without adding this!
             connection.setRequestProperty("Content-Disposition", "inline");
-            
+
             BufferedOutputStream bos = new BufferedOutputStream(connection.getOutputStream());
             BufferedInputStream bis = new BufferedInputStream(new FileInputStream(selectedFile));
             int i;
@@ -59,9 +59,9 @@ public class S3Upload extends AsyncTask<String, Void, String> {
                 bos.write(i);
             }
             bos.close();
-            
+
             connection.disconnect();
-            
+
             return "succes";
         } catch (Exception e) {
             return "failure";
