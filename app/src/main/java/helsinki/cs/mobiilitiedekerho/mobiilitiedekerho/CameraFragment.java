@@ -254,6 +254,6 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
     }
 
     public void upload(String answerUri) {
-        S3 = new S3Upload(new S3uploadFinished(), getContext(), selectedFile).execute(answerUri);
+        S3 = new S3Upload(new S3uploadFinished(), selectedFile).execute(answerUri);
     }
 }
