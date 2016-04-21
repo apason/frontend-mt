@@ -26,12 +26,16 @@ public class S3Download extends AsyncTask<String, Void, String> {
 
     /**
     * Constructor for S3Download.
+    *
     * @param act a interface for being able to pass the response for the calling activity.
-    * @param imageNames the names of the images to be downloaded, note that they are the names which how they are saved to memory and how saved to S3.
+    *
+    * @param imageNames the names how the images will be saved to memory. Note: Use naming convency here! (give the same names of how they are saved in S3)
     * @param urlss the urls pointing to images to be downloaded.
-    *   "imageNames" must match the order of "urlss".
-+   *   If their length doesn't match, async will stop and return "'Image names' and 'urls' don't match in size" (to avoid crashing)
-    * Note (@return after executing): "succes" if all went right, "failure" communication with S3 failed and if only some images couldn't be saved then it returns their indexes in a string in format: "index:index:", indes is the index and ":" a separator.
+    *           "imageNames" must match the order of "urlss".
+    *           If their length doesn't match, async will stop and return "'Image names' and 'urls' don't match in size" (to avoid crashing)
+    *
+    * Note (@return after executing): "succes" if all went right, "failure" if communication with S3 failed and if only some images 
+    * couldn't be saved then it returns their indexes in a string in format: "index:index:", index is the index and ":" a separator.
     */
     public S3Download(TaskCompleted act, ArrayList<String> imageNames, ArrayList<String> urlss){
         this.act = act;

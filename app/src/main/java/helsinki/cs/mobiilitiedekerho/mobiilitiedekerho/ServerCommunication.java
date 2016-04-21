@@ -298,7 +298,8 @@ public class ServerCommunication {
     }
     
     /**
-    * Gets the instructions as a String from the server.
+    * Gets the signed url for downloading the category menu's BG.
+    * Note that the retruned key's name is "category_menu_bg_uri".
     */
     public String GetCategoryMenuBG() {
         return getResponse("GetCategoryMenuBG");

@@ -35,6 +35,9 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
 
 
 
+    /**
+    * A listener that checks the given url to download the category menu's BG and call S3Download to get it.
+    */
     public class CategoryMenuBGDownload implements TaskCompleted {
         @Override
         public void taskCompleted(String response) {
@@ -50,6 +53,11 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
         }
     }
 
+    /**
+    * A listener that after a succefull category menu's BG downloading
+    * -> Makes a call to the server for getting the info of all categories.
+    * TODO: Do something in case of error.
+    */
     public class CategoryMenuBGDownloaded implements TaskCompleted {
         @Override
         public void taskCompleted(String response) {

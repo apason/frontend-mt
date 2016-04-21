@@ -24,8 +24,11 @@ public class S3Upload extends AsyncTask<String, Void, String> {
     
     /**
     * Constructor for S3Upload.
+    *
     * @param act a interface for being able to pass the response for the calling activity.
     * @param selectedFile the file to be uploaded
+    *
+    * Note (@return after executing): "succes" if all went right or "failure" if uploading failed. 
     */
     public S3Upload(TaskCompleted act, File selectedFile){
         this.act = act;
