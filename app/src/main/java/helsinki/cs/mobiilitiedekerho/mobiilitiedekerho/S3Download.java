@@ -50,9 +50,9 @@ public class S3Download extends AsyncTask<String, Void, String> {
 
         try {
             for (int i = 0 ; i < urlss.size() ; i++) {
-                Log.i("urli", StatusService.StaticStatusService.s3Location + StatusService.StaticStatusService.graphicsBucket + "/" + urlss.get(i));
+                Log.i("urli", urlss.get(i));
 
-                URL url = new URL(StatusService.StaticStatusService.s3Location + StatusService.StaticStatusService.graphicsBucket + "/" + urlss.get(i));
+                URL url = new URL(urlss.get(i));
                 Log.i("kuvaurli", url.toString());
                 urlConnection = (HttpURLConnection) url.openConnection();
                 bitmaps.add(BitmapFactory.decodeStream(urlConnection.getInputStream()));
