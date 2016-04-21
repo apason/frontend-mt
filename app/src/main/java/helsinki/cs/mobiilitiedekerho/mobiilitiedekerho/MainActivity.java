@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
             if (parsingWorked && StatusService.StaticStatusService.sc.checkStatus()) {
                 StatusService.StaticStatusService.authToken = StatusService.StaticStatusService.jc.getProperty("auth_token");
                 StatusService.StaticStatusService.fh.saveToken();
-                getBuckets();
+                start();
             }
             else {
                 if (triedCommunicatingAlready) {
@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 else {
                     StatusService.setLoggedIn(true);
-                    getBuckets();
+                    start();
                 }
             }
             //else {String url = StatusService.StaticStatusService.sc.AnonymousSession(); hp = new HTTPSRequester(new GotToken()).execute(url);} //???
@@ -111,36 +111,14 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
-    
-    
-    /**
-     * A listener that checks if receiving bucket names worked out and takes them to memory for use.
-     */
-    public class GotBuckets implements TaskCompleted {
-        @Override
-        public void taskCompleted(String response) {
-            Log.i("bucketit", response);
-            boolean parsingWorked = StatusService.StaticStatusService.jc.newJson(response);
-            if (parsingWorked && StatusService.StaticStatusService.sc.checkStatus()) {
-                StatusService.StaticStatusService.s3Location = StatusService.StaticStatusService.jc.getProperty("s3_location");
-                Log.i("s3Location", StatusService.StaticStatusService.s3Location);
-                StatusService.StaticStatusService.answerBucket = StatusService.StaticStatusService.jc.getProperty("answers_bucket");
-                StatusService.StaticStatusService.taskBucket = StatusService.StaticStatusService.jc.getProperty("tasks_bucket");
-                StatusService.StaticStatusService.graphicsBucket = StatusService.StaticStatusService.jc.getProperty("graphics_bucket");
-            }
-            //else just uses the hard-coded ones.
-            start();
-        }
-    }
-    
-    
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         new ConnectionCheck().conMgr(this);
-
 
 
         new StatusService();
@@ -163,6 +141,12 @@ public class MainActivity extends AppCompatActivity {
         
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        String suburl = StatusService.StaticStatusService.sc.DescribeSubUsers();
+        hp = new HTTPSRequester(new GotSubUsers()).execute(suburl);
+    }
 
     @Override
     public void onResume() {  // Refreshes screen when returning to this page, after eg. logging in or out
@@ -171,11 +155,7 @@ public class MainActivity extends AppCompatActivity {
         drawScreen();
     }
 
-    public void getBuckets() {
-        String url = StatusService.StaticStatusService.sc.GetBuckets();
-        hp = new HTTPSRequester(new GotBuckets()).execute(url);
-    }
-    
+
     public void start() {
         // TODO: Maybe some kind of data-preloading.
         drawScreen();
@@ -186,6 +166,7 @@ public class MainActivity extends AppCompatActivity {
         LoginFragment lf = new LoginFragment();
         UserVideosFragment uvf = new UserVideosFragment();
         InfoTextFragment itf = new InfoTextFragment();
+        
         //taskId is -1 so InfoTextFragment displays user info
         Bundle bundle = new Bundle();
         bundle.putString("task", "-1");
@@ -200,6 +181,7 @@ public class MainActivity extends AppCompatActivity {
         transaction.commit();
     }
 
+
     public void startCategories() {
         Intent intent = new Intent(this, CategoriesActivity.class);
         startActivity(intent);
@@ -210,16 +192,10 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+
     public void playback(String uri) {
         Intent intent = new Intent(this, VideoScreen.class);
         StatusService.StaticStatusService.url = uri;
         startActivity(intent);
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        String suburl = StatusService.StaticStatusService.sc.DescribeSubUsers();
-        hp = new HTTPSRequester(new GotSubUsers()).execute(suburl);
     }
 }
