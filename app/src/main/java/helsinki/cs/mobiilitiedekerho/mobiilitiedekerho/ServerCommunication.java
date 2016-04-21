@@ -296,5 +296,12 @@ public class ServerCommunication {
     public String GetInstructions() {
         return getResponse("GetInstructions");
     }
+    
+    /**
+    * Gets the instructions as a String from the server.
+    */
+    public String GetCategoryMenuBG() {
+        return getResponse("GetCategoryMenuBG");
+    }
 }
 
