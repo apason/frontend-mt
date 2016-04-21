@@ -35,18 +35,22 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
 
 
 
-    public class CategoryMenuBGDownload implement TaskCompleted {
+    public class CategoryMenuBGDownload implements TaskCompleted {
         @Override
         public void taskCompleted(String response) {
             boolean parsingWorked = StatusService.StaticStatusService.jc.newJson(response);
             if (parsingWorked && StatusService.StaticStatusService.sc.checkStatus()) {
-                new S3Download(new CategoryMenuBGDownloaded(), category_menu_bg.png, StatusService.StaticStatusService.jc.getObject().get("category_menu_bg_uri")).execute();
+                ArrayList<String> name = new ArrayList<String>();
+                name.add("category_menu_bg.png");
+                ArrayList<String> url = new ArrayList<String>();
+                url.add(StatusService.StaticStatusService.jc.getObject().get("category_menu_bg_uri"));
+                new S3Download(new CategoryMenuBGDownloaded(), name, url).execute();
             }
             else ; //TODO: PROOOBLEEEMMM
         }
     }
 
-    public class CategoryMenuBGDownloaded implement TaskCompleted {
+    public class CategoryMenuBGDownloaded implements TaskCompleted {
         @Override
         public void taskCompleted(String response) {
             if (response.equals("success")) {
