@@ -41,6 +41,8 @@ public class StatusService {
         protected static final FileHandling fh = new FileHandling();
         
         protected static Context context;
+
+        protected static String url;
     }
     
 

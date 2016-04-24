@@ -192,10 +192,11 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-
+/*TODO: get presigned URL
     public void playback(String uri) {
         Intent intent = new Intent(this, VideoScreen.class);
         StatusService.StaticStatusService.url = uri;
         startActivity(intent);
     }
+    */
 }

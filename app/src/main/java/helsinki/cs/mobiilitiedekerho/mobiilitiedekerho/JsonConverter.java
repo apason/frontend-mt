@@ -102,11 +102,11 @@ public class JsonConverter {
                 objn.put(key, "" + reader.nextInt());
             }
             else if(token.equals(JsonToken.BOOLEAN)) {
-                obj.put(key, "" + reader.nextBoolean());
+                objn.put(key, "" + reader.nextBoolean());
             }
             //There exists no other? else is in case of problem.
             else
-                obj.put(key, "#ERROR#");
+                objn.put(key, "#ERROR#");
 
         }
         

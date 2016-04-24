@@ -105,7 +105,8 @@ public class AnswerVideoFragment extends Fragment implements View.OnClickListene
         boolean parsingWorked = StatusService.StaticStatusService.jc.newJson(response);
         if (parsingWorked && StatusService.StaticStatusService.sc.checkStatus()) {
             ArrayList<HashMap<String, String>> answer = StatusService.StaticStatusService.jc.getObjects();
-            answerURL = StatusService.StaticStatusService.s3Location + StatusService.StaticStatusService.answerBucket + "/" + answer.get(0).get("uri");
+            //answerURL = StatusService.StaticStatusService.s3Location + StatusService.StaticStatusService.answerBucket + "/" + answer.get(0).get("uri");
+            answerURL = answer.get(0).get("uri");
             ((TaskActivity) getActivity()).playback(answerURL);
         }
         //TODO else?

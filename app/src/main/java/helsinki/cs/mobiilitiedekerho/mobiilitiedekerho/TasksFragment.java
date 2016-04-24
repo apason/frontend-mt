@@ -89,7 +89,7 @@ public class TasksFragment extends Fragment implements View.OnClickListener {
                 String imageName;
                 for (int i = 0; i < tasks.size(); i++) {
                     //imageName = "task_icon_id_" + tasks.get(i).get("id") + ".png";
-                    if(!StatusService.StaticStatusService.fh.checkIfImageExists("task_icon_id_" + tasks.get(i).get("id") + ".png") {
+                    if(!StatusService.StaticStatusService.fh.checkIfImageExists("task_icon_id_" + tasks.get(i).get("id") + ".png")) {
                         names.add("task_icon_id_" + tasks.get(i).get("id") + ".png");
                         urls.add(tasks.get(i).get("icon_uri"));
                     }

@@ -120,7 +120,7 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
     }
 */
 
-    private void menuBG(String response) {
+    private void menuBG() {
         if (StatusService.StaticStatusService.fh.checkIfImageExists("category_menu_bg.png")) {
             String url = StatusService.StaticStatusService.sc.DescribeCategories();
             hp = new HTTPSRequester(new categorieslistener()).execute(url);
@@ -141,7 +141,7 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
 
                 for (int i = 0; i < categories.size(); i++) {
                     //String imageName = "category_icon_id_" + categories.get(i).get("id") + ".png";
-                    if (!StatusService.StaticStatusService.fh.checkIfImageExists("category_icon_id_"+ categories.get(i).get("id") + ".png") {
+                    if (!StatusService.StaticStatusService.fh.checkIfImageExists("category_icon_id_"+ categories.get(i).get("id") + ".png")) {
                         Log.i("nimet", categories.get(i).get("icon_uri"));
                         names.add("category_icon_id_"+ categories.get(i).get("id") + ".png");
                         urls.add(categories.get(i).get("icon_uri"));

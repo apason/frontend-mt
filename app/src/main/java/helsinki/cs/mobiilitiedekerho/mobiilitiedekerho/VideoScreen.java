@@ -109,6 +109,7 @@ public class VideoScreen extends Activity {
         // It must contain a axtension telling which file-type it is.
         String url = StatusService.StaticStatusService.url;
 
+
         // From file's' extension it does determine whether it is showing a video or a image.
         //MimeTypeMap mime = MimeTypeMap.getSingleton();
         //String ext = url.substring(url.lastIndexOf(".")).toLowerCase(); //toLowerCase in the (odd) case of the extension being in UpperCase, else MimeType may not recognize it.

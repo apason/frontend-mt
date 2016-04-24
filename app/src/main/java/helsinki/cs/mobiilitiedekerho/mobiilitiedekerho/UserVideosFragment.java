@@ -141,9 +141,10 @@ public class UserVideosFragment extends Fragment implements View.OnClickListener
                         @Override
                         public void onClick(View v) {
                             //int id = v.getId();
-                            Log.i("urli", url);
+                            /*TODO: get presigned URLs
                             String answerURL = StatusService.StaticStatusService.s3Location + StatusService.StaticStatusService.answerBucket + "/" + url;
                             ((MainActivity) getActivity()).playback(answerURL);
+                            */
                         }});
                 //taskbutton[i].setBackgroundColor(Color.TRANSPARENT); <-- use this with thumbnail images
                 videobutton[i].setBackgroundColor(Color.BLACK);
