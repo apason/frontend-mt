@@ -9,9 +9,14 @@
     // Fragment responsible for playing the task video
     <FrameLayout
         android:id="@+id/task_video_fragment"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-         />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    // Fragment responsible for playing the answer videos
+    <FrameLayout
+        android:id="@+id/answer_video_fragment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
     // Fragment responsible for operating the camera
     <FrameLayout
@@ -20,13 +25,6 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp" android:layout_below="@+id/info_button_fragment"
         android:layout_marginTop="10dp"/>
-
-    // Fragment responsible for playing the answer videos
-    <FrameLayout
-        android:id="@+id/answer_video_fragment"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/task_video_fragment"/>
 
     // Fragment responsible for videoview
     <FrameLayout

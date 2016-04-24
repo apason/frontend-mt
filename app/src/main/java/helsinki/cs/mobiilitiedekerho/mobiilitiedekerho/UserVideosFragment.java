@@ -3,9 +3,6 @@ package helsinki.cs.mobiilitiedekerho.mobiilitiedekerho;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -18,8 +15,6 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import java.util.ArrayList;
@@ -27,16 +22,10 @@ import java.util.HashMap;
 
 public class UserVideosFragment extends Fragment implements View.OnClickListener {
 
-
-    public final static String EXTRA_MESSAGE_URL = "helsinki.cs.mobiilitiedekerho.mobiilitiedekerho.CATEGORY";
-
     private Dialog list = null;
     private View view;
     private ImageButton userVideosButton;
     private ArrayList<HashMap<String, String>> uservideos;
-    private String url;
-    private String email;
-    private String password;
     
     private AsyncTask hp = null;
 
@@ -61,9 +50,6 @@ public class UserVideosFragment extends Fragment implements View.OnClickListener
     // When loginButton is pressed call method openLoginDialog
     @Override
     public void onClick(View v) {
-
-        //FOR TESTING, REMOVE WHEN SUBUSERS CAN BE CREATED:
-        StatusService.StaticStatusService.currentSubUserID = "1";
 
         String url = StatusService.StaticStatusService.sc.DescribeSubUserAnswers(StatusService.StaticStatusService.currentSubUserID);
         hp = new HTTPSRequester(new FetchUserVideos()).execute(url);
@@ -140,11 +126,7 @@ public class UserVideosFragment extends Fragment implements View.OnClickListener
                     new OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            //int id = v.getId();
-                            /*TODO: get presigned URLs
-                            String answerURL = StatusService.StaticStatusService.s3Location + StatusService.StaticStatusService.answerBucket + "/" + url;
-                            ((MainActivity) getActivity()).playback(answerURL);
-                            */
+                             ((MainActivity) getActivity()).playback(url);
                         }});
                 //taskbutton[i].setBackgroundColor(Color.TRANSPARENT); <-- use this with thumbnail images
                 videobutton[i].setBackgroundColor(Color.BLACK);
