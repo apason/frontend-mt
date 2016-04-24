@@ -10,7 +10,8 @@
     <FrameLayout
         android:id="@+id/task_video_fragment"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/info_button_fragment"/>
 
     // Fragment responsible for playing the answer videos
     <FrameLayout

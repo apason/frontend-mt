@@ -7,6 +7,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,7 +42,7 @@ public class TaskVideoFragment extends Fragment implements View.OnClickListener 
         String id = getArguments().getString("task");
         LinearLayout category = (LinearLayout) view.findViewById(R.id.taskbutton);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-
+        lp.gravity= Gravity.CENTER;
         Log.i("leveys", Integer.toString(category.getLayoutParams().height));
         Log.i("leveys", Integer.toString(category.getLayoutParams().width));
 
@@ -50,8 +51,9 @@ public class TaskVideoFragment extends Fragment implements View.OnClickListener 
             ImageView categoryImage = new ImageView(getContext());
             categoryImage.setImageBitmap(Bitmap.createScaledBitmap(bm, 500, 500, false));
             categoryImage.setBackgroundColor(Color.TRANSPARENT);
+            categoryImage.setLayoutParams(lp);
+            category.setBackgroundColor(Color.BLACK);
             category.addView(categoryImage);
-            //categoryImage.setLayoutParams(lp);
             category.setOnClickListener(this);
         }
         catch (Exception e) {
