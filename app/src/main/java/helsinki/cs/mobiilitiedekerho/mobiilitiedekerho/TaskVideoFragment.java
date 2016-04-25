@@ -49,7 +49,10 @@ public class TaskVideoFragment extends Fragment implements View.OnClickListener 
         try {
             Bitmap bm = BitmapFactory.decodeFile(StatusService.StaticStatusService.context.getFilesDir() + "/" + "task_icon_id_" + id + ".png");
             ImageView categoryImage = new ImageView(getContext());
-            categoryImage.setImageBitmap(Bitmap.createScaledBitmap(bm, 500, 500, false));
+
+
+            final float scale = getContext().getResources().getDisplayMetrics().density;
+            categoryImage.setImageBitmap(Bitmap.createScaledBitmap(bm, (int) (500 * scale + 0.5f), (int) (500 * scale + 0.5f), false));
             categoryImage.setBackgroundColor(Color.TRANSPARENT);
             categoryImage.setLayoutParams(lp);
             category.setBackgroundColor(Color.BLACK);

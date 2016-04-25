@@ -129,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
         StatusService.StaticStatusService.screenWidth = metrics.widthPixels;
         StatusService.StaticStatusService.screenHeight = metrics.heightPixels;
-        
+
         //Either saved token will be used (user auto-login) or an anonymous-token is retrieved for use. Token validity is also checked.
         if (StatusService.StaticStatusService.fh.CheckIfSavedToken()) {
             String url = StatusService.StaticStatusService.sc.CheckTokenIntegrity(StatusService.StaticStatusService.authToken);
