@@ -21,6 +21,7 @@ public class MainActivity extends AppCompatActivity {
     private AsyncTask hp = null;
     private boolean triedCommunicatingAlready = false;
     private ArrayList<HashMap<String, String>> subUsers;
+    private boolean askedForSubUser = false;
 
 
     /**
@@ -93,26 +94,45 @@ public class MainActivity extends AppCompatActivity {
                 subUsers = StatusService.StaticStatusService.jc.getObjects();
                 if (!subUsers.isEmpty()) {
                     Log.i("subit", "saatiin");
-                    List<String> subList = new ArrayList<String>();
-                    for (int i = 0; i < subUsers.size(); i++) {
-                        subList.add(subUsers.get(i).get("nick"));
-                    }
-                    CharSequence subs[] = subList.toArray(new CharSequence[subList.size()]);
+                    //List<String> subList = new ArrayList<String>();
+                    //for (int i = 0; i < subUsers.size(); i++) {
+                    //    subList.add(subUsers.get(i).get("nick"));
+                    //}
+                    //CharSequence subs[] = subList.toArray(new CharSequence[subList.size()]);
                     AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                     builder.setTitle("Valitse käyttäjä");
-                    builder.setItems(subs, new DialogInterface.OnClickListener() {
+                    StatusService.StaticStatusService.currentSubUserID = subUsers.get(0).get("id");
+                    builder.setPositiveButton(subUsers.get(0).get("nick"), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            // the user clicked on colors[which]
+                            StatusService.StaticStatusService.currentSubUserID = subUsers.get(0).get("id");
+                            Log.i("Current sub = ", StatusService.StaticStatusService.currentSubUserID);
                         }
                     });
+                    if(subUsers.get(1) != null) {
+                        builder.setNeutralButton(subUsers.get(1).get("nick"), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                StatusService.StaticStatusService.currentSubUserID = subUsers.get(1).get("id");
+                                Log.i("Current sub = ", StatusService.StaticStatusService.currentSubUserID);
+                            }
+                        });
+                    }
+                    if(subUsers.get(2) != null) {
+                        builder.setNeutralButton(subUsers.get(2).get("nick"), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                StatusService.StaticStatusService.currentSubUserID = subUsers.get(2).get("id");
+                                Log.i("Current sub = ", StatusService.StaticStatusService.currentSubUserID);
+                            }
+                        });
+                    }
+
                     builder.show();
                 }
             }
         }
     }
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -143,9 +163,12 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onStart() {
-        super.onStart();
-        String suburl = StatusService.StaticStatusService.sc.DescribeSubUsers();
-        hp = new HTTPSRequester(new GotSubUsers()).execute(suburl);
+        if(askedForSubUser == false) {
+            super.onStart();
+            String suburl = StatusService.StaticStatusService.sc.DescribeSubUsers();
+            hp = new HTTPSRequester(new GotSubUsers()).execute(suburl);
+            askedForSubUser = true;
+        }
     }
 
     @Override
