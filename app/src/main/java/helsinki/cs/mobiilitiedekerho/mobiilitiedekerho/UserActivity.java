@@ -119,7 +119,7 @@ public class UserActivity extends AppCompatActivity {
                 c.setChecked(true);
                 break;
         }
-
+        /**
         ImageButton subUser1 = (ImageButton) findViewById(R.id.subUser1);
         subUser1.setBackgroundResource(R.drawable.sub_user_icon_placeholder);
 
@@ -128,7 +128,7 @@ public class UserActivity extends AppCompatActivity {
 
         ImageButton subUser3 = (ImageButton) findViewById(R.id.subUser3);
         subUser3.setBackgroundResource(R.drawable.sub_user_icon_placeholder);
-
+        */
         // Add OnClickListener to the logout button
         Button logoutButton = (Button) findViewById(R.id.logout_button);
         logoutButton.setOnClickListener(new View.OnClickListener() {

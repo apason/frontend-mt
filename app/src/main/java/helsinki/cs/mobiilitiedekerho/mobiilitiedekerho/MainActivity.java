@@ -109,7 +109,8 @@ public class MainActivity extends AppCompatActivity {
                             Log.i("Current sub = ", StatusService.StaticStatusService.currentSubUserID);
                         }
                     });
-                    if(subUsers.get(1) != null) {
+                    Log.i ("subilista", subUsers.toString());
+                    if(subUsers.size() == 2) {
                         builder.setNeutralButton(subUsers.get(1).get("nick"), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
@@ -118,8 +119,8 @@ public class MainActivity extends AppCompatActivity {
                             }
                         });
                     }
-                    if(subUsers.get(2) != null) {
-                        builder.setNeutralButton(subUsers.get(2).get("nick"), new DialogInterface.OnClickListener() {
+                    if(subUsers.size() == 3) {
+                        builder.setNegativeButton(subUsers.get(2).get("nick"), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 StatusService.StaticStatusService.currentSubUserID = subUsers.get(2).get("id");
@@ -163,8 +164,8 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onStart() {
+        super.onStart();
         if(askedForSubUser == false) {
-            super.onStart();
             String suburl = StatusService.StaticStatusService.sc.DescribeSubUsers();
             hp = new HTTPSRequester(new GotSubUsers()).execute(suburl);
             askedForSubUser = true;

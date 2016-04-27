@@ -122,11 +122,12 @@ public class UserVideosFragment extends Fragment implements View.OnClickListener
 
                 //videobutton[i].setId(Integer.parseInt(uservideos.get(i).get("id")));
                 final String url = uservideos.get(i).get("uri");
+                final String answerType = uservideos.get(i).get("answer_type");
                 videobutton[i].setOnClickListener(
                     new OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                             ((MainActivity) getActivity()).playback(url);
+                             ((MainActivity) getActivity()).playback(url, answerType);
                         }});
                 //taskbutton[i].setBackgroundColor(Color.TRANSPARENT); <-- use this with thumbnail images
                 videobutton[i].setBackgroundColor(Color.BLACK);
