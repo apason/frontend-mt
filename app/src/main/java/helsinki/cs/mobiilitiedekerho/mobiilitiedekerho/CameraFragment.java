@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -24,6 +25,22 @@ import java.util.Date;
 public class CameraFragment extends Fragment implements View.OnClickListener {
 
     private Dialog upload;
+    private View view;
+
+    private String taskId;
+
+    private static final int VIDEO_CAPTURE = 101;
+    private static final int IMAGE_CAPTURE = 102;
+    private static final int VIDEO_SAVED = 201;
+    private static final int IMAGE_SAVED = 202;
+
+    private Uri fileUri;
+    private File selectedFile;
+    private String selectedFileName;
+    private String answerID;
+
+    private AsyncTask S3 = null;
+    private AsyncTask hp = null;
 
 
     public class S3uploadFinished implements TaskCompleted {
@@ -33,41 +50,28 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
             new HTTPSRequester(null).execute(url);
         }
     }
-    
+
     public class GotUrlToUpload implements TaskCompleted {
         @Override
         public void taskCompleted(String response) {
             boolean parsingWorked = StatusService.StaticStatusService.jc.newJson(response);
             Log.i("upataan", "uppaus on yeeeeah");
+            Log.i("uppausresponssi", response);
             if (parsingWorked && StatusService.StaticStatusService.sc.checkStatus()) {
                 String answerUri = StatusService.StaticStatusService.jc.getProperty("answer_uri");
+                Log.i("vastausuri", answerUri);
                 answerID = StatusService.StaticStatusService.jc.getProperty("answer_id");
                 upload(answerUri);
             }
         }
     }
 
-    private View view;
-
-    private String taskId;
-
-    private static final int VIDEO_CAPTURE = 101;
-    private static final int IMAGE_CAPTURE = 102;
-    private static final int VIDEO_SAVED = 201;
-    private static final int IMAGE_SAVED = 202;
-    
-    private Uri fileUri;
-    private File selectedFile;
-    private String selectedFileName;
-    private String answerID;
-
-    private AsyncTask S3 = null;
-    private AsyncTask hp = null;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        taskId = this.getArguments().toString();
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        //taskId = this.getArguments().toString();
+        taskId = getArguments().getString("task");
+        Log.i("taski2", taskId);
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.camera_fragment, container, false);
 
@@ -113,8 +117,15 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
                     // Creates a file for saving the shot video VID + timestamp + .mp4 TODO: Check if possible to use WebM in device, NEVER expect that the recorded video is of a certain format.
                     // TODO: the name should contain task.
                     String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+
+                    //Log.i("filuuuu", );
                     selectedFile = new File(mediaStorageDirectory.getPath() + File.separator +
                             "VID_" + timeStamp + ".mp4");
+                    try {
+                        selectedFile.createNewFile();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                     selectedFileName = selectedFile.getName();
 
                     // Create a new Intent to shoot video and save the result to the file specified earlier
@@ -161,6 +172,11 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
                     String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
                     selectedFile = new File(mediaStorageDirectory.getPath() + File.separator +
                             "IID_" + timeStamp + ".JPEG");
+                    try {
+                        selectedFile.createNewFile();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                     selectedFileName = selectedFile.getName();
 
                     // Create a new Intent to shoot image and save the result to the file specified earlier
@@ -203,105 +219,43 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
         }
     }
 
-            public void onActivityResult(int requestCode, int resultCode, Intent data) {
-                // Result handler for videos from the gallery
-                super.onActivityResult(requestCode, resultCode, data);
-                if (requestCode == VIDEO_SAVED) {
-                    if (resultCode == TaskActivity.RESULT_OK) {
-
-                        // Get the selected file's Uri, name and the file itself
-                        Uri selectedVideoLocation = data.getData();
-
-                        // Mikä ihme kovakoodattu tiesdosto tämä on?
-                        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-                        selectedFileName = "VID_" + timeStamp + ".mp4";
-
-                        selectedFile = new File(selectedVideoLocation.getLastPathSegment(), selectedFileName);
-
-                        Log.i("filename", selectedFileName);
-                        Log.i("location", selectedVideoLocation.toString());
-                        Log.i("file", selectedFile.getName());
-
-                        // Initialize the Amazon Cognito credentials provider
-                        //if(selectedFile.exists()) {
-                        Log.i("lataa", "lataa");
-                        String url = StatusService.StaticStatusService.sc.StartAnswerUpload
-                                (taskId, StatusService.StaticStatusService.currentSubUserID, selectedFileName.substring(selectedFileName.lastIndexOf(".")).toLowerCase()); //TODO: Check if there is subuser in use! Get task.
-                        hp = new HTTPSRequester(new GotUrlToUpload()).execute(url);
-                        //}
-                    }
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // Result handler for videos from the gallery
+        super.onActivityResult(requestCode, resultCode, data);
+            if (resultCode == TaskActivity.RESULT_OK) {
+                if (selectedFile.exists()) {
+                    createUrl();
                 }
-                // Result handler for videos from the camera
-                else if (requestCode == VIDEO_CAPTURE) {
-                    if (resultCode == TaskActivity.RESULT_OK) {
-                        //Toast t = Toast.makeText(CameraFragment.this.getContext(), "Video has been saved to:\n" +
-                        //        data.getData(), Toast.LENGTH_LONG);
-                        //t.show();-->
-                        // Initialize the Amazon Cognito credentials provider
-
-                        if (selectedFile.exists()) {
-                            String url = StatusService.StaticStatusService.sc.StartAnswerUpload
-                                    (taskId, StatusService.StaticStatusService.currentSubUserID, selectedFileName.substring(selectedFileName.lastIndexOf(".")).toLowerCase()); //TODO: Check if there is subuser in use! Get task.
-                            hp = new HTTPSRequester(new GotUrlToUpload()).execute(url);
-                        }
-
-                    } else if (resultCode == TaskActivity.RESULT_CANCELED) {
-                        Toast.makeText(CameraFragment.this.getActivity(), "Videon ottaminen peruttu.",
-                                Toast.LENGTH_LONG).show();
-                    } else {
-                        Toast.makeText(CameraFragment.this.getActivity(), "Videon ottaminen epäonnistui.",
-                                Toast.LENGTH_LONG).show();
-                    }
-                }
-                // Result handler for iamges from the gallery
-                else if (requestCode == IMAGE_SAVED) {
-                    if (resultCode == TaskActivity.RESULT_OK) {
-
-                        // Get the selected file's Uri, name and the file itself
-                        Uri selectedVideoLocation = data.getData();
-
-                        // Mikä ihme kovakoodattu tiesdosto tämä on? D: Tein samantyylinsen kun näemmäs tämä oikeasti ei toimi kuten pitää...
-                        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-                        selectedFileName = "VID_" + timeStamp + ".JPEG";
-
-                        selectedFile = new File(selectedVideoLocation.getLastPathSegment(), selectedFileName);
-
-                        Log.i("filename", selectedFileName);
-                        Log.i("location", selectedVideoLocation.toString());
-                        Log.i("file", selectedFile.getName());
-
-                        // Initialize the Amazon Cognito credentials provider
-                        //if(selectedFile.exists()) {
-                        Log.i("lataa", "lataa");
-                        String url = StatusService.StaticStatusService.sc.StartAnswerUpload
-                                (taskId, StatusService.StaticStatusService.currentSubUserID, selectedFileName.substring(selectedFileName.lastIndexOf(".")).toLowerCase()); //TODO: Check if there is subuser in use! Get task.
-                        hp = new HTTPSRequester(new GotUrlToUpload()).execute(url);
-                        //}
-                    }
-                } else if (requestCode == IMAGE_CAPTURE) {
-                    if (resultCode == TaskActivity.RESULT_OK) {
-                        //Toast t = Toast.makeText(CameraFragment.this.getContext(), "Video has been saved to:\n" +
-                        //        data.getData(), Toast.LENGTH_LONG);
-                        //t.show();-->
-                        // Initialize the Amazon Cognito credentials provider
-
-                        if (selectedFile.exists()) {
-                            String url = StatusService.StaticStatusService.sc.StartAnswerUpload
-                                    (taskId, StatusService.StaticStatusService.currentSubUserID, selectedFileName.substring(selectedFileName.lastIndexOf(".")).toLowerCase()); //TODO: Check if there is subuser in use! Get task.
-                            hp = new HTTPSRequester(new GotUrlToUpload()).execute(url);
-                        }
-
-                    } else if (resultCode == TaskActivity.RESULT_CANCELED) {
-                        Toast.makeText(CameraFragment.this.getActivity(), "Kuvan ottaminen peruttu.",
-                                Toast.LENGTH_LONG).show();
-                    } else {
-                        Toast.makeText(CameraFragment.this.getActivity(), "Kuvan ottaminen epäonnistui.",
-                                Toast.LENGTH_LONG).show();
-                    }
-                }
+            } else if ((requestCode == VIDEO_CAPTURE || requestCode == IMAGE_CAPTURE) && resultCode == TaskActivity.RESULT_CANCELED) {
+                Toast.makeText(CameraFragment.this.getActivity(), "Kuvaaminen peruttu.",
+                        Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(CameraFragment.this.getActivity(), "Kuvaaminen epäonnistui.",
+                        Toast.LENGTH_LONG).show();
             }
+    }
 
-            public void upload(String answerUri) {
-                S3 = new S3Upload(new S3uploadFinished(), getContext(), selectedFile).execute(answerUri);
+    private void createUrl() {
+        if (StatusService.StaticStatusService.currentSubUserID != null) {
+            String Ftype;
+            try {
+                Ftype = selectedFileName.substring(selectedFileName.lastIndexOf(".")).toLowerCase().substring(1);
+            } catch (Exception e) {
+                Ftype = "fail";
             }
+            String url = StatusService.StaticStatusService.sc.StartAnswerUpload
+                    (taskId, StatusService.StaticStatusService.currentSubUserID, Ftype);
+            Log.i("StartAnswerUpload", url);
+            hp = new HTTPSRequester(new GotUrlToUpload()).execute(url);
         }
+        else {
+            Toast.makeText(CameraFragment.this.getActivity(), "Sinun on valittava tai luotava käyttäjä lähettääksesi vastauksen",
+                    Toast.LENGTH_LONG).show();
+        }
+    }
+
+    public void upload(String answerUri) {
+        Log.i("answerUri", answerUri);
+        S3 = new S3Upload(new S3uploadFinished(), selectedFile).execute(answerUri);
+    }
+}

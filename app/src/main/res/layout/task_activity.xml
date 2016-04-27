@@ -3,31 +3,29 @@
                 xmlns:tools="http://schemas.android.com/tools"
                 android:orientation="horizontal"
                 android:background="#ffffff"
-                android:layout_width="fill_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="fill_parent">
 
     // Fragment responsible for playing the task video
     <FrameLayout
         android:id="@+id/task_video_fragment"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_gravity="center_vertical"
-        android:layout_alignParentEnd="false" android:layout_below="@+id/login_button_fragment"/>
+        android:layout_alignLeft="@+id/info_button_fragment"/>
+
+    // Fragment responsible for playing the answer videos
+    <FrameLayout
+        android:id="@+id/answer_video_fragment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
     // Fragment responsible for operating the camera
     <FrameLayout
         android:id="@+id/camera_fragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp" android:layout_below="@+id/task_video_fragment"
+        android:layout_marginLeft="10dp" android:layout_below="@+id/info_button_fragment"
         android:layout_marginTop="10dp"/>
-
-    // Fragment responsible for playing the answer videos
-    <FrameLayout
-        android:id="@+id/answer_video_fragment"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
 
     // Fragment responsible for videoview
     <FrameLayout
@@ -39,6 +37,12 @@
         android:id="@+id/info_button_fragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/camera_fragment" />
+        android:layout_below="@+id/home_button_fragment" />
+
+    // Fragment responsible for showing home button.
+    <FrameLayout
+        android:id="@+id/home_button_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
 </RelativeLayout>

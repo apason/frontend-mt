@@ -61,22 +61,30 @@
             android:onClick="radioButtonOnClick"/>
     </RadioGroup>
 
-    <ImageButton
+    <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/subUser1" android:layout_centerVertical="true"
         android:layout_alignLeft="@+id/radioGroup" android:layout_alignStart="@+id/radioGroup"
         android:layout_marginRight="40dp"/>
-    <ImageButton
+    <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/subUser2" android:layout_centerVertical="true"
         android:layout_toRightOf="@+id/subUser1" android:layout_toEndOf="@+id/subUser1"
         android:layout_marginRight="40dp"/>
-    <ImageButton
+    <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/subUser3" android:layout_centerVertical="true"
         android:layout_toRightOf="@+id/subUser2" android:layout_toEndOf="@+id/subUser2"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Kuka käyttää tiedekerhoa?"
+        android:id="@+id/subUserText" android:layout_above="@+id/subUser1"
+        android:layout_alignLeft="@+id/subUser1" android:layout_alignStart="@+id/subUser1"
+        android:textColor="#000000"/>
 
 </RelativeLayout>

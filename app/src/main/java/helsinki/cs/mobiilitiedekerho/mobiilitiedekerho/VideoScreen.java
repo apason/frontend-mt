@@ -22,8 +22,20 @@ import name.cpr.VideoEnabledWebView;
  */
 public class VideoScreen extends Activity {
 
+
     private VideoEnabledWebView webView;
     private VideoEnabledWebChromeClient webChromeClient;
+    
+    
+    private class InsideWebViewClient extends WebViewClient {
+        @Override
+        // Force links to be opened inside WebView and not in Default Browser
+        // Thanks http://stackoverflow.com/a/33681975/1815624
+        public boolean shouldOverrideUrlLoading(WebView view, String url) {
+            view.loadUrl(url);
+            return true;
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -48,6 +60,7 @@ public class VideoScreen extends Activity {
 //                 // Your code...
 //             }
 //         };
+        
         webChromeClient.setOnToggledFullscreen(new VideoEnabledWebChromeClient.ToggledFullscreenCallback()
         {
             @Override
@@ -77,6 +90,7 @@ public class VideoScreen extends Activity {
 
             }
         });
+        
         webView.setWebChromeClient(webChromeClient);
         // Call private class InsideWebViewClient
         webView.setWebViewClient(new InsideWebViewClient());
@@ -91,9 +105,11 @@ public class VideoScreen extends Activity {
 
 
 
+        /*WARNING: OLD CODE
         // Video loading code from intent message: URL.
         // It must contain a axtension telling which file-type it is.
         String url = StatusService.StaticStatusService.url;
+
 
         // From file's' extension it does determine whether it is showing a video or a image.
         //MimeTypeMap mime = MimeTypeMap.getSingleton();
@@ -126,19 +142,28 @@ public class VideoScreen extends Activity {
             }
             else ; //TODO: Wrong file extension! Should not happen ever thought.
         }
+        WARNING: IT ENDED, YEAH*/
+        
+        //Media loading code:
+        String url = StatusService.StaticStatusService.url;
+        String mediaTypee = StatusService.StaticStatusService.mediaTypee;
+        
+        String html_text = null;
+        if (mediaTypee.equals("video")) {
+            html_text = StatusService.StaticStatusService.VideoPlay_HtmlTemplate.replace("#video_src#", url);
+        }
+        else if (mediaTypee.equals("image")) {
+            webView.getSettings().setBuiltInZoomControls(true);
+            webView.getSettings().setJavaScriptEnabled(true);
+            webView.getSettings().setLoadWithOverviewMode(true);
+            webView.getSettings().setUseWideViewPort(true);
+            html_text = "<html><img src='" + url + "' /></html>";
+        }
+        else ; //Your problem :D
+        
         
         //NOTE: Only "US-ASCII charset" is allowed/works in the html_text actually (android bug).
         webView.loadData(html_text, "text/html; charset=utf-8", "UTF-8");
-    }
-
-    private class InsideWebViewClient extends WebViewClient {
-        @Override
-        // Force links to be opened inside WebView and not in Default Browser
-        // Thanks http://stackoverflow.com/a/33681975/1815624
-        public boolean shouldOverrideUrlLoading(WebView view, String url) {
-            view.loadUrl(url);
-            return true;
-        }
     }
 
     @Override

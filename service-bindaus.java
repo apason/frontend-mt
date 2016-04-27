@@ -1,12 +1,13 @@
-//These are things to be added to EACH activity that communicates whit the ServerCommunication service 
- 
+//These are things to be added to EACH activity that communicates with a service.
+// We do not have any services at the moment.
+
  
 //All activities must have these variables
 LocalService commService;
 boolean CommunicationBound = false; //false at the beggining
 
 //On onStart() there must be added (after super calling):
-Intent intent = new Intent(this, ServerCommunication.class);
+Intent intent = new Intent(this, ServiceClass.class); //ServiceClass is the service class.
 bindService(intent, CommunicationConnection, Context.BIND_AUTO_CREATE); //CommunicationConnection told in this file
 
 //ON onStop()
@@ -35,5 +36,5 @@ private ServiceConnection CommunicationConnection = new ServiceConnection() {
 }
 
 
-/**For calling ServerCommunication methods use:*/
-//E.G. commService.getTaskById("100");
+/**For calling then methods in the service use:*/
+//E.G. commService.something("YOLO");

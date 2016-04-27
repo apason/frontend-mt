@@ -19,8 +19,8 @@ import java.io.IOException;
 public class FileHandling extends AppCompatActivity {
 
 
-    String token = "token";
-    String usageRights = "usagerights";
+    private String token = "token";
+    private String usageRights = "usagerights";
 
 
     /**
@@ -53,6 +53,7 @@ public class FileHandling extends AppCompatActivity {
         return editor.commit();
     }
 
+
     public boolean saveUsageRights(int i) {
         SharedPreferences sharedPref = StatusService.StaticStatusService.context.getSharedPreferences("mobiilitiedekerho", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
@@ -70,6 +71,7 @@ public class FileHandling extends AppCompatActivity {
         } else
         return Integer.parseInt(rights);
     }
+
 
     /**
     * Checks whether the pointed image (or any file...) exist in applications allocated Internal Storage.

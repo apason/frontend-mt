@@ -4,8 +4,10 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -15,22 +17,30 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 /**
  * Activity responsible for the user info screen
  */
 public class UserActivity extends AppCompatActivity {
 
-    AsyncTask hp;
-    boolean triedCommunicatingAlready = false;
-    String eula;
+
+    private AsyncTask hp;
+    private boolean triedCommunicatingAlready = false;
+    private String eula;
+    Button subUser1;
+    Button subUser2;
+    Button subUser3;
+    private ArrayList<HashMap<String, String>> subUsers;
 
 
     public class GotToken implements TaskCompleted {
         @Override
         public void taskCompleted(String response) {
-            StatusService.StaticStatusService.jc.newJson(response);
-
-            if (StatusService.StaticStatusService.sc.checkStatus()) {
+            boolean parsingWorked = StatusService.StaticStatusService.jc.newJson(response);
+            
+            if (parsingWorked && StatusService.StaticStatusService.sc.checkStatus()) {
                 StatusService.StaticStatusService.authToken = StatusService.StaticStatusService.jc.getProperty("auth_token");
                 afterLogout();
             }
@@ -56,11 +66,46 @@ public class UserActivity extends AppCompatActivity {
             }
         }
     }
+    
+    public class EULAListener implements TaskCompleted {
+        @Override
+        public void taskCompleted(String response) {
+            Log.i("voi eula", response);
+            boolean parsingWorked = StatusService.StaticStatusService.jc.newJson(response);
+            if (parsingWorked && StatusService.StaticStatusService.sc.checkStatus()) {
+                eula = StatusService.StaticStatusService.jc.getProperty("eula");
+            }
+            else eula = "Ongelma käyttöehtojen lataamisessa."; //Jotta ei crassha null viitteeseen.
+        }
+    }
+    
+    /**
+     * A listener that checks if saving the privacy level worked out and notifies the user of the result.
+     */
+    public class PrivacyListener implements TaskCompleted {
+        @Override
+        public void taskCompleted(String response) {
+            Log.i("subia", response);
+            boolean parsingWorked = StatusService.StaticStatusService.jc.newJson(response);
+            if (parsingWorked && StatusService.StaticStatusService.sc.checkStatus()) {
+                Toast.makeText(UserActivity.this, "Muutokset käyttöoikeuksiin tallennettu.",
+                        Toast.LENGTH_LONG).show();
+            }
+            else {
+                Toast.makeText(UserActivity.this, "Yhteyttä palvelimeen ei saatu. Tekemiäsi muutoksia ei tallennettu.",
+                        Toast.LENGTH_LONG).show();
+            }
+        }
+    }
 
+    
     // Draw content of user_activity.xml to the screen
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        new ConnectionCheck().conMgr(getApplicationContext());
+
         setContentView(R.layout.user_activity);
 
         String url = StatusService.StaticStatusService.sc.GetEULA();
@@ -71,7 +116,7 @@ public class UserActivity extends AppCompatActivity {
         RadioButton c = (RadioButton) findViewById(R.id.anyone);
 
         // Check which usage rights the user has determined for his/her videos and set the corresponding RadioButton checked.
-        switch(StatusService.getUsageRights()) {
+        switch(StatusService.StaticStatusService.fh.getUsageRights()) {
             case 1:
                 a.setChecked(true);
                 break;
@@ -83,14 +128,12 @@ public class UserActivity extends AppCompatActivity {
                 break;
         }
 
-        ImageButton subUser1 = (ImageButton) findViewById(R.id.subUser1);
-        subUser1.setBackgroundResource(R.drawable.sub_user_icon_placeholder);
+        subUser1 = (Button) findViewById(R.id.subUser1);
 
-        ImageButton subUser2 = (ImageButton) findViewById(R.id.subUser2);
-        subUser2.setBackgroundResource(R.drawable.sub_user_icon_placeholder);
+        subUser2 = (Button) findViewById(R.id.subUser2);
 
-        ImageButton subUser3 = (ImageButton) findViewById(R.id.subUser3);
-        subUser3.setBackgroundResource(R.drawable.sub_user_icon_placeholder);
+        subUser3 = (Button) findViewById(R.id.subUser3);
+
 
         // Add OnClickListener to the logout button
         Button logoutButton = (Button) findViewById(R.id.logout_button);
@@ -125,8 +168,6 @@ public class UserActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
-
     }
 
     public void showUserAgreement() {
@@ -145,14 +186,6 @@ public class UserActivity extends AppCompatActivity {
         });
         alert.show();
     }
-
-    public class EULAListener implements TaskCompleted {
-        @Override
-        public void taskCompleted(String response) {
-            StatusService.StaticStatusService.jc.newJson(response);
-            eula = StatusService.StaticStatusService.jc.getProperty("eula");
-        }
-    }
     
     public void afterLogout() {
         Intent intent = new Intent(getApplication(), MainActivity.class);
@@ -169,45 +202,109 @@ public class UserActivity extends AppCompatActivity {
         switch(view.getId()) {
             case R.id.onlyme:
                 if (checked)
-                    StatusService.setUsageRights(1);
                     setPrivacyLevel(1);
                     break;
             case R.id.registered:
                 if (checked)
-                    StatusService.setUsageRights(2);
                     setPrivacyLevel(2);
                     break;
             case R.id.anyone:
                 if (checked)
-                    StatusService.setUsageRights(3);
                     setPrivacyLevel(3);
                     break;
         }
     }
 
     public void setPrivacyLevel(int i) {
+    
+        //Saves the privacy level for later use.
+        StatusService.setUsageRights(i);
+        StatusService.StaticStatusService.fh.saveUsageRights(i);
+    
         String url = StatusService.StaticStatusService.sc.SetPrivacyLevel(Integer.toString(i));
         Log.i("vika", url);
         hp = new HTTPSRequester(new UserActivity.PrivacyListener()).execute(url);
     }
 
     /**
-     * A listener that checks if saving the privacy level worked out and notifies the user of the result.
+     * A listener that checks the response for DescribeSubUsers.
+     * If it is successful, draw an alertdialog on screen which the user can use to select the desired sub-user.
      */
-    public class PrivacyListener implements TaskCompleted {
+    public class GotSubUsers implements TaskCompleted {
         @Override
         public void taskCompleted(String response) {
-            Log.i("subia", response);
             boolean parsingWorked = StatusService.StaticStatusService.jc.newJson(response);
-            if (parsingWorked && StatusService.StaticStatusService.sc.checkStatus()) {
-                Toast.makeText(UserActivity.this, "Muutokset käyttöoikeuksiin tallennettu.",
-                        Toast.LENGTH_LONG).show();
-            }
-            else {
-                //Poistettu käytöstä kunnes privacylevelit implementoitu backissa.
-                //Toast.makeText(UserActivity.this, "Yhteyttä palvelimeen ei saatu. Tekemiäsi muutoksia ei tallennettu.",
-                //        Toast.LENGTH_LONG).show();
+            if (parsingWorked) {
+                subUsers = StatusService.StaticStatusService.jc.getObjects();
+                if (!subUsers.isEmpty()) {
+                    Log.i("subit", "saatiin");
+                    subUser1.setText(subUsers.get(0).get("nick"));
+                    if(subUsers.get(0).get("id").equals(StatusService.getSubUser())) {
+                        subUser1.setEnabled(false);
+                    }
+                    subUser1.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            StatusService.setSubUser(subUsers.get(0).get("id"));
+                            subUser1.setEnabled(false);
+                            subUser2.setEnabled(true);
+                            subUser3.setEnabled(true);
+                            Toast.makeText(getApplicationContext(), "Käyttäjä valittu.", Toast.LENGTH_LONG).show();
+                        }
+                    });
+
+                    Log.i ("subilista", subUsers.toString());
+
+                    if(subUsers.size() >= 2) {
+                        subUser2.setText(subUsers.get(1).get("nick"));
+                        if(subUsers.get(1).get("id").equals(StatusService.getSubUser())) {
+                            subUser2.setEnabled(false);
+                        }
+                        subUser2.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                StatusService.setSubUser(subUsers.get(1).get("id"));
+                                subUser1.setEnabled(true);
+                                subUser2.setEnabled(false);
+                                subUser3.setEnabled(true);
+                                Toast.makeText(getApplicationContext(), "Käyttäjä valittu.", Toast.LENGTH_LONG).show();
+                            }
+                        });
+                    }else {
+                        subUser2.setText("EI LUOTU");
+                        subUser2.setEnabled(false);
+                        subUser3.setText("EI LUOTU");
+                        subUser3.setEnabled(false);
+                    }
+                    if(subUsers.size() == 3) {
+                        subUser3.setText(subUsers.get(2).get("nick"));
+                        if(subUsers.get(2).get("id").equals(StatusService.getSubUser())) {
+                            subUser3.setEnabled(false);
+                        }
+                        subUser3.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                StatusService.setSubUser(subUsers.get(2).get("id"));
+                                subUser1.setEnabled(true);
+                                subUser2.setEnabled(true);
+                                subUser3.setEnabled(false);
+                                Toast.makeText(getApplicationContext(), "Käyttäjä valittu.", Toast.LENGTH_LONG).show();
+                            }
+                        });
+                    }else {
+                        subUser3.setText("EI LUOTU");
+                        subUser3.setEnabled(false);
+                    }
+
+                }
             }
         }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        String suburl = StatusService.StaticStatusService.sc.DescribeSubUsers();
+        hp = new HTTPSRequester(new GotSubUsers()).execute(suburl);
     }
 }

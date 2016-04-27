@@ -20,12 +20,15 @@ import android.widget.Toast;
  */
 public class SubUserActivity extends AppCompatActivity {
 
-    View view;
-    static final int REQUEST_IMAGE_CAPTURE = 1;
-    ImageView iv;
-    String subUserNick;
-    AsyncTask hp = null;
+    private View view;
+    private static final int REQUEST_IMAGE_CAPTURE = 1;
+    private ImageView iv;
+    
+    private String subUserNick;
+    
+    private AsyncTask hp = null;
 
+    
     /**
      * A listener that checks if saving sub-user worked out and notifies the user of the result.
      */
@@ -59,6 +62,9 @@ public class SubUserActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         // Inflate the layout for this activity
         super.onCreate(savedInstanceState);
+
+        new ConnectionCheck().conMgr(this);
+
         setContentView(R.layout.sub_user_activity);
 
         final EditText subuserNickField = (EditText) findViewById(R.id.nickname_field);
@@ -104,6 +110,4 @@ public class SubUserActivity extends AppCompatActivity {
             iv.setImageBitmap(imageBitmap);
         }
     }
-
-
 }

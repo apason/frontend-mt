@@ -13,6 +13,7 @@ import java.util.HashMap;
 /**
  * Json converter class which to parse JSON Strings. It stores the retrieved data for later use.
  * Use newJson for assigning a new JSON from which to retrieve data, and use get*(...) for getting the info actually.
+ * NOTE: all values are stored as string. (Numerical ones 123 -> "123" and boolean ones true -> "true")
  */
 public class JsonConverter {
 
@@ -22,7 +23,7 @@ public class JsonConverter {
     //this is for first level properties and object list names only!
     private String key;
 
-    
+
     /**
      * Parses the wanted JSON string and stores the retrieved data for later use.
      * Note: Cleares old data if exists.
@@ -31,19 +32,19 @@ public class JsonConverter {
     public boolean newJson(String json) {
         boolean workedOut = false;
         Log.i("json", json);
-        
+
         try {
             properties = new HashMap<String, String>();
             objects = new ArrayList<HashMap<String, String>>();
-            
+
             JsonReader reader = new JsonReader(new StringReader(json));
             parseJson(reader);
-            
+
             workedOut = true;
         } catch (IOException e) {
             Log.e("JSON error", e.toString());
         }
-        
+
         return workedOut;
     }
 
@@ -85,45 +86,49 @@ public class JsonConverter {
         }
     }
 
-    private void handleArrayObject(JsonReader reader, HashMap<String, String> objn)
-
-        throws IOException {
+    private void handleArrayObject(JsonReader reader, HashMap<String, String> objn) throws IOException {
 
         reader.beginObject();
+        
         while(reader.hasNext()){
 
             String key = reader.nextName();
             JsonToken token = reader.peek();
 
-            if(token.equals(JsonToken.NUMBER)){
-                Integer value = reader.nextInt();
-                objn.put(key, "" + value);
-            }
-            else if(token.equals(JsonToken.STRING))
+            if(token.equals(JsonToken.STRING)) {
                 objn.put(key, reader.nextString());
+            }
+            else if(token.equals(JsonToken.NUMBER)) {
+                objn.put(key, "" + reader.nextInt());
+            }
+            else if(token.equals(JsonToken.BOOLEAN)) {
+                objn.put(key, "" + reader.nextBoolean());
+            }
+            //There exists no other? else is in case of problem.
             else
-                reader.skipValue();
+                objn.put(key, "#ERROR#");
 
         }
+        
     }
 
-    private void handleProperty(JsonReader reader, JsonToken token)
-
-            throws IOException {
-
+    private void handleProperty(JsonReader reader, JsonToken token) throws IOException {
 
         token = reader.peek();
 
-        if(token.equals(JsonToken.STRING)){
-            String s = reader.nextString();
-            properties.put(key, s);
+        if(token.equals(JsonToken.STRING)) {
+            properties.put(key, reader.nextString());
         }
-        else if (token.equals(JsonToken.NUMBER))
+        else if (token.equals(JsonToken.NUMBER)) {
             properties.put(key, "" + reader.nextInt());
-
-        //'else-part' isn't' actually needed?
+        }
+        else if(token.equals(JsonToken.BOOLEAN)) {
+            properties.put(key, "" + reader.nextBoolean());
+        }
+        //There exists no other? else is in case of problem.
         else
-            reader.skipValue();
+            properties.put(key, "#ERROR#");
+            
     }
 
 
@@ -155,7 +160,7 @@ public class JsonConverter {
     }
 
     /**
-     * Returns first (or only) returned object.
+     * @return first (or only) returned object.
      * Note that return value can be null.
      */
     public HashMap<String, String> getObject(){

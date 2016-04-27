@@ -69,6 +69,13 @@ public class ServerCommunication {
     public String CreateUser(String email, String password) {
         return getResponse("CreateUser", "user_email", email, "user_password", password);
     }
+    
+    /**
+     * Gets all the info related to the current user in use. (Privacy-level, pin, password, etc.)
+     */
+    public String DescribeUser() {
+        return getResponse("DescribeUser");
+    }
 
     /**
      * This does authenticate the user and get a hash for it.
@@ -253,7 +260,6 @@ public class ServerCommunication {
         return getResponse("DeleteLike", "like_id", likeId);
     }
     
-    
     /**
      * Gets all the addresses of the S3 buckets and its location.
      */
@@ -263,13 +269,40 @@ public class ServerCommunication {
     
     /**
      * Notices the server to change user's privacy-level settings.
+     * @param privacyLevel the privacyLevel to become the users privacyLevel.
      */
     public String SetPrivacyLevel(String privacyLevel) {
         return getResponse("SetPrivacyLevel", "privacy_level", privacyLevel);
     }
-
+    
+    /**
+     * Notices the server to change user's pin or set it if there wasn't one already.
+     * @param pin the pin to become the users pin. To stop children from messing up some things.
+     */
+    public String SetPin(String pin) {
+        return getResponse("SetPrivacyLevel", "pin", pin);
+    }
+    
+    /**
+    * Gets the EULA as a String from the server.
+    */
     public String GetEULA() {
         return getResponse("GetEULA");
+    }
+
+    /**
+    * Gets the instructions as a String from the server.
+    */
+    public String GetInstructions() {
+        return getResponse("GetInstructions");
+    }
+    
+    /**
+    * Gets the signed url for downloading the category menu's BG.
+    * Note that the retruned key's name is "category_menu_bg_uri".
+    */
+    public String GetCategoryMenuBG() {
+        return getResponse("GetCategoryMenuBG");
     }
 }
 

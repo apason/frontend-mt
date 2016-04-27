@@ -13,14 +13,12 @@ import android.widget.ImageButton;
 public class LoginFragment extends Fragment implements View.OnClickListener {
 
     private Dialog login = null;
-
-    String url;
-    View view;
-    ImageButton loginIconButton;
+    private ImageButton loginIconButton;
+    private String url;
+    private View view;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.login_button_fragment, null);
         // Add onClickListener to the login button

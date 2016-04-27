@@ -12,12 +12,22 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.util.Log;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
 
     private AsyncTask hp = null;
     private boolean triedCommunicatingAlready = false;
+    private ArrayList<HashMap<String, String>> subUsers;
+    private boolean askedForSubUser = false;
 
 
+    /**
+     * A listener that checks if the client got the anonymous token right.
+     * If it went wrong after trying again it does notify the user about a problem with communication with the server.
+     */
     public class GotToken implements TaskCompleted {
         @Override
         public void taskCompleted(String response) {
@@ -25,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
             if (parsingWorked && StatusService.StaticStatusService.sc.checkStatus()) {
                 StatusService.StaticStatusService.authToken = StatusService.StaticStatusService.jc.getProperty("auth_token");
                 StatusService.StaticStatusService.fh.saveToken();
-                getBuckets();
+                start();
             }
             else {
                 if (triedCommunicatingAlready) {
@@ -65,58 +75,75 @@ public class MainActivity extends AppCompatActivity {
                 }
                 else {
                     StatusService.setLoggedIn(true);
-                    getBuckets();
+                    start();
                 }
             }
             //else {String url = StatusService.StaticStatusService.sc.AnonymousSession(); hp = new HTTPSRequester(new GotToken()).execute(url);} //???
         }
     }
-    
-    
+
     /**
-     * A listener that checks if receiving bucket names worked out and takes them to memory for use.
+     * A listener that checks the response for DescribeSubUsers.
+     * If it is successful, draw an alertdialog on screen which the user can use to select the desired sub-user.
      */
-    public class GotBuckets implements TaskCompleted {
+    public class GotSubUsers implements TaskCompleted {
         @Override
         public void taskCompleted(String response) {
-            Log.i("bucketit", response);
             boolean parsingWorked = StatusService.StaticStatusService.jc.newJson(response);
-            if (parsingWorked && StatusService.StaticStatusService.sc.checkStatus()) {
-                StatusService.StaticStatusService.s3Location = StatusService.StaticStatusService.jc.getProperty("s3_location");
-                Log.i("s3Location", StatusService.StaticStatusService.s3Location);
-                StatusService.StaticStatusService.taskBucket = StatusService.StaticStatusService.jc.getProperty("tasks_bucket");
-                StatusService.StaticStatusService.answerBucket = StatusService.StaticStatusService.jc.getProperty("answers_bucket");
-                StatusService.StaticStatusService.graphicsBucket = StatusService.StaticStatusService.jc.getProperty("graphics_bucket");
+            if (parsingWorked) {
+                subUsers = StatusService.StaticStatusService.jc.getObjects();
+                if (!subUsers.isEmpty()) {
+                    Log.i("subit", "saatiin");
+                    //List<String> subList = new ArrayList<String>();
+                    //for (int i = 0; i < subUsers.size(); i++) {
+                    //    subList.add(subUsers.get(i).get("nick"));
+                    //}
+                    //CharSequence subs[] = subList.toArray(new CharSequence[subList.size()]);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                    builder.setTitle("Valitse käyttäjä");
+                    StatusService.StaticStatusService.currentSubUserID = subUsers.get(0).get("id");
+                    builder.setPositiveButton(subUsers.get(0).get("nick"), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            StatusService.setSubUser(subUsers.get(0).get("id"));
+                            Log.i("Current sub = ", StatusService.StaticStatusService.currentSubUserID);
+                        }
+                    });
+                    Log.i ("subilista", subUsers.toString());
+                    if(subUsers.size() >= 2) {
+                        builder.setNeutralButton(subUsers.get(1).get("nick"), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                StatusService.setSubUser(subUsers.get(1).get("id"));
+                                Log.i("Current sub = ", StatusService.StaticStatusService.currentSubUserID);
+                            }
+                        });
+                    }
+                    if(subUsers.size() == 3) {
+                        builder.setNegativeButton(subUsers.get(2).get("nick"), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                StatusService.setSubUser(subUsers.get(2).get("id"));
+                                Log.i("Current sub = ", StatusService.StaticStatusService.currentSubUserID);
+                            }
+                        });
+                    }
+
+                    builder.show();
+                }
             }
-            //else just uses the hard-coded ones.
-            start();
         }
     }
-    
-    
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //Checks if there is an internet connection available. Note:  isConnectedOrConnecting () is true if connection is being established, but hasn't already.
-        ConnectivityManager conMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        boolean internetConnectionAvailable = conMgr.getActiveNetworkInfo() != null && conMgr.getActiveNetworkInfo().isAvailable() && conMgr.getActiveNetworkInfo().isConnected();
-        if (!internetConnectionAvailable) {
-            AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
-            alert.setTitle("Tietoliikennevirhe");
-            alert.setMessage("Laite ei ole yhteydessä internetiin. Suurinta osaa Mobiilitiedekerhon toiminnoista ei voi käyttää ilman toimivaa verkkoyhteyttä");
-            alert.setNegativeButton("Sulje", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int whichButton) {
-                    dialog.dismiss();
-                }
-            });
-            alert.show();
-        }
+        new ConnectionCheck().conMgr(this);
+
 
         new StatusService();
         StatusService.StaticStatusService.context = getApplicationContext(); //needed for saving files to internal memory.
-
         
         //Saves the screen resolution for being able to show correct sized images.
         DisplayMetrics metrics = new DisplayMetrics();
@@ -124,7 +151,6 @@ public class MainActivity extends AppCompatActivity {
         StatusService.StaticStatusService.screenWidth = metrics.widthPixels;
         StatusService.StaticStatusService.screenHeight = metrics.heightPixels;
 
-        
         //Either saved token will be used (user auto-login) or an anonymous-token is retrieved for use. Token validity is also checked.
         if (StatusService.StaticStatusService.fh.CheckIfSavedToken()) {
             String url = StatusService.StaticStatusService.sc.CheckTokenIntegrity(StatusService.StaticStatusService.authToken);
@@ -136,18 +162,26 @@ public class MainActivity extends AppCompatActivity {
         
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.i ("Kysytty subeista", Boolean.toString(askedForSubUser));
+        if(askedForSubUser == false) {
+            String suburl = StatusService.StaticStatusService.sc.DescribeSubUsers();
+            hp = new HTTPSRequester(new GotSubUsers()).execute(suburl);
+            askedForSubUser = true;
+            Log.i ("Kysytty subeista", Boolean.toString(askedForSubUser));
+        }
+    }
 
     @Override
-    public void onResume() {  // Refreshes screen when returned to the front page, after eg. logging in or out
+    public void onResume() {  // Refreshes screen when returning to this page, after eg. logging in or out
         super.onResume();
+        new ConnectionCheck().conMgr(this);
         drawScreen();
     }
 
-    public void getBuckets() {
-        String url = StatusService.StaticStatusService.sc.GetBuckets();
-        hp = new HTTPSRequester(new GotBuckets()).execute(url);
-    }
-    
+
     public void start() {
         // TODO: Maybe some kind of data-preloading.
         drawScreen();
@@ -158,6 +192,7 @@ public class MainActivity extends AppCompatActivity {
         LoginFragment lf = new LoginFragment();
         UserVideosFragment uvf = new UserVideosFragment();
         InfoTextFragment itf = new InfoTextFragment();
+        
         //taskId is -1 so InfoTextFragment displays user info
         Bundle bundle = new Bundle();
         bundle.putString("task", "-1");
@@ -172,6 +207,7 @@ public class MainActivity extends AppCompatActivity {
         transaction.commit();
     }
 
+
     public void startCategories() {
         Intent intent = new Intent(this, CategoriesActivity.class);
         startActivity(intent);
@@ -182,9 +218,10 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void playback(String uri) {
+    public void playback(String uri, String mediaTypee) {
         Intent intent = new Intent(this, VideoScreen.class);
         StatusService.StaticStatusService.url = uri;
+        StatusService.StaticStatusService.mediaTypee = mediaTypee;
         startActivity(intent);
     }
 }

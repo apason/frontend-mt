@@ -3,9 +3,6 @@ package helsinki.cs.mobiilitiedekerho.mobiilitiedekerho;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -18,9 +15,8 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,24 +24,22 @@ import java.util.HashMap;
 public class UserVideosFragment extends Fragment implements View.OnClickListener {
 
     private Dialog list = null;
+    private View view;
+    private ImageButton userVideosButton;
     private ArrayList<HashMap<String, String>> uservideos;
-    public final static String EXTRA_MESSAGE_URL = "helsinki.cs.mobiilitiedekerho.mobiilitiedekerho.CATEGORY";
+    
+    private AsyncTask hp = null;
 
     public class FetchUserVideos implements TaskCompleted {
         @Override
-        public void taskCompleted(String response) { openUserVideoDialog(response); }
+        public void taskCompleted(String response) {
+            openUserVideoDialog(response);
+        }
     }
 
-    String url;
-    View view;
-    String email;
-    String password;
-    AsyncTask hp = null;
-    ImageButton userVideosButton;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.user_videos_button_fragment, null);
         userVideosButton =
@@ -57,9 +51,6 @@ public class UserVideosFragment extends Fragment implements View.OnClickListener
     // When loginButton is pressed call method openLoginDialog
     @Override
     public void onClick(View v) {
-
-        //FOR TESTING, REMOVE WHEN SUBUSERS CAN BE CREATED:
-        StatusService.StaticStatusService.currentSubUserID = "1";
 
         String url = StatusService.StaticStatusService.sc.DescribeSubUserAnswers(StatusService.StaticStatusService.currentSubUserID);
         hp = new HTTPSRequester(new FetchUserVideos()).execute(url);
@@ -88,11 +79,11 @@ public class UserVideosFragment extends Fragment implements View.OnClickListener
             uservideos = StatusService.StaticStatusService.jc.getObjects();
             if (!uservideos.isEmpty()) {
                 drawImages();
+                Log.i ("Omat videot ", uservideos.toString());
             }
 
             // On click of cancel button close the dialog
-            Button closePopupButton =
-                    (Button) list.findViewById(R.id.cancel_button);
+            Button closePopupButton = (Button) list.findViewById(R.id.cancel_button);
             closePopupButton.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -108,6 +99,9 @@ public class UserVideosFragment extends Fragment implements View.OnClickListener
             lp.height = WindowManager.LayoutParams.MATCH_PARENT;
             list.show();
             list.getWindow().setAttributes(lp);
+        }
+        else {
+            Toast.makeText(getContext(), "Ei näytettäviä vastauksia.", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -133,15 +127,13 @@ public class UserVideosFragment extends Fragment implements View.OnClickListener
 
                 //videobutton[i].setId(Integer.parseInt(uservideos.get(i).get("id")));
                 final String url = uservideos.get(i).get("uri");
+                final String answerType = uservideos.get(i).get("answer_type");
                 videobutton[i].setOnClickListener(
-                        new OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                //int id = v.getId();
-                                Log.i("urli", url);
-                                String answerURL = StatusService.StaticStatusService.s3Location + StatusService.StaticStatusService.answerBucket + "/" + url;
-                                ((MainActivity) getActivity()).playback(answerURL);
-                            }});
+                    new OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                             ((MainActivity) getActivity()).playback(url, answerType);
+                        }});
                 //taskbutton[i].setBackgroundColor(Color.TRANSPARENT); <-- use this with thumbnail images
                 videobutton[i].setBackgroundColor(Color.BLACK);
                 videobutton[i].setTextColor(Color.WHITE);
