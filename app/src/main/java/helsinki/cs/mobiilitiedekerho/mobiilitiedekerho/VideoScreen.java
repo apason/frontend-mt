@@ -105,6 +105,7 @@ public class VideoScreen extends Activity {
 
 
 
+        /*WARNING: OLD CODE
         // Video loading code from intent message: URL.
         // It must contain a axtension telling which file-type it is.
         String url = StatusService.StaticStatusService.url;
@@ -141,6 +142,25 @@ public class VideoScreen extends Activity {
             }
             else ; //TODO: Wrong file extension! Should not happen ever thought.
         }
+        WARNING: IT ENDED, YEAH*/
+        
+        //Media loading code:
+        String url = StatusService.StaticStatusService.url;
+        String mediaTypee = StatusService.StaticStatusService.mediaTypee;
+        
+        String html_text = null;
+        if (mediaTypee.equals("video")) {
+            html_text = StatusService.StaticStatusService.VideoPlay_HtmlTemplate.replace("#video_src#", url);
+        }
+        else if (mediaTypee.equals("image")) {
+            webView.getSettings().setBuiltInZoomControls(true);
+            webView.getSettings().setJavaScriptEnabled(true);
+            webView.getSettings().setLoadWithOverviewMode(true);
+            webView.getSettings().setUseWideViewPort(true);
+            html_text = "<html><img src='" + url + "' /></html>";
+        }
+        else ; //Your problem :D
+        
         
         //NOTE: Only "US-ASCII charset" is allowed/works in the html_text actually (android bug).
         webView.loadData(html_text, "text/html; charset=utf-8", "UTF-8");

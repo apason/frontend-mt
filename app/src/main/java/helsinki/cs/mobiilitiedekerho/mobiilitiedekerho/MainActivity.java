@@ -215,9 +215,10 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void playback(String uri) {
+    public void playback(String uri, String mediaTypee) {
         Intent intent = new Intent(this, VideoScreen.class);
         StatusService.StaticStatusService.url = uri;
+        StatusService.StaticStatusService.mediaTypee = mediaTypee;
         startActivity(intent);
     }
 }

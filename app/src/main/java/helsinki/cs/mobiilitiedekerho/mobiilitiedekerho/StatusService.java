@@ -42,7 +42,9 @@ public class StatusService {
         
         protected static Context context;
 
+        //For VideoScreen:
         protected static String url;
+        protected static String mediaTypee;
     }
     
 
