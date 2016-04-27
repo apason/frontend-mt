@@ -143,10 +143,17 @@ public class VideoScreen extends Activity {
             else ; //TODO: Wrong file extension! Should not happen ever thought.
         }
         WARNING: IT ENDED, YEAH*/
-        
+
         //Media loading code:
         String url = StatusService.StaticStatusService.url;
-        String mediaTypee = StatusService.StaticStatusService.mediaTypee;
+
+        String mediaTypee = null;
+        String ext = MimeTypeMap.getFileExtensionFromUrl(url);
+        if (ext != null) {
+            mediaTypee = MimeTypeMap.getSingleton().getMimeTypeFromExtension(ext);
+        }
+        //String mediaTypee = StatusService.StaticStatusService.mediaTypee;
+        Log.i("mediaTypee", mediaTypee);
         
         String html_text = null;
         if (mediaTypee.equals("video")) {
