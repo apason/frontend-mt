@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -91,7 +92,7 @@ public class InfoTextFragment extends Fragment implements View.OnClickListener {
 
             //Checks whether the task has info defined or not. If not it sets "Ei ole kuvausta tehtävälle." as the task's description.
             if (taskInfo == null) textView.setText("Tehtävälle ei ole kuvausta.");
-            else textView.setText(taskInfo);
+            else textView.setText(Html.fromHtml(taskInfo));
         }
         //This is for user info - taskId should be set to -1 in MainActivity.java
         if (taskId.equals("-1")) {
