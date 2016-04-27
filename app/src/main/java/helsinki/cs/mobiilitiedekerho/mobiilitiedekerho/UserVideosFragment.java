@@ -16,6 +16,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -97,6 +98,9 @@ public class UserVideosFragment extends Fragment implements View.OnClickListener
             lp.height = WindowManager.LayoutParams.MATCH_PARENT;
             list.show();
             list.getWindow().setAttributes(lp);
+        }
+        else {
+            Toast.makeText(getContext(), "Ei näytettäviä vastauksia.", Toast.LENGTH_LONG).show();
         }
     }
 

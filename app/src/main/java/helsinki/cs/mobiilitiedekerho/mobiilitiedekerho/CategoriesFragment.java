@@ -46,7 +46,7 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
                 ArrayList<String> name = new ArrayList<String>();
                 name.add("category_menu_bg.png");
                 ArrayList<String> url = new ArrayList<String>();
-                url.add(StatusService.StaticStatusService.jc.getObject().get("category_menu_bg_uri"));
+                url.add(StatusService.StaticStatusService.jc.getProperty("category_menu_bg_uri"));
                 new S3Download(new CategoryMenuBGDownloaded(), name, url).execute();
             }
             else ; //TODO: PROOOBLEEEMMM
@@ -54,7 +54,7 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
     }
 
     /**
-    * A listener that after a succefull category menu's BG downloading
+    * A listener that after a successful category menu's BG downloading
     * -> Makes a call to the server for getting the info of all categories.
     * TODO: Do something in case of error.
     */
