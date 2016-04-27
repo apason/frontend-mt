@@ -245,6 +245,7 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
             }
             String url = StatusService.StaticStatusService.sc.StartAnswerUpload
                     (taskId, StatusService.StaticStatusService.currentSubUserID, Ftype);
+            Log.i("StartAnswerUpload", url);
             hp = new HTTPSRequester(new GotUrlToUpload()).execute(url);
         }
         else {
@@ -254,6 +255,7 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
     }
 
     public void upload(String answerUri) {
+        Log.i("answerUri", answerUri);
         S3 = new S3Upload(new S3uploadFinished(), selectedFile).execute(answerUri);
     }
 }

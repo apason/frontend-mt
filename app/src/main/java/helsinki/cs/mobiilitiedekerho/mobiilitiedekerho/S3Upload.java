@@ -52,8 +52,6 @@ public class S3Upload extends AsyncTask<String, Void, String> {
             String ext = selectedFile.getName().substring(selectedFile.getName().lastIndexOf(".")).toLowerCase(); //toLowerCase in the (odd) case of the extension being in UpperCase, else MimeType may not recognize it.
             String type = mime.getMimeTypeFromExtension(ext); //Gets the Mime type corresponding to the extension. E.G: mp4 -> video/mp4
             connection.setRequestProperty("Content-Type", type); // Very important ! It won't work without adding this!
-            connection.setRequestProperty("Content-Disposition", "inline");
-
             BufferedOutputStream bos = new BufferedOutputStream(connection.getOutputStream());
             BufferedInputStream bis = new BufferedInputStream(new FileInputStream(selectedFile));
             int i;
@@ -62,11 +60,11 @@ public class S3Upload extends AsyncTask<String, Void, String> {
                 bos.write(i);
             }
             bos.close();
-
             connection.disconnect();
 
             return "succes";
         } catch (Exception e) {
+            Log.e("S3uploadfailure", e.toString());
             return "failure";
         }
         //TODO: Check response code, connection.getResponseCode()
