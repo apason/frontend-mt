@@ -28,7 +28,7 @@ public class ConnectionCheck {
         }
     }
 
-    boolean isNetworkAvailable(Context context) {
+    private boolean isNetworkAvailable(Context context) {
         ConnectivityManager cm = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
 
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();

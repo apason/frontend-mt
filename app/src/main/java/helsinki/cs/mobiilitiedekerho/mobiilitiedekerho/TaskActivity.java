@@ -55,6 +55,7 @@ public class TaskActivity extends AppCompatActivity {
     public void playback(String uri, String contentType) {
         Intent intent = new Intent(this, VideoScreen.class);
         StatusService.StaticStatusService.url = uri;
+        StatusService.StaticStatusService.mediaTypee = contentType;
         startActivity(intent);
     }
 
