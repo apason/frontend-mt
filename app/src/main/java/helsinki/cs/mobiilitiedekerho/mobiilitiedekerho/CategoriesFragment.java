@@ -36,12 +36,13 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
 
 
     /**
-    * A listener that checks the given url to download the category menu's BG and call S3Download to get it.
-    */
+     * A listener that checks the given url to download the category menu's BG and call S3Download to get it.
+     */
     public class CategoryMenuBGDownload implements TaskCompleted {
         @Override
         public void taskCompleted(String response) {
             boolean parsingWorked = StatusService.StaticStatusService.jc.newJson(response);
+            Log.i("responssiBGload", response);
             if (parsingWorked && StatusService.StaticStatusService.sc.checkStatus()) {
                 ArrayList<String> name = new ArrayList<String>();
                 name.add("category_menu_bg.png");
@@ -58,9 +59,11 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
     * -> Makes a call to the server for getting the info of all categories.
     * TODO: Do something in case of error.
     */
+
     public class CategoryMenuBGDownloaded implements TaskCompleted {
         @Override
         public void taskCompleted(String response) {
+            Log.i("responssiBGloaded", response);
             if (response.equals("success")) {
                 String url = StatusService.StaticStatusService.sc.DescribeCategories();
                 hp = new HTTPSRequester(new categorieslistener()).execute(url);
@@ -80,6 +83,7 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
     public class catImgsDownloaded implements TaskCompleted {
         @Override
         public void taskCompleted(String response) {
+            Log.i("responssicatImgs", response);
             if (response.equals("success")) drawImages(); //All went right, proceed to draw images.
             else checkErrors(response);
         }
@@ -215,7 +219,7 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
                 //TODO: check if category icon is enabled
                 if (true) {
                     RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-                    
+
                     // WHAT, busy wait?!!? TODO: Fix something this is no good.
                     start = System.currentTimeMillis();
                     timer = 0;

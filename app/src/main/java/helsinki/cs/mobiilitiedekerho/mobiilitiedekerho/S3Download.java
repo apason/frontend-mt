@@ -46,6 +46,9 @@ public class S3Download extends AsyncTask<String, Void, String> {
 
 
     protected String doInBackground(String... urls) {
+        for (String urli: urls) {
+            Log.i("kuvaurli", urli);
+        }
 
         if(urlss.size() != imageNames.size()) 
             return "'ImageNames' and 'urlss' don't match in size";
