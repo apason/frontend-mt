@@ -105,16 +105,16 @@ public class MainActivity extends AppCompatActivity {
                     builder.setPositiveButton(subUsers.get(0).get("nick"), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            StatusService.StaticStatusService.currentSubUserID = subUsers.get(0).get("id");
+                            StatusService.setSubUser(subUsers.get(0).get("id"));
                             Log.i("Current sub = ", StatusService.StaticStatusService.currentSubUserID);
                         }
                     });
                     Log.i ("subilista", subUsers.toString());
-                    if(subUsers.size() == 2) {
+                    if(subUsers.size() >= 2) {
                         builder.setNeutralButton(subUsers.get(1).get("nick"), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                StatusService.StaticStatusService.currentSubUserID = subUsers.get(1).get("id");
+                                StatusService.setSubUser(subUsers.get(1).get("id"));
                                 Log.i("Current sub = ", StatusService.StaticStatusService.currentSubUserID);
                             }
                         });
@@ -123,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
                         builder.setNegativeButton(subUsers.get(2).get("nick"), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                StatusService.StaticStatusService.currentSubUserID = subUsers.get(2).get("id");
+                                StatusService.setSubUser(subUsers.get(2).get("id"));
                                 Log.i("Current sub = ", StatusService.StaticStatusService.currentSubUserID);
                             }
                         });
@@ -165,10 +165,12 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+        Log.i ("Kysytty subeista", Boolean.toString(askedForSubUser));
         if(askedForSubUser == false) {
             String suburl = StatusService.StaticStatusService.sc.DescribeSubUsers();
             hp = new HTTPSRequester(new GotSubUsers()).execute(suburl);
             askedForSubUser = true;
+            Log.i ("Kysytty subeista", Boolean.toString(askedForSubUser));
         }
     }
 

@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
@@ -16,6 +17,9 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 /**
  * Activity responsible for the user info screen
  */
@@ -25,6 +29,10 @@ public class UserActivity extends AppCompatActivity {
     private AsyncTask hp;
     private boolean triedCommunicatingAlready = false;
     private String eula;
+    Button subUser1;
+    Button subUser2;
+    Button subUser3;
+    private ArrayList<HashMap<String, String>> subUsers;
 
 
     public class GotToken implements TaskCompleted {
@@ -119,16 +127,14 @@ public class UserActivity extends AppCompatActivity {
                 c.setChecked(true);
                 break;
         }
-        /**
-        ImageButton subUser1 = (ImageButton) findViewById(R.id.subUser1);
-        subUser1.setBackgroundResource(R.drawable.sub_user_icon_placeholder);
 
-        ImageButton subUser2 = (ImageButton) findViewById(R.id.subUser2);
-        subUser2.setBackgroundResource(R.drawable.sub_user_icon_placeholder);
+        subUser1 = (Button) findViewById(R.id.subUser1);
 
-        ImageButton subUser3 = (ImageButton) findViewById(R.id.subUser3);
-        subUser3.setBackgroundResource(R.drawable.sub_user_icon_placeholder);
-        */
+        subUser2 = (Button) findViewById(R.id.subUser2);
+
+        subUser3 = (Button) findViewById(R.id.subUser3);
+
+
         // Add OnClickListener to the logout button
         Button logoutButton = (Button) findViewById(R.id.logout_button);
         logoutButton.setOnClickListener(new View.OnClickListener() {
@@ -218,5 +224,87 @@ public class UserActivity extends AppCompatActivity {
         String url = StatusService.StaticStatusService.sc.SetPrivacyLevel(Integer.toString(i));
         Log.i("vika", url);
         hp = new HTTPSRequester(new UserActivity.PrivacyListener()).execute(url);
+    }
+
+    /**
+     * A listener that checks the response for DescribeSubUsers.
+     * If it is successful, draw an alertdialog on screen which the user can use to select the desired sub-user.
+     */
+    public class GotSubUsers implements TaskCompleted {
+        @Override
+        public void taskCompleted(String response) {
+            boolean parsingWorked = StatusService.StaticStatusService.jc.newJson(response);
+            if (parsingWorked) {
+                subUsers = StatusService.StaticStatusService.jc.getObjects();
+                if (!subUsers.isEmpty()) {
+                    Log.i("subit", "saatiin");
+                    subUser1.setText(subUsers.get(0).get("nick"));
+                    if(subUsers.get(0).get("id").equals(StatusService.getSubUser())) {
+                        subUser1.setEnabled(false);
+                    }
+                    subUser1.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            StatusService.setSubUser(subUsers.get(0).get("id"));
+                            subUser1.setEnabled(false);
+                            subUser2.setEnabled(true);
+                            subUser3.setEnabled(true);
+                            Toast.makeText(getApplicationContext(), "Käyttäjä valittu.", Toast.LENGTH_LONG).show();
+                        }
+                    });
+
+                    Log.i ("subilista", subUsers.toString());
+
+                    if(subUsers.size() >= 2) {
+                        subUser2.setText(subUsers.get(1).get("nick"));
+                        if(subUsers.get(1).get("id").equals(StatusService.getSubUser())) {
+                            subUser2.setEnabled(false);
+                        }
+                        subUser2.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                StatusService.setSubUser(subUsers.get(1).get("id"));
+                                subUser1.setEnabled(true);
+                                subUser2.setEnabled(false);
+                                subUser3.setEnabled(true);
+                                Toast.makeText(getApplicationContext(), "Käyttäjä valittu.", Toast.LENGTH_LONG).show();
+                            }
+                        });
+                    }else {
+                        subUser2.setText("EI LUOTU");
+                        subUser2.setEnabled(false);
+                        subUser3.setText("EI LUOTU");
+                        subUser3.setEnabled(false);
+                    }
+                    if(subUsers.size() == 3) {
+                        subUser3.setText(subUsers.get(2).get("nick"));
+                        if(subUsers.get(2).get("id").equals(StatusService.getSubUser())) {
+                            subUser3.setEnabled(false);
+                        }
+                        subUser3.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                StatusService.setSubUser(subUsers.get(2).get("id"));
+                                subUser1.setEnabled(true);
+                                subUser2.setEnabled(true);
+                                subUser3.setEnabled(false);
+                                Toast.makeText(getApplicationContext(), "Käyttäjä valittu.", Toast.LENGTH_LONG).show();
+                            }
+                        });
+                    }else {
+                        subUser3.setText("EI LUOTU");
+                        subUser3.setEnabled(false);
+                    }
+
+                }
+            }
+        }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        String suburl = StatusService.StaticStatusService.sc.DescribeSubUsers();
+        hp = new HTTPSRequester(new GotSubUsers()).execute(suburl);
     }
 }

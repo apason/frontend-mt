@@ -79,6 +79,7 @@ public class UserVideosFragment extends Fragment implements View.OnClickListener
             uservideos = StatusService.StaticStatusService.jc.getObjects();
             if (!uservideos.isEmpty()) {
                 drawImages();
+                Log.i ("Omat videot ", uservideos.toString());
             }
 
             // On click of cancel button close the dialog

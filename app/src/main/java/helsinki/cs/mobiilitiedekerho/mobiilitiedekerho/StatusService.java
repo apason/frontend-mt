@@ -79,6 +79,14 @@ public class StatusService {
     public static int getUsageRights() {
         return StaticStatusService.usageRights;
     }
+
+    public static void setSubUser(String s) {
+        StaticStatusService.currentSubUserID = s;
+    }
+
+    public static String getSubUser() {
+        return StaticStatusService.currentSubUserID;
+    }
 }
 
 
