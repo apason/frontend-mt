@@ -14,7 +14,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
+/**
+ *  A class responsible for the login dialog
+ */
 public class LoginDialog extends AppCompatActivity {
 
     private Dialog login = null;
@@ -27,6 +29,9 @@ public class LoginDialog extends AppCompatActivity {
     
     private AsyncTask hp = null;
 
+    private boolean triedCommunicatingAlready = false;
+
+    // Checks if the login was successful
     public class loginListener implements TaskCompleted {
         @Override
         public void taskCompleted(String response) {
@@ -34,15 +39,13 @@ public class LoginDialog extends AppCompatActivity {
         }
     }
 
+    // Checks if the registration was succesful
     public class registerListener implements TaskCompleted {
         @Override
         public void taskCompleted(String response) {
             registered(response);
         }
     }
-
-
-    private boolean triedCommunicatingAlready = false;
 
     // Checks whether login was successful and acts accordingly.
     public void authenticated(String response) {
@@ -94,15 +97,14 @@ public class LoginDialog extends AppCompatActivity {
         }
     }
 
-
+    // Responsible for drawing the required components on screen
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.login_fragment);
-        // Add onClickListener to the login button
         openLoginDialog();
     }
 
+    // A method that opens the login dialog
     public void openLoginDialog() {
         login = new Dialog(this);
         // Set GUI of login screen

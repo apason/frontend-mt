@@ -13,9 +13,9 @@ import android.util.Log;
  */
 public class ConnectionCheck {
 
+    // A method called from activities. Notifies the user if there is no network available.
     public void conMgr(Context context) {
         if (!isNetworkAvailable(context)) {
-            Log.i("täällä", "ollaan");
             AlertDialog.Builder alert = new AlertDialog.Builder(context);
             alert.setTitle("Tietoliikennevirhe");
             alert.setMessage("Laite ei ole yhteydessä internetiin. Suurinta osaa Mobiilitiedekerhon toiminnoista ei voi käyttää ilman toimivaa verkkoyhteyttä");
@@ -28,6 +28,8 @@ public class ConnectionCheck {
         }
     }
 
+
+    // A method for checking if there is a network connection available. Uses permission to access ACCESS_NETWORK_STATE
     private boolean isNetworkAvailable(Context context) {
         ConnectivityManager cm = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
 

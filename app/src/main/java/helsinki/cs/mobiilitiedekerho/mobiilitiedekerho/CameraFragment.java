@@ -21,7 +21,10 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-
+/**
+ * A class responsible for activating the camera for image or video capture.
+ * This class also sends the resulting video/image answer further to be uploaded.
+ */
 public class CameraFragment extends Fragment implements View.OnClickListener {
 
     private Dialog upload;
@@ -42,7 +45,7 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
     private AsyncTask S3 = null;
     private AsyncTask hp = null;
 
-
+    // A listener that checks whether the upload finished successfully
     public class S3uploadFinished implements TaskCompleted {
         @Override
         public void taskCompleted(String response) {
@@ -51,12 +54,14 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
         }
     }
 
+    // A listener that checks whether the URL for uploading was received
     public class GotUrlToUpload implements TaskCompleted {
         @Override
         public void taskCompleted(String response) {
             boolean parsingWorked = StatusService.StaticStatusService.jc.newJson(response);
             Log.i("upataan", "uppaus on yeeeeah");
             Log.i("uppausresponssi", response);
+            // If the response was success then do the following
             if (parsingWorked && StatusService.StaticStatusService.sc.checkStatus()) {
                 String answerUri = StatusService.StaticStatusService.jc.getProperty("answer_uri");
                 Log.i("vastausuri", answerUri);
@@ -66,7 +71,7 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
         }
     }
 
-
+    // A method used for drawing the objects needed for this fragment on screen
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         //taskId = this.getArguments().toString();
@@ -84,6 +89,7 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
         return view;
     }
 
+
     @Override
     public void onClick(View v) {
         // If user hasn't logged in disable camera functionality.
@@ -91,9 +97,8 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
             Intent intent = new Intent(getActivity().getApplicationContext(), LoginDialog.class);
             startActivity(intent);
         } else {
-
+            // A dialog that shows the user multiple choices for adding an answer
             upload = new Dialog(getActivity());
-
             upload.setContentView(R.layout.answer_upload_fragment);
             upload.setTitle("Lisää vastaus tehtävään");
 
@@ -114,11 +119,10 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
                         }
                     }
 
-                    // Creates a file for saving the shot video VID + timestamp + .mp4 TODO: Check if possible to use WebM in device, NEVER expect that the recorded video is of a certain format.
-                    // TODO: the name should contain task.
+                    // Creates a file for saving the shot video VID + timestamp + .mp4
                     String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
 
-                    //Log.i("filuuuu", );
+                    // The file that was selected by the user
                     selectedFile = new File(mediaStorageDirectory.getPath() + File.separator +
                             "VID_" + timeStamp + ".mp4");
                     try {
@@ -219,6 +223,7 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
         }
     }
 
+    // Activity handler for checking if the answer recording was successful
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         // Result handler for videos from the gallery
         super.onActivityResult(requestCode, resultCode, data);
@@ -226,15 +231,18 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
                 if (selectedFile.exists()) {
                     createUrl();
                 }
+                // If the recording was cancelled by the user, then notify
             } else if ((requestCode == VIDEO_CAPTURE || requestCode == IMAGE_CAPTURE) && resultCode == TaskActivity.RESULT_CANCELED) {
                 Toast.makeText(CameraFragment.this.getActivity(), "Kuvaaminen peruttu.",
                         Toast.LENGTH_LONG).show();
             } else {
+                // If the recording was cancelled for some other reason, then notify
                 Toast.makeText(CameraFragment.this.getActivity(), "Kuvaaminen epäonnistui.",
                         Toast.LENGTH_LONG).show();
             }
     }
 
+    // A method for creating an executable URL for GotUrlToUpload
     private void createUrl() {
         if (StatusService.StaticStatusService.currentSubUserID != null) {
             String Ftype;
@@ -254,6 +262,7 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
         }
     }
 
+    // A method for starting a new S3Upload that uploads the recorded answer to Amazon S3
     public void upload(String answerUri) {
         Log.i("answerUri", answerUri);
         S3 = new S3Upload(new S3uploadFinished(), selectedFile).execute(answerUri);

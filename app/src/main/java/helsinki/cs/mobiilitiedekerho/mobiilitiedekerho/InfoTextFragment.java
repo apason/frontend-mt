@@ -17,6 +17,9 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ *  A class responsible for showing the info-texts
+ */
 public class InfoTextFragment extends Fragment implements View.OnClickListener {
 
     private Dialog info = null;
@@ -29,14 +32,15 @@ public class InfoTextFragment extends Fragment implements View.OnClickListener {
     private String instructionsText;
 
     
-    
+    // A method that checks if we got the info-text
     public class InfoTextLoaded implements TaskCompleted {
         @Override
         public void taskCompleted(String response) {
             openInfoDialog(response);
         }
     }
-    
+
+    // A method that checks if we got the instructions for this app
     public class instructionsListener implements TaskCompleted {
         @Override
         public void taskCompleted(String response) {
@@ -48,7 +52,7 @@ public class InfoTextFragment extends Fragment implements View.OnClickListener {
         }
     }
 
-    
+    // A method that draws the needed objects onscreen
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -67,17 +71,19 @@ public class InfoTextFragment extends Fragment implements View.OnClickListener {
         return view;
     }
 
+    // A method for setting the title for an info-box
     public void setTitle(String s) {
         title = s;
     }
 
-    // When loginButton is pressed call method openLoginDialog
+    // A listener for clicks that loads the info text for a given task
     @Override
     public void onClick(View v) {
         String url = StatusService.StaticStatusService.sc.DescribeTask(taskId);
         hp = new HTTPSRequester(new InfoTextLoaded()).execute(url);
     }
 
+    // A method for opening a dialog that shows the info-text for the given task
     public void openInfoDialog(String response) {
         info = new Dialog(InfoTextFragment.this.getActivity());
         info.setContentView(R.layout.info_text_fragment);
@@ -85,6 +91,7 @@ public class InfoTextFragment extends Fragment implements View.OnClickListener {
         textView = (TextView) info.findViewById(R.id.taskText);
         textView.setTextSize(20);
 
+        // If we got the info-text, then show it
         boolean parsingWorked = StatusService.StaticStatusService.jc.newJson(response);
         if (parsingWorked && StatusService.StaticStatusService.sc.checkStatus()) {
             ArrayList<HashMap<String, String>> task = StatusService.StaticStatusService.jc.getObjects();
