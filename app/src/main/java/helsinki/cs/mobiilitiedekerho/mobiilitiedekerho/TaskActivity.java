@@ -8,6 +8,9 @@ import android.util.Log;
 import android.view.Window;
 
 //public class TaskActivity extends FragmentActivity {
+/**
+* No idea, guess that something about tasks... ???
+*/
 public class TaskActivity extends AppCompatActivity {
 
     public final static String EXTRA_MESSAGE_URL = "helsinki.cs.mobiilitiedekerho.mobiilitiedekerho.CATEGORY";
@@ -52,6 +55,9 @@ public class TaskActivity extends AppCompatActivity {
         transaction.commit();
     }
 
+    /**
+    * ???
+    */
     public void playback(String uri, String contentType) {
         Intent intent = new Intent(this, VideoScreen.class);
         StatusService.StaticStatusService.url = uri;
@@ -66,6 +72,9 @@ public class TaskActivity extends AppCompatActivity {
         drawScreen();
     }
 
+    /**
+    * Draws the needed components to the screen.
+    */
     public void drawScreen() {
         CameraFragment cf = new CameraFragment();
         AnswerVideoFragment avf = new AnswerVideoFragment();

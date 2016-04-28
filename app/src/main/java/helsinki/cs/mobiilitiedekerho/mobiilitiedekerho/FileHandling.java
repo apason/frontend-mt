@@ -53,6 +53,9 @@ public class FileHandling extends AppCompatActivity {
         return editor.commit();
     }
 
+    
+    //TODO: Do not save this to the device but get it from the server.
+    
     // Saves the privacy level of the user
     public boolean saveUsageRights(int i) {
         SharedPreferences sharedPref = StatusService.StaticStatusService.context.getSharedPreferences("mobiilitiedekerho", Context.MODE_PRIVATE);
@@ -73,6 +76,8 @@ public class FileHandling extends AppCompatActivity {
         return Integer.parseInt(rights);
     }
 
+    //Ends.
+    
 
     /**
     * Checks whether the pointed image (or any file...) exist in applications allocated Internal Storage.
@@ -98,6 +103,7 @@ public class FileHandling extends AppCompatActivity {
 
     /**
     * Saves the wanted image to the Applications data directory.
+    * It saves it as PNG.
     * @param name the to-be-saved file's name.
     * @param image the image to be saved.
     * @return true if saving the image worked out.

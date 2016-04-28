@@ -20,13 +20,18 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 
+/**
+* Deals with the taskVideo or something.
+*/
 public class TaskVideoFragment extends Fragment implements View.OnClickListener {
 
     private View view;
     private AsyncTask hp;
     private String taskURL;
 
-    
+    /**
+    * Listener that pass VideoStreaming initialization to task-method.
+    */
     public class Listener implements TaskCompleted {
         @Override
         public void taskCompleted(String response) {
@@ -76,6 +81,10 @@ public class TaskVideoFragment extends Fragment implements View.OnClickListener 
         hp = new HTTPSRequester(new Listener()).execute(url);
     }
 
+    /**
+    * Makes VideoScreen be called to stream the desired video.
+    * @param response the response of the API-call DescribeTask.
+    */
     private void task(String response) {
         boolean parsingWorked = StatusService.StaticStatusService.jc.newJson(response);
         if (parsingWorked && StatusService.StaticStatusService.sc.checkStatus()) {

@@ -15,8 +15,9 @@ import android.widget.VideoView;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+
 /**
- * A class that handles the answer videos and images that users have sent
+ * A class that handles the answer-videos and -images that users have sent.
  */
 public class AnswerVideoFragment extends Fragment implements View.OnClickListener {
 
@@ -25,7 +26,10 @@ public class AnswerVideoFragment extends Fragment implements View.OnClickListene
     private AsyncTask hp;
     private String answerURL;
 
-    // A listener for answers from the database
+    
+    /**
+    * A listener for answers from the database.
+    */
     public class AnswerListener implements TaskCompleted {
         @Override
         public void taskCompleted(String response) {
@@ -33,7 +37,9 @@ public class AnswerVideoFragment extends Fragment implements View.OnClickListene
         }
     }
 
-    // A listener for the answer description
+    /**
+    * A listener for the answer description
+    */
     public class URLListener implements TaskCompleted {
         @Override
         public void taskCompleted(String response) {
@@ -41,6 +47,7 @@ public class AnswerVideoFragment extends Fragment implements View.OnClickListene
         }
     }
 
+    
     // Draws the content of this fragments content on the screen
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

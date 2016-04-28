@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+
 /**
  * A class responsible for activating the camera for image or video capture.
  * This class also sends the resulting video/image answer further to be uploaded.
@@ -45,7 +46,10 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
     private AsyncTask S3 = null;
     private AsyncTask hp = null;
 
-    // A listener that checks whether the upload finished successfully
+    
+    /**
+    * A listener that checks whether the upload finished successfully.
+    */
     public class S3uploadFinished implements TaskCompleted {
         @Override
         public void taskCompleted(String response) {
@@ -54,7 +58,9 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
         }
     }
 
-    // A listener that checks whether the URL for uploading was received
+    /**
+    * A listener that checks whether the URL for uploading was received.
+    */
     public class GotUrlToUpload implements TaskCompleted {
         @Override
         public void taskCompleted(String response) {
@@ -242,7 +248,10 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
             }
     }
 
-    // A method for creating an executable URL for GotUrlToUpload
+    /**
+    * A method for creating a correct URL to make 'StartAnswerUpload' and makes the response to be passed to GotUrlToUpload-method.
+    * Also it notify the user if no SubUser is in use at the moment.
+    */
     private void createUrl() {
         if (StatusService.StaticStatusService.currentSubUserID != null) {
             String Ftype;
@@ -262,7 +271,10 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
         }
     }
 
-    // A method for starting a new S3Upload that uploads the recorded answer to Amazon S3
+    /**
+    * A method for starting a new S3Upload that uploads the recorded answer to Amazon S3
+    * @param answerUri the signed url to use for uploading the answer.
+    */
     public void upload(String answerUri) {
         Log.i("answerUri", answerUri);
         S3 = new S3Upload(new S3uploadFinished(), selectedFile).execute(answerUri);

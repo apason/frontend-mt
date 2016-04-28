@@ -16,6 +16,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+
+/**
+* Main activity of the app.
+* It does initialize the process.
+* And also servers as the Main-menu.
+* TODO: A separate class for the initialization?
+*/
 public class MainActivity extends AppCompatActivity {
 
     private AsyncTask hp = null;
@@ -185,11 +192,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // This initiates the drawScreen method
+    // Can be used also to do "extra-stuff" before drawing.
     public void start() {
         drawScreen();
     }
 
-    // A method for drawing the needed objects on screen.
+    /**
+    * Draws the needed components to the screen.
+    */
     public void drawScreen() {
         setContentView(R.layout.main_activity);
         LoginFragment lf = new LoginFragment();
@@ -210,19 +220,31 @@ public class MainActivity extends AppCompatActivity {
         transaction.commit();
     }
 
-    // Starts the CategoriesActivity
+
+    /**
+    * Starts the CategoriesActivity.
+    */
     public void startCategories() {
         Intent intent = new Intent(this, CategoriesActivity.class);
         startActivity(intent);
     }
 
-    // Starts the UserActivity
+    /**
+    * Starts the UserActivity.
+    */
     public void startUserActivity() {
         Intent intent = new Intent(this, UserActivity.class);
         startActivity(intent);
     }
 
-    // A method for taking care that the media that is played is of the right type
+
+    /**
+    * A method for taking care to notify VideoScreen the right type of the media to be played.
+    * And starts it.
+    * Note: it uses StatusService's variables for this.
+    * @param uri Uri to be streamed or well readed by the WebView.
+    * @param mediaTypee the media-type of the stuff, "video" or "image".
+    */
     public void playback(String uri, String mediaTypee) {
         Intent intent = new Intent(this, VideoScreen.class);
         StatusService.StaticStatusService.url = uri;

@@ -8,7 +8,7 @@ import java.util.ArrayList;
 public class StatusService {
 
     /**
-     *  A class that saves important states needed for the operation of this app
+     *  A class that saves important states needed for the operation of this app.
      */
     public static class StaticStatusService {
 

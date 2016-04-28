@@ -17,8 +17,9 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+
 /**
- *  A class responsible for showing the info-texts
+ *  A class responsible for showing the info-texts.
  */
 public class InfoTextFragment extends Fragment implements View.OnClickListener {
 
@@ -31,8 +32,11 @@ public class InfoTextFragment extends Fragment implements View.OnClickListener {
     private String title;
     private String instructionsText;
 
-    
-    // A method that checks if we got the info-text
+
+    /**
+     * A listener for the info-text.
+     * Calls openInfoDialog to check if info-text has been returned allright.
+     */
     public class InfoTextLoaded implements TaskCompleted {
         @Override
         public void taskCompleted(String response) {
@@ -40,7 +44,11 @@ public class InfoTextFragment extends Fragment implements View.OnClickListener {
         }
     }
 
-    // A method that checks if we got the instructions for this app
+    
+    /**
+     * A listener that checks if we got the instructions for this app.
+     * It sets the instructionsText variable to it if gotten, otherwise "Ongelma ohjeiden lataamisessa.".
+     */
     public class instructionsListener implements TaskCompleted {
         @Override
         public void taskCompleted(String response) {
@@ -71,7 +79,10 @@ public class InfoTextFragment extends Fragment implements View.OnClickListener {
         return view;
     }
 
-    // A method for setting the title for an info-box
+    /**
+     * A method for setting the title for an info-box.
+     * @param s the text.
+     */
     public void setTitle(String s) {
         title = s;
     }
@@ -83,7 +94,11 @@ public class InfoTextFragment extends Fragment implements View.OnClickListener {
         hp = new HTTPSRequester(new InfoTextLoaded()).execute(url);
     }
 
-    // A method for opening a dialog that shows the info-text for the given task
+    
+    /**
+     * A method for opening a dialog that shows the info-text for the given task
+     * @param response the response from the API-call DescribeTask.
+     */
     public void openInfoDialog(String response) {
         info = new Dialog(InfoTextFragment.this.getActivity());
         info.setContentView(R.layout.info_text_fragment);

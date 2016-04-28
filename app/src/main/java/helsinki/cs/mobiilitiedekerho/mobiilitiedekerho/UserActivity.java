@@ -20,8 +20,9 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+
 /**
- * Activity responsible for the user info screen
+ * Activity responsible for the user info screen.
  */
 public class UserActivity extends AppCompatActivity {
 
@@ -34,7 +35,9 @@ public class UserActivity extends AppCompatActivity {
     Button subUser3;
     private ArrayList<HashMap<String, String>> subUsers;
 
-    // Checks if we got a valid token for the user
+    /**
+    * A listener that checks if it returned response contains a valid token for the user.
+    */
     public class GotToken implements TaskCompleted {
         @Override
         public void taskCompleted(String response) {
@@ -67,7 +70,11 @@ public class UserActivity extends AppCompatActivity {
         }
     }
 
-    // A listener for the usage rights
+    
+    /**
+    * A listener that checks if it returned response contains a valid EULA.
+    * If it is valid it sets it to the local variable eula otherwise it sets it to "Ongelma käyttöehtojen lataamisessa."
+    */
     public class EULAListener implements TaskCompleted {
         @Override
         public void taskCompleted(String response) {
@@ -80,8 +87,9 @@ public class UserActivity extends AppCompatActivity {
         }
     }
 
-     // A listener that checks if saving the privacy level worked out and notifies the user of the result.
-
+    /**
+    * A listener that checks if saving the privacy level worked out and notifies the user of the result.
+    */
     public class PrivacyListener implements TaskCompleted {
         @Override
         public void taskCompleted(String response) {
@@ -170,7 +178,9 @@ public class UserActivity extends AppCompatActivity {
         });
     }
 
-    // Shows the user agreement
+    /**
+    * Shows the user agreement
+    */
     public void showUserAgreement() {
         AlertDialog.Builder alert = new AlertDialog.Builder(UserActivity.this);
         alert.setTitle("Mobiilitiedekerhon käyttöehdot");
@@ -188,15 +198,17 @@ public class UserActivity extends AppCompatActivity {
         alert.show();
     }
 
-    // After the user has looged out, show MainActivity
+    /**
+    * After the user has looged out call this, it pass the crrent activity to MainActivity.
+    */
     public void afterLogout() {
         Intent intent = new Intent(getApplication(), MainActivity.class);
         startActivity(intent);
     }
 
-
-    // Method for handling changes in usage rights the user makes.
-
+    /**
+    * Method for handling changes in usage rights the user makes.
+    */
     public void radioButtonOnClick(View view) {
         boolean checked = ((RadioButton) view).isChecked();
 
@@ -217,7 +229,10 @@ public class UserActivity extends AppCompatActivity {
         }
     }
 
-    // Sets the privacy level for the current user
+    /**
+    * Sets the privacy level for the current user
+    * @param i the userights code.
+    */
     public void setPrivacyLevel(int i) {
     
         //Saves the privacy level for later use.
@@ -229,10 +244,11 @@ public class UserActivity extends AppCompatActivity {
         hp = new HTTPSRequester(new UserActivity.PrivacyListener()).execute(url);
     }
 
-
-    // A listener that checks the response for DescribeSubUsers.
-    // If it is successful, draw an alertdialog on screen which the user can use to select the desired sub-user.
-
+    /**
+    * A listener that checks the response for DescribeSubUsers.
+    * If it is successful, draw an alertdialog on screen which the user can use to select the desired sub-user.
+    * TODO: Slice this to pieces!
+    */
     public class GotSubUsers implements TaskCompleted {
         @Override
         public void taskCompleted(String response) {

@@ -22,6 +22,10 @@ import android.widget.ScrollView;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+
+/**
+ *  A fragment-class responsible for showing all kind of stuff related to the 'category-view' and doing all backstage work for it.
+ */
 public class CategoriesFragment extends Fragment implements View.OnClickListener {
 
     private View view;
@@ -32,7 +36,6 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
     private ArrayList<String> urls; //Save urls to be used for downloading for error checking.
 
     private AsyncTask hp = null;
-
 
 
     /**
@@ -59,7 +62,6 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
     * -> Makes a call to the server for getting the info of all categories.
     * TODO: Do something in case of error.
     */
-
     public class CategoryMenuBGDownloaded implements TaskCompleted {
         @Override
         public void taskCompleted(String response) {
@@ -72,7 +74,10 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
         }
     }
 
-
+    /**
+     * A listener that takes the response of the DescribeCategories-API-call and calls the categories-method with the response.
+     * Just that.
+     */
     public class categorieslistener implements TaskCompleted {
         @Override
         public void taskCompleted(String response) {
@@ -80,6 +85,10 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
         }
     }
 
+    /**
+     * A listener that takes the response of S3Upload and if succes it calls drawImages-method, otherwise checkErrors-method.
+     * Just that.
+     */
     public class catImgsDownloaded implements TaskCompleted {
         @Override
         public void taskCompleted(String response) {
@@ -89,6 +98,10 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
         }
     }
 
+    /**
+     * A listener that checks if the images that could not be downlaoded last time ahd been downloaded right this time.
+     * TODO: This method does nothing at the moment actually, makes some error handling.
+     */
     public class restOfImgsDownloaded implements TaskCompleted {
         @Override
         public void taskCompleted(String response) {
@@ -124,6 +137,9 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
     }
 */
 
+    /**
+     * Checks if the category_menu_bg is already in the device and if not it does GetCategoryMenuBG-API-call to get it.
+     */
     private void menuBG() {
         if (StatusService.StaticStatusService.fh.checkIfImageExists("category_menu_bg.png")) {
             String url = StatusService.StaticStatusService.sc.DescribeCategories();
@@ -135,6 +151,12 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
         }
     }
 
+
+    /**
+     * Checks if the categories' icons are already in the device and if not it downloads the ones that are missing.
+     * If no missing it calls drawImages() if some missing it calls S3Download correctly.
+     * @param response contains the response form the server to the API-call DescribeCategories.
+     */
     private void categories(String response) {
         boolean parsingWorked = StatusService.StaticStatusService.jc.newJson(response);
         if (parsingWorked && StatusService.StaticStatusService.sc.checkStatus()) {
@@ -166,6 +188,12 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
     }
 
 
+    /**
+     * Checks which erros has happened in S3Download.
+     * If "failure" it tries again if not already; if names and url don't match in size then nothing for now.
+     * At last it does try to get again the images that could not be got last time.
+     * @param response the Response from S3Download.
+     */
     private void checkErrors(String response) {
         // Communicating with S3 failed, try again.
         if (response.equals("failure")) {
@@ -195,6 +223,10 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
         }
     }
 
+    /**
+    * Draws the needed components to the screen.
+    * etc.
+    */
     private void drawImages() {
         RelativeLayout rl = (RelativeLayout) view.findViewById(R.id.categories);
 

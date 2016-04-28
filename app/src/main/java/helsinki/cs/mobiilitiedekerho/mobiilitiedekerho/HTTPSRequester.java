@@ -1,6 +1,5 @@
 package helsinki.cs.mobiilitiedekerho.mobiilitiedekerho;
 
-
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -13,6 +12,7 @@ import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.net.UnknownHostException;
 
+
 /**
  * A class for communicating with the back-end server via HTTPS.
  * Give the wanted url(parameters included) for making API calls to the server.
@@ -20,11 +20,14 @@ import java.net.UnknownHostException;
 public class HTTPSRequester extends AsyncTask<String, String, String> {
 
     private TaskCompleted act;
-
+    
     
     /**
      * Constructor for HTTPSRequester.
      * @param act a interface for being able to pass the response for the calling activity.
+     *
+     * Note (@return after executing): The response from the server to the API-call if all went right
+     * or a hard-coded JSON where status-field is "CommunicationWithServerError"
      */
     public HTTPSRequester(TaskCompleted act){
         this.act = act;
@@ -35,7 +38,6 @@ public class HTTPSRequester extends AsyncTask<String, String, String> {
         HttpURLConnection urlConnection = null;
         
         try {
-
             URL url = new URL(urli[0]);
 
             urlConnection = (HttpURLConnection) url.openConnection();
@@ -48,6 +50,7 @@ public class HTTPSRequester extends AsyncTask<String, String, String> {
             while ((line = br.readLine()) != null) {
                 sb.append(line + "\n");
             }
+            
             br.close();
             return sb.toString();
         } catch (SocketTimeoutException e) {
@@ -68,9 +71,8 @@ public class HTTPSRequester extends AsyncTask<String, String, String> {
         } finally {
             if (urlConnection != null) urlConnection.disconnect();
         }
-
-        return "{\"status\":\"CommunicationWithServerError\"}"; //A problem has been encountered while either calling the API or the response its damaged in some way (strange if data checking...) => Some special precautions to take?
-
+        //A problem has been encountered while either calling the API or the response its damaged in some way (strange if data checking...) => Some special precautions to take?
+        return "{\"status\":\"CommunicationWithServerError\"}";
     }
 
 

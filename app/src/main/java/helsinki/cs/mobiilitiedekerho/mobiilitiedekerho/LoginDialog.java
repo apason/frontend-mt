@@ -1,6 +1,5 @@
 package helsinki.cs.mobiilitiedekerho.mobiilitiedekerho;
 
-
 import android.app.Dialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -13,6 +12,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
 
 /**
  *  A class responsible for the login dialog
@@ -31,7 +31,11 @@ public class LoginDialog extends AppCompatActivity {
 
     private boolean triedCommunicatingAlready = false;
 
-    // Checks if the login was successful
+    
+
+    /**
+    * A listener that checks if the login was successful by calling authenticated-method and that is.
+    */
     public class loginListener implements TaskCompleted {
         @Override
         public void taskCompleted(String response) {
@@ -47,7 +51,11 @@ public class LoginDialog extends AppCompatActivity {
         }
     }
 
-    // Checks whether login was successful and acts accordingly.
+
+    /**
+    * Checks whether login was successful and acts accordingly.
+    * @param response the reponse from the server fo the API-call AuthenticateUser.
+    */
     public void authenticated(String response) {
         Log.i("login response", response);
         boolean parsingWorked = StatusService.StaticStatusService.jc.newJson(response);
@@ -79,7 +87,11 @@ public class LoginDialog extends AppCompatActivity {
         }
     }
 
-    // Checks whether registration was successful and acts accordingly.
+
+    /**
+    * Checks whether registration was successful and acts accordingly.
+    * @param response the reponse from the server fo the API-call CreateUser.
+    */
     public void registered(String response) {
         Log.i("register response", response);
         boolean parsingWorked = StatusService.StaticStatusService.jc.newJson(response);
@@ -104,7 +116,10 @@ public class LoginDialog extends AppCompatActivity {
         openLoginDialog();
     }
 
-    // A method that opens the login dialog
+
+    /**
+    * A method that opens the login dialog
+    */
     public void openLoginDialog() {
         login = new Dialog(this);
         // Set GUI of login screen
@@ -159,4 +174,5 @@ public class LoginDialog extends AppCompatActivity {
         login.show();
         login.getWindow().setAttributes(lp);
     }
+    
 }

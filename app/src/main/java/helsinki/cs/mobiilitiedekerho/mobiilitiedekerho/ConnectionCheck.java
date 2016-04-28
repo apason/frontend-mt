@@ -13,7 +13,10 @@ import android.util.Log;
  */
 public class ConnectionCheck {
 
-    // A method called from activities. Notifies the user if there is no network available.
+
+    /**
+    * Checks if network connection aviable and notifies the user if there is no network available.
+    */
     public void conMgr() {
         if (!isNetworkAvailable(StatusService.StaticStatusService.context)) {
             AlertDialog.Builder alert = new AlertDialog.Builder(StatusService.StaticStatusService.context);
@@ -34,7 +37,7 @@ public class ConnectionCheck {
         ConnectivityManager cm = (ConnectivityManager)StatusService.StaticStatusService.context.getSystemService(Context.CONNECTIVITY_SERVICE);
 
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-        boolean isConnected = activeNetwork != null && activeNetwork.isConnectedOrConnecting();
+        boolean isConnected = activeNetwork != null && activeNetwork.isConnectedOrConnecting(); //TODO: Is Connecting does not mean that the connection establisation will work out!
         Log.i("yhteys", Boolean.toString(isConnected));
         return isConnected;
     }

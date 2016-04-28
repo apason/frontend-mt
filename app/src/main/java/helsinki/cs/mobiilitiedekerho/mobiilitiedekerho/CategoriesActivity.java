@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.LinearLayout;
 
+
 /**
  *  A class responsible for adding the needed fragments to show the categories
  */
@@ -36,7 +37,10 @@ public class CategoriesActivity extends AppCompatActivity {
         transaction.commit();
     }
 
-    // Starts CategoryActivity with the particular task chosen
+    /**
+    * Starts CategoryActivity with the particular task chosen.
+    * @param id the task id.
+    */
     public void startCategory(String id) {
         Intent intent = new Intent(this, CategoryActivity.class);
         intent.putExtra(EXTRA_MESSAGE_CATEGORY, id);
@@ -51,7 +55,9 @@ public class CategoriesActivity extends AppCompatActivity {
         drawScreen();
     }
 
-    // Draw the needed components on the screen
+    /**
+    * Draws the needed components to the screen.
+    */
     public void drawScreen() {
         CategoriesFragment cf = new CategoriesFragment();
         HomeButtonFragment hbf = new HomeButtonFragment();

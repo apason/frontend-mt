@@ -27,6 +27,10 @@ public class VideoScreen extends Activity {
     private VideoEnabledWebChromeClient webChromeClient;
     
     
+    /**
+    * A subclass from https://github.com/cprcrack/VideoEnabledWebView example-activity
+    * that forces the video/image to be played in the WebView and not in the default browser.
+    */
     private class InsideWebViewClient extends WebViewClient {
         @Override
         // Force links to be opened inside WebView and not in Default Browser
@@ -46,12 +50,11 @@ public class VideoScreen extends Activity {
         // Save the web view
         webView = (VideoEnabledWebView)findViewById(R.id.webView);
 
-        // Initialize the VideoEnabledWebChromeClient and set event handlers
-        View nonVideoLayout = findViewById(R.id.nonVideoLayout); // Your own view, read class comments
-        ViewGroup videoLayout = (ViewGroup)findViewById(R.id.videoLayout); // Your own view, read class comments
-        //noinspection all
-        View loadingView = getLayoutInflater().inflate(R.layout.view_loading_video, null); // Your own view, read class comments
-        webChromeClient = new VideoEnabledWebChromeClient(nonVideoLayout, videoLayout, loadingView, webView); // See all available constructors... //TODO: Maybe another one fits better?
+        // Initialize the VideoEnabledWebChromeClient and set event handlers:
+        View nonVideoLayout = findViewById(R.id.nonVideoLayout); // Your own view, read class comments.
+        ViewGroup videoLayout = (ViewGroup)findViewById(R.id.videoLayout); // Your own view, read class comments.
+        View loadingView = getLayoutInflater().inflate(R.layout.view_loading_video, null); // Your own view, read class comments.
+        webChromeClient = new VideoEnabledWebChromeClient(nonVideoLayout, videoLayout, loadingView, webView); //TODO: Maybe another constructor fits better?
 //         {
 //             // Subscribe to standard events, such as onProgressChanged()...
 //             @Override
