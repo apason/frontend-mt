@@ -140,7 +140,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        new ConnectionCheck().conMgr(this);
+        new ConnectionCheck().conMgr();
 
 
         new StatusService();
