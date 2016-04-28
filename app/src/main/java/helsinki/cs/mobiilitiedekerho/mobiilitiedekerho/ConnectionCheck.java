@@ -28,8 +28,9 @@ public class ConnectionCheck {
         }
     }
 
+
     // A method for checking if there is a network connection available. Uses permission to access ACCESS_NETWORK_STATE
-    boolean isNetworkAvailable(Context context) {
+    private boolean isNetworkAvailable(Context context) {
         ConnectivityManager cm = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
 
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
