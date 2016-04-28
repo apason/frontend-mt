@@ -7,7 +7,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 
-// Fragment that creates an arrow button to screen, currently clicking changes view from front page to next page
+/**
+ *  Fragment that creates an arrow button to screen, currently clicking changes view from front page to next page
+ */
 public class NextPageFragment extends Fragment implements View.OnClickListener {
 
     private View view;

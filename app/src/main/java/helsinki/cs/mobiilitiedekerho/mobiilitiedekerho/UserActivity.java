@@ -34,7 +34,7 @@ public class UserActivity extends AppCompatActivity {
     Button subUser3;
     private ArrayList<HashMap<String, String>> subUsers;
 
-
+    // Checks if we got a valid token for the user
     public class GotToken implements TaskCompleted {
         @Override
         public void taskCompleted(String response) {
@@ -66,7 +66,8 @@ public class UserActivity extends AppCompatActivity {
             }
         }
     }
-    
+
+    // A listener for the usage rights
     public class EULAListener implements TaskCompleted {
         @Override
         public void taskCompleted(String response) {
@@ -78,10 +79,9 @@ public class UserActivity extends AppCompatActivity {
             else eula = "Ongelma käyttöehtojen lataamisessa."; //Jotta ei crassha null viitteeseen.
         }
     }
-    
-    /**
-     * A listener that checks if saving the privacy level worked out and notifies the user of the result.
-     */
+
+     // A listener that checks if saving the privacy level worked out and notifies the user of the result.
+
     public class PrivacyListener implements TaskCompleted {
         @Override
         public void taskCompleted(String response) {
@@ -98,7 +98,6 @@ public class UserActivity extends AppCompatActivity {
         }
     }
 
-    
     // Draw content of user_activity.xml to the screen
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,6 +110,7 @@ public class UserActivity extends AppCompatActivity {
         String url = StatusService.StaticStatusService.sc.GetEULA();
         hp = new HTTPSRequester(new UserActivity.EULAListener()).execute(url);
 
+        // The radiobuttons responsible for changing the privacy level
         RadioButton a = (RadioButton) findViewById(R.id.onlyme);
         RadioButton b = (RadioButton) findViewById(R.id.registered);
         RadioButton c = (RadioButton) findViewById(R.id.anyone);
@@ -127,7 +127,7 @@ public class UserActivity extends AppCompatActivity {
                 c.setChecked(true);
                 break;
         }
-
+        // The buttons responsible for changing the sub-user
         subUser1 = (Button) findViewById(R.id.subUser1);
 
         subUser2 = (Button) findViewById(R.id.subUser2);
@@ -170,6 +170,7 @@ public class UserActivity extends AppCompatActivity {
         });
     }
 
+    // Shows the user agreement
     public void showUserAgreement() {
         AlertDialog.Builder alert = new AlertDialog.Builder(UserActivity.this);
         alert.setTitle("Mobiilitiedekerhon käyttöehdot");
@@ -186,15 +187,16 @@ public class UserActivity extends AppCompatActivity {
         });
         alert.show();
     }
-    
+
+    // After the user has looged out, show MainActivity
     public void afterLogout() {
         Intent intent = new Intent(getApplication(), MainActivity.class);
         startActivity(intent);
     }
 
-    /**
-     * Method for handling changes in usage rights the user makes.
-     */
+
+    // Method for handling changes in usage rights the user makes.
+
     public void radioButtonOnClick(View view) {
         boolean checked = ((RadioButton) view).isChecked();
 
@@ -215,6 +217,7 @@ public class UserActivity extends AppCompatActivity {
         }
     }
 
+    // Sets the privacy level for the current user
     public void setPrivacyLevel(int i) {
     
         //Saves the privacy level for later use.
@@ -226,10 +229,10 @@ public class UserActivity extends AppCompatActivity {
         hp = new HTTPSRequester(new UserActivity.PrivacyListener()).execute(url);
     }
 
-    /**
-     * A listener that checks the response for DescribeSubUsers.
-     * If it is successful, draw an alertdialog on screen which the user can use to select the desired sub-user.
-     */
+
+    // A listener that checks the response for DescribeSubUsers.
+    // If it is successful, draw an alertdialog on screen which the user can use to select the desired sub-user.
+
     public class GotSubUsers implements TaskCompleted {
         @Override
         public void taskCompleted(String response) {
@@ -301,6 +304,7 @@ public class UserActivity extends AppCompatActivity {
         }
     }
 
+    // Do this when the user first starts this activity
     @Override
     protected void onStart() {
         super.onStart();

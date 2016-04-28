@@ -53,7 +53,7 @@ public class FileHandling extends AppCompatActivity {
         return editor.commit();
     }
 
-
+    // Saves the privacy level of the user
     public boolean saveUsageRights(int i) {
         SharedPreferences sharedPref = StatusService.StaticStatusService.context.getSharedPreferences("mobiilitiedekerho", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
@@ -62,6 +62,7 @@ public class FileHandling extends AppCompatActivity {
         return editor.commit();
     }
 
+    // Gets the privacy level of the current user
     public int getUsageRights() {
         SharedPreferences prefs = StatusService.StaticStatusService.context.getSharedPreferences("mobiilitiedekerho", Context.MODE_PRIVATE);
         String rights = prefs.getString(usageRights, null);

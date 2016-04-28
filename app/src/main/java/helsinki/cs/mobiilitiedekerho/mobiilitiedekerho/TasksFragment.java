@@ -19,6 +19,9 @@ import android.widget.RelativeLayout;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ *  A class responsible for taking care of the individual tasks inside a category
+ */
 public class TasksFragment extends Fragment implements View.OnClickListener {
 
 
@@ -31,7 +34,7 @@ public class TasksFragment extends Fragment implements View.OnClickListener {
     
     private AsyncTask hp = null;
 
-    
+    //
     public class listener implements TaskCompleted {
         @Override
         public void taskCompleted(String response) {
