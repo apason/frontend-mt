@@ -51,9 +51,12 @@ public class S3Upload extends AsyncTask<String, Void, String> {
             //Also the extension may or may not tell the truth about the file's type. (No need to take into account?)
             //In android it is possible to use "android.media.MediaMetadataRetriever" for reading the file's metadata and get the real type. TODO: Do this to the File selectedFile, Note: this is not very favored for some reason, why?
             String ext = selectedFile.getName().substring(selectedFile.getName().lastIndexOf(".")).toLowerCase(); //toLowerCase in the (odd) case of the extension being in UpperCase, else MimeType may not recognize it.
+
             String type = mime.getMimeTypeFromExtension(ext); //Gets the Mime type corresponding to the extension. E.G: mp4 -> video/mp4
             //Add metadata to the header:
+            Log.i("exttype", ext);
             connection.setRequestProperty("Content-Type", type); // Very important ! It won't work without adding this!
+
             connection.setRequestProperty("Content-Disposition", "inline");
 
 
@@ -65,9 +68,10 @@ public class S3Upload extends AsyncTask<String, Void, String> {
                 bos.write(i);
             }
             bos.close();
-            connection.disconnect();
+            Log.i("connection", String.valueOf(connection.getResponseCode()));
+                    connection.disconnect();
 
-            return "succes";
+            return "success";
         } catch (Exception e) {
             Log.e("S3uploadfailure", e.toString());
             return "failure";
