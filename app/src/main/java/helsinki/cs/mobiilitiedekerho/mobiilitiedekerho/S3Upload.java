@@ -54,11 +54,7 @@ public class S3Upload extends AsyncTask<String, Void, String> {
 
             String type = mime.getMimeTypeFromExtension(ext); //Gets the Mime type corresponding to the extension. E.G: mp4 -> video/mp4
             //Add metadata to the header:
-            Log.i("exttype", ext);
-            connection.setRequestProperty("Content-Type", type); // Very important ! It won't work without adding this!
-
             connection.setRequestProperty("Content-Disposition", "inline");
-
 
             BufferedOutputStream bos = new BufferedOutputStream(connection.getOutputStream());
             BufferedInputStream bis = new BufferedInputStream(new FileInputStream(selectedFile));
