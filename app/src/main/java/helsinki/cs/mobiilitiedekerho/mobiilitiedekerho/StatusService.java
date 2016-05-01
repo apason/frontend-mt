@@ -5,6 +5,8 @@ import android.content.Context;
 
 import java.util.ArrayList;
 
+
+// This is for 'wrapping' the static-class, android does not let declare a static class directly.
 public class StatusService {
 
     /**
@@ -12,11 +14,18 @@ public class StatusService {
      */
     public static class StaticStatusService {
 
-        //The DNS name of the back-end server. Hard-coded and will always be.
+        //The DNS name of the back-end server. Hard-coded.
         protected static final String urli = "https://mobiilitiedekerho.duckdns.org:27461/";
 
+
+        // This is the html-template to be used for streaming videos from S3. #Video_src# is programatically replaced with the url of the stream.
+        // It is used so that autoplay would work and auto-fullscreen too. (Android doesn't let this to be done programatically otherwise.)
+        // TODO: Auto-fullscreen does not work for some reason.
+        // TODO: It may be better to not hard-code it like this.
         protected static final String VideoPlay_HtmlTemplate = "<!DOCTYPE html><head><script>var elem = document.getElementById(\"video\");if (elem.requestFullscreen) {elem.requestFullscreen();} else if (elem.msRequestFullscreen) {elem.msRequestFullscreen();} else if (elem.mozRequestFullScreen) {elem.mozRequestFullScreen();} else if (elem.webkitRequestFullscreen) {elem.webkitRequestFullscreen();}elem.play();</script></head><body><video controls id=\"video\" width=\"100%\" height=\"100%\" preload=\"auto\" data-setup=\"{}\" autoplay><source src=\"#video_src#\"></video></body>";
-        
+
+
+        /* These are variables storing info about the current user. */
         // Is the user logged in
         protected static boolean loggedIn;
 
@@ -32,29 +41,47 @@ public class StatusService {
         //The IDs of the available sub-users for the current user.
         protected static String[] availableSubUsers;
 
-        //Note: These variables declare the resolution of the screen in pixels, in this APP is the landscape orientation (width is the larger).
-        protected static int screenWidth;
-        protected static int screenHeight;
 
         // Keeps track of the RadioButtons in UserActivity. Defines who can view the user's videos.
         // 1 = Only the user itself, 2 = Only registered users, 3 = Anyone
         protected static int usageRights;
+        /* */
         
-        
-        protected static ArrayList<Integer> categories;
-        protected static ArrayList<ArrayList<Integer>> category;
-    
-    
+        //Note: These variables declare the resolution of the screen in pixels, in this APP is the landscape orientation (width is the larger).
+        protected static int screenWidth;
+        protected static int screenHeight;
+
+
+        /*  These are references to class instances to be used all over the program.
+            They contain methods to be called from activities.
+            Note: See each class documetation for further information about them.   */
+        // The JSON parser class that is used to parse the response from the server.
         protected static final JsonConverter jc = new JsonConverter();
+
+        // A class for creating urls to make calls for the server.
         protected static final ServerCommunication sc = new ServerCommunication();
+
+        // A class for saving data to the devices persistent memory.
         protected static final FileHandling fh = new FileHandling();
-        
+        /* */
+        // This is for the 'helper-classes' since the apllication's context is needed for saving data, etc.
         protected static Context context;
 
-        //For VideoScreen:
+
+        // For VideoScreen-activity, they are like parameters for what to show:
+        // (Note supposed to be setted only in MainActivity's playVideo()-method)
         protected static String url;
         protected static String mediaTypee;
+
+
+        // Originally meant for 'data-preloading' from the server, could store IDs and based on them show icons, etc.
+        // NOT in use!
+        // protected static ArrayList<Integer> categories;
+        // protected static ArrayList<ArrayList<Integer>> category;
     }
+
+
+    // All kind of methods for setting variables in StaticStatusService that cannot be accesed directly.
     
     // Returns true if the user has logged in, otherwise false
     public static boolean loggedIn() {
@@ -106,5 +133,3 @@ public class StatusService {
         return StaticStatusService.currentSubUserID;
     }
 }
-
-
