@@ -54,6 +54,7 @@ public class S3Upload extends AsyncTask<String, Void, String> {
 
             String type = mime.getMimeTypeFromExtension(ext); //Gets the Mime type corresponding to the extension. E.G: mp4 -> video/mp4
             //Add metadata to the header:
+            connection.setRequestProperty("Content-Type", type);
             connection.setRequestProperty("Content-Disposition", "inline");
 
             BufferedOutputStream bos = new BufferedOutputStream(connection.getOutputStream());
@@ -64,8 +65,7 @@ public class S3Upload extends AsyncTask<String, Void, String> {
                 bos.write(i);
             }
             bos.close();
-            Log.i("connection", String.valueOf(connection.getResponseCode()));
-                    connection.disconnect();
+            connection.disconnect();
 
             return "success";
         } catch (Exception e) {
