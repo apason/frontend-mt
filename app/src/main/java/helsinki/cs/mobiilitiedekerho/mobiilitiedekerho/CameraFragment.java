@@ -1,3 +1,4 @@
+
 package helsinki.cs.mobiilitiedekerho.mobiilitiedekerho;
 
 import android.app.Dialog;
@@ -14,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import java.io.File;
@@ -29,6 +31,12 @@ import java.util.Date;
 public class CameraFragment extends Fragment implements View.OnClickListener {
 
     private Dialog upload;
+    private Button newVideoButton;
+    private Button existingVideoButton;
+    private Button newImageButton;
+    private Button existingImageButton;
+    private ProgressBar progressBar;
+
     private View view;
 
     private String taskId;
@@ -42,32 +50,46 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
     private File selectedFile;
     private String selectedFileName;
     private String answerID;
+    private int progress_status;
 
     private AsyncTask S3 = null;
     private AsyncTask hp = null;
 
-    
     /**
-    * A listener that checks whether the upload finished successfully.
-    */
+     * A listener that closes the upload dialog when the upload task is finished.
+     */
+    public class CloseDialog implements TaskCompleted {
+        @Override
+        public void taskCompleted(String response) {
+            upload.dismiss();
+        }
+    }
+
+    /**
+     * A listener that checks whether the upload finished successfully.
+     */
     public class S3uploadFinished implements TaskCompleted {
         @Override
         public void taskCompleted(String response) {
             String url = StatusService.StaticStatusService.sc.EndAnswerUpload(answerID, response);
             Log.i("loppu", url);
-            new HTTPSRequester(null).execute(url);
+            progress_status += 50;
+            progressBar.setProgress(progress_status);
+            new HTTPSRequester(new CloseDialog()).execute(url);
         }
     }
 
     /**
-    * A listener that checks whether the URL for uploading was received.
-    */
+     * A listener that checks whether the URL for uploading was received.
+     */
     public class GotUrlToUpload implements TaskCompleted {
         @Override
         public void taskCompleted(String response) {
             boolean parsingWorked = StatusService.StaticStatusService.jc.newJson(response);
             Log.i("upataan", "uppaus on yeeeeah");
             Log.i("uppausresponssi", response);
+            progress_status += 50;
+            progressBar.setProgress(progress_status);
             // If the response was success then do the following
             if (parsingWorked && StatusService.StaticStatusService.sc.checkStatus()) {
                 String answerUri = StatusService.StaticStatusService.jc.getProperty("answer_uri");
@@ -110,7 +132,7 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
             upload.setTitle("Lisää vastaus tehtävään");
 
             //Create button that after clicking leads the user to record a video using the device's camera
-            Button newVideoButton =
+            newVideoButton =
                     (Button) upload.findViewById(R.id.newVideoButton);
             newVideoButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -150,7 +172,7 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
             });
 
             // Creates a button that after clicking leads the user to upload a video from the device's gallery.
-            Button existingVideoButton =
+            existingVideoButton =
                     (Button) upload.findViewById(R.id.existingVideoButton);
             existingVideoButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -162,7 +184,7 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
             });
 
             //Create button that after clicking leads the user to take a picture using the device's camera.
-            Button newImageButton =
+            newImageButton =
                     (Button) upload.findViewById(R.id.newImageButton);
             newImageButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -200,7 +222,7 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
                 }
             });
             // Creates a button that opens the device's image gallery
-            Button existingImageButton =
+            existingImageButton =
                     (Button) upload.findViewById(R.id.existingImageButton);
             existingImageButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -234,25 +256,25 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         // Result handler for videos from the gallery
         super.onActivityResult(requestCode, resultCode, data);
-            if (resultCode == TaskActivity.RESULT_OK) {
-                if (selectedFile.exists()) {
-                    createUrl();
-                }
-                // If the recording was cancelled by the user, then notify
-            } else if ((requestCode == VIDEO_CAPTURE || requestCode == IMAGE_CAPTURE) && resultCode == TaskActivity.RESULT_CANCELED) {
-                Toast.makeText(CameraFragment.this.getActivity(), "Kuvaaminen peruttu.",
-                        Toast.LENGTH_LONG).show();
-            } else {
-                // If the recording was cancelled for some other reason, then notify
-                Toast.makeText(CameraFragment.this.getActivity(), "Kuvaaminen epäonnistui.",
-                        Toast.LENGTH_LONG).show();
+        if (resultCode == TaskActivity.RESULT_OK) {
+            if (selectedFile.exists()) {
+                createUrl();
             }
+            // If the recording was cancelled by the user, then notify
+        } else if ((requestCode == VIDEO_CAPTURE || requestCode == IMAGE_CAPTURE) && resultCode == TaskActivity.RESULT_CANCELED) {
+            Toast.makeText(CameraFragment.this.getActivity(), "Kuvaaminen peruttu.",
+                    Toast.LENGTH_LONG).show();
+        } else {
+            // If the recording was cancelled for some other reason, then notify
+            Toast.makeText(CameraFragment.this.getActivity(), "Kuvaaminen epäonnistui.",
+                    Toast.LENGTH_LONG).show();
+        }
     }
 
     /**
-    * A method for creating a correct URL to make 'StartAnswerUpload' and makes the response to be passed to GotUrlToUpload-method.
-    * Also it notify the user if no SubUser is in use at the moment.
-    */
+     * A method for creating a correct URL to make 'StartAnswerUpload' and makes the response to be passed to GotUrlToUpload-method.
+     * Also it notify the user if no SubUser is in use at the moment.
+     */
     private void createUrl() {
         if (StatusService.StaticStatusService.currentSubUserID != null) {
             String Ftype;
@@ -261,6 +283,15 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
             } catch (Exception e) {
                 Ftype = "fail";
             }
+
+
+            newVideoButton.setEnabled(false);
+            existingVideoButton.setEnabled(false);
+            newImageButton.setEnabled(false);
+            existingImageButton.setEnabled(false);
+            progressBar = (ProgressBar) upload.findViewById(R.id.Progressbar);
+            progressBar.setProgress(0);
+
             String url = StatusService.StaticStatusService.sc.StartAnswerUpload
                     (taskId, StatusService.StaticStatusService.currentSubUserID, Ftype);
             Log.i("StartAnswerUpload", url);
@@ -273,9 +304,9 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
     }
 
     /**
-    * A method for starting a new S3Upload that uploads the recorded answer to Amazon S3
-    * @param answerUri the signed url to use for uploading the answer.
-    */
+     * A method for starting a new S3Upload that uploads the recorded answer to Amazon S3
+     * @param answerUri the signed url to use for uploading the answer.
+     */
     public void upload(String answerUri) {
         Log.i("answerUri", answerUri);
         S3 = new S3Upload(new S3uploadFinished(), selectedFile).execute(answerUri);

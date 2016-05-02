@@ -85,7 +85,7 @@ public class AnswerVideoFragment extends Fragment implements View.OnClickListene
             ArrayList<HashMap<String, String>> answers = StatusService.StaticStatusService.jc.getObjects();
 
             // Draws the chosen number of taskvideobuttons:
-            Button[] answerbutton = new Button[10];
+            Button[] answerbutton = new Button[answers.size()];
             for (int i = 0; i < answers.size(); i++) {
                 if (!answers.get(i).isEmpty()) {
 
