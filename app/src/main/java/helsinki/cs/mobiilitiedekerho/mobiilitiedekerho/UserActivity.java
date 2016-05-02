@@ -111,6 +111,8 @@ public class UserActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        StatusService.StaticStatusService.context = getApplicationContext(); //needed for saving files to internal memory.
+
         StatusService.StaticStatusService.cc.conMgr();
 
         setContentView(R.layout.user_activity);

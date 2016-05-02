@@ -21,6 +21,9 @@ public class TaskActivity extends AppCompatActivity {
         // Draw components described in activity_main.xml on screen
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
+        StatusService.StaticStatusService.context = getApplicationContext(); //needed for saving files to internal memory.
+        StatusService.StaticStatusService.dialogContext = TaskActivity.this;
+
         StatusService.StaticStatusService.cc.conMgr();
 
         super.onCreate(savedInstanceState);
