@@ -15,7 +15,7 @@ import java.net.URL;
 
 /**
  * A class for uploading videos to S3.
- * When calling execute pass as String... urli the signed url to be used for upload the file.
+ * When calling execute pass as String... urli the signed url to be used for uploading the file.
  */
 public class S3Upload extends AsyncTask<String, Void, String> {
 
@@ -44,8 +44,8 @@ public class S3Upload extends AsyncTask<String, Void, String> {
             connection.setDoOutput(true);
             connection.setRequestMethod("PUT");
 
-            //# Sets the metadata to the file to be uploaded.
-
+            /* The below sets the metadata to the file to be uploaded. */
+            
             MimeTypeMap mime = MimeTypeMap.getSingleton();
             //TODO: There is no need for the extension part ".type" actually (except for Windows) so possibly there could be a viable file without its type written in the file's name.
             //Also the extension may or may not tell the truth about the file's type. (No need to take into account?)
@@ -57,14 +57,17 @@ public class S3Upload extends AsyncTask<String, Void, String> {
             connection.setRequestProperty("Content-Type", type);
             connection.setRequestProperty("Content-Disposition", "inline");
 
+
+            // Upload the file as Byte-stream.
             BufferedOutputStream bos = new BufferedOutputStream(connection.getOutputStream());
             BufferedInputStream bis = new BufferedInputStream(new FileInputStream(selectedFile));
             int i;
-            // read byte by byte until end of stream
+            // Reads byte by byte until the end of stream and pass it to OutputStream.
             while ((i = bis.read()) > -1) {
                 bos.write(i);
             }
             bos.close();
+            
             connection.disconnect();
 
             return "success";
@@ -72,7 +75,7 @@ public class S3Upload extends AsyncTask<String, Void, String> {
             Log.e("S3uploadfailure", e.toString());
             return "failure";
         }
-        //TODO: Check response code, connection.getResponseCode()
+        //TODO: Check response code, connection.getResponseCode(), and do something if needed.
     }
 
     protected void onPostExecute(String result) {
