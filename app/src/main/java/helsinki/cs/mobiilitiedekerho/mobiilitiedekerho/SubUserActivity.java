@@ -62,7 +62,7 @@ public class SubUserActivity extends AppCompatActivity {
         // Inflate the layout for this activity
         super.onCreate(savedInstanceState);
 
-        new ConnectionCheck().conMgr(this);
+        StatusService.StaticStatusService.cc.conMgr();
 
         setContentView(R.layout.sub_user_activity);
 

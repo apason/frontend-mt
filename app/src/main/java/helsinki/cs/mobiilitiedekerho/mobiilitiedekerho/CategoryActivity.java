@@ -21,7 +21,7 @@ public class CategoryActivity extends AppCompatActivity {
 
         setContentView(R.layout.category_layout);
 
-        new ConnectionCheck().conMgr(this);
+        StatusService.StaticStatusService.cc.conMgr();
 
         TasksFragment tf = new TasksFragment();
         HomeButtonFragment hbf = new HomeButtonFragment();
@@ -46,7 +46,7 @@ public class CategoryActivity extends AppCompatActivity {
     @Override
     public void onResume() {  // Refreshes screen when returning to this page, after eg. logging in or out
         super.onResume();
-        new ConnectionCheck().conMgr(this);
+        StatusService.StaticStatusService.cc.conMgr();
         drawScreen();
     }
 

@@ -111,7 +111,7 @@ public class UserActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        new ConnectionCheck().conMgr(getApplicationContext());
+        StatusService.StaticStatusService.cc.conMgr();
 
         setContentView(R.layout.user_activity);
 

@@ -63,6 +63,9 @@ public class StatusService {
 
         // A class for saving data to the devices persistent memory.
         protected static final FileHandling fh = new FileHandling();
+        
+        // A class for checking the internet connection's state.
+        protected static final ConnectionCheck cc = new ConnectionCheck();
         /* */
         // This is for the 'helper-classes' since the apllication's context is needed for saving data, etc.
         protected static Context context;

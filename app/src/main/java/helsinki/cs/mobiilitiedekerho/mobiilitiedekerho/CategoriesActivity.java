@@ -24,7 +24,7 @@ public class CategoriesActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         //  Checks if there is an internet connection available. Note:  isConnectedOrConnecting () is true if connection is being established, but hasn't already.
-        new ConnectionCheck().conMgr(this);
+        StatusService.StaticStatusService.cc.conMgr();
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.categories_activity);
@@ -51,7 +51,7 @@ public class CategoriesActivity extends AppCompatActivity {
     @Override
     public void onResume() {  // Refreshes screen when returning to this page, after eg. logging in or out
         super.onResume();
-        new ConnectionCheck().conMgr(this);
+        StatusService.StaticStatusService.cc.conMgr();
         drawScreen();
     }
 

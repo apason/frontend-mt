@@ -21,7 +21,7 @@ public class TaskActivity extends AppCompatActivity {
         // Draw components described in activity_main.xml on screen
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
-        new ConnectionCheck().conMgr(getApplicationContext());
+        StatusService.StaticStatusService.cc.conMgr();
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.task_activity);
@@ -68,7 +68,7 @@ public class TaskActivity extends AppCompatActivity {
     @Override
     public void onResume() {  // Refreshes screen when returning to this page, after eg. logging in or out
         super.onResume();
-        new ConnectionCheck().conMgr(this);
+        StatusService.StaticStatusService.cc.conMgr();
         drawScreen();
     }
 

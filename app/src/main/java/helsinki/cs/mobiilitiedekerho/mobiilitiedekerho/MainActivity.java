@@ -147,7 +147,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        new ConnectionCheck().conMgr(this);
+        StatusService.StaticStatusService.cc.conMgr();
 
 
         new StatusService();
@@ -187,7 +187,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onResume() {  // Refreshes screen when returning to this page, after eg. logging in or out
         super.onResume();
-        new ConnectionCheck().conMgr(this);
+        StatusService.StaticStatusService.cc.conMgr();
         drawScreen();
     }
 
