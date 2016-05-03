@@ -59,32 +59,16 @@ public class LoginDialog extends AppCompatActivity {
 
 
     /**
-    * Checks whether login was successful and acts accordingly.
+    * Checks whether the loging's response is correct and acts accordingly.
+    * If authentication response "cannot be computed" empty TextViews and notify user.
     * @param response the reponse from the server fo the API-call AuthenticateUser.
     */
     public void authenticated(String response) {
         Log.i("login response", response);
         boolean parsingWorked = StatusService.StaticStatusService.jc.newJson(response);
         if (parsingWorked && StatusService.StaticStatusService.sc.checkStatus()) {
-            //ArrayList<HashMap<String, String>> tasks = StatusService.StaticStatusService.jc.getObjects();
-            //Log.i("status", StatusService.StaticStatusService.jc.getProperty("status"));
-            if (StatusService.StaticStatusService.sc.checkStatus()) {
-                StatusService.StaticStatusService.authToken = StatusService.StaticStatusService.jc.getProperty("auth_token");
-                Log.i("token", "uusi" + StatusService.StaticStatusService.authToken);
-                StatusService.StaticStatusService.fh.saveToken();
-                Toast.makeText(this, "Kirjautuminen onnistui.",
-                    Toast.LENGTH_LONG).show();
-                StatusService.setLoggedIn(true);
-                String suburl = StatusService.StaticStatusService.sc.DescribeSubUsers();
-                hp = new HTTPSRequester(new GotSubUsers()).execute(suburl);
-                this.finish();
-            } else {
-                // If username or password is incorrect empty TextViews and notify user.
-                emailTV.setText("");
-                passwordTV.setText("");
-                Toast.makeText(this, "Sähköpostiosoite tai salasana väärin.",
-                    Toast.LENGTH_LONG).show();
-            }
+            // Checks whether loging in was successful or not and acts accordingly.
+            authenticationCheck();
         }
         else {
             // If authentication response "cannot be computed" empty TextViews and notify user.
@@ -92,6 +76,32 @@ public class LoginDialog extends AppCompatActivity {
             passwordTV.setText("");
             Toast.makeText(this, "Ongelma varmentamisessa, kokeile uudestaan.",
             Toast.LENGTH_LONG).show();
+        }
+    }
+    
+    /**
+    * Checks whether loging in was successful or not and acts accordingly.
+    * It Shows the user if the logging worked out or if soemthing was wrong it says that either the email or password is wrong.
+    */
+    private void authenticationCheck() {
+        //ArrayList<HashMap<String, String>> tasks = StatusService.StaticStatusService.jc.getObjects();
+        //Log.i("status", StatusService.StaticStatusService.jc.getProperty("status"));
+        if (StatusService.StaticStatusService.sc.checkStatus()) {
+            StatusService.StaticStatusService.authToken = StatusService.StaticStatusService.jc.getProperty("auth_token");
+            Log.i("token", "uusi" + StatusService.StaticStatusService.authToken);
+            StatusService.StaticStatusService.fh.saveToken();
+            Toast.makeText(this, "Kirjautuminen onnistui.",
+                Toast.LENGTH_LONG).show();
+            StatusService.setLoggedIn(true);
+            String suburl = StatusService.StaticStatusService.sc.DescribeSubUsers();
+            hp = new HTTPSRequester(new GotSubUsers()).execute(suburl);
+            this.finish();
+        } else {
+            // If username or password is incorrect empty TextViews and notify user.
+            emailTV.setText("");
+            passwordTV.setText("");
+            Toast.makeText(this, "Sähköpostiosoite tai salasana väärin.",
+                Toast.LENGTH_LONG).show();
         }
     }
 
@@ -137,42 +147,11 @@ public class LoginDialog extends AppCompatActivity {
         // Add TextView elements to the dialog
         emailTV = (EditText) login.findViewById(R.id.username);
         passwordTV = (EditText) login.findViewById(R.id.password);
-
-        // Add buttons to the dialog and set onclicklisteners
-        Button loginButton =
-            (Button) login.findViewById(R.id.login_button);
-        loginButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // On click of login button get content from TextViews and check if they match a valid user using ServerCommunication.
-                email = emailTV.getText().toString();
-                password = passwordTV.getText().toString();
-                url = StatusService.StaticStatusService.sc.AuthenticateUser(email, password);
-                Log.i("auturli", url);
-                hp = new HTTPSRequester(new loginListener()).execute(url);
-            }});
-
-        Button registerButton =
-            (Button) login.findViewById(R.id.register_button);
-        registerButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                email = emailTV.getText().toString();
-                password = passwordTV.getText().toString();
-                url = StatusService.StaticStatusService.sc.CreateUser(email, password);
-                hp = new HTTPSRequester(new registerListener()).execute(url);
-                emailTV.setText("");
-                passwordTV.setText("");
-            }
-        });
-
-        // On click of cancel button close the dialog
-        Button closePopupButton = (Button) login.findViewById(R.id.cancel_button);
-        closePopupButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }});
+        
+        // Add buttons to the dialog and set onclicklisteners.
+        createLoginButton();
+        createRegisterButton();
+        createClosePopupButton();
 
         // Force the dialog to the right size
         WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
@@ -183,7 +162,52 @@ public class LoginDialog extends AppCompatActivity {
         login.getWindow().setAttributes(lp);
     }
 
-    /**
+
+	private void createLoginButton() {
+        Button loginButton =
+                (Button) login.findViewById(R.id.login_button);
+            loginButton.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // On click of login button get content from TextViews and check if they match a valid user using ServerCommunication.
+                    email = emailTV.getText().toString();
+                    password = passwordTV.getText().toString();
+                    url = StatusService.StaticStatusService.sc.AuthenticateUser(email, password);
+                    Log.i("auturli", url);
+                    hp = new HTTPSRequester(new loginListener()).execute(url);
+                }});
+	}
+    
+	private void createRegisterButton() {
+        Button registerButton =
+                (Button) login.findViewById(R.id.register_button);
+            registerButton.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    email = emailTV.getText().toString();
+                    password = passwordTV.getText().toString();
+                    url = StatusService.StaticStatusService.sc.CreateUser(email, password);
+                    hp = new HTTPSRequester(new registerListener()).execute(url);
+                    emailTV.setText("");
+                    passwordTV.setText("");
+                }
+            });
+	}
+	
+	// On click of cancel button close the dialog
+    private void createClosePopupButton() {
+        Button closePopupButton = (Button) login.findViewById(R.id.cancel_button);
+        closePopupButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }});
+	}
+
+
+
+
+	/**
      * A listener that checks the response for DescribeSubUsers.
      * If it is successful, draw an alertdialog on screen which the user can use to select the desired sub-user.
      */
