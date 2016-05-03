@@ -167,7 +167,7 @@ public class TasksFragment extends Fragment implements View.OnClickListener {
     }
 
     /**
-    * Draws imagebuttons with task video thumbnails.
+    * Draws imagebuttons with task video thumbnails and sets to the upper-left corner the category-icon too.
     */
     private void drawImages() {
         LinearLayout category = (LinearLayout) view.findViewById(R.id.category_icon);
@@ -182,7 +182,14 @@ public class TasksFragment extends Fragment implements View.OnClickListener {
             Log.e("Image error", e.toString());
         }
 
+        createCategoryButtons();
+    }
 
+    /**
+    * Draws the task-icons to the screen.
+    * TODO: In the future it must fit the icons to a grid and place them based in the coordinates (that would be of the grid's).
+    */
+    private void createCategoryButtons() {
         RelativeLayout rl = (RelativeLayout) view.findViewById(R.id.tasks);
 
         ImageButton[] taskbutton = new ImageButton[tasks.size()];

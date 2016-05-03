@@ -250,7 +250,7 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
 
     /**
     * Draws the category-icons to the screen.
-    * TODO: In the future it must fit the icons to a grid based and place them based in the coordinates (that would be of the grid's).
+    * TODO: In the future it must fit the icons to a grid and place them based in the coordinates (that would be of the grid's).
     */
     private void createCategoryButtons(RelativeLayout rl) {
         ImageButton[] categorybutton = new ImageButton[categories.size()];
