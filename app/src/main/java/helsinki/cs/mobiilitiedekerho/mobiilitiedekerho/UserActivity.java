@@ -150,14 +150,7 @@ public class UserActivity extends AppCompatActivity {
         logoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                StatusService.setLoggedIn(false);
-                Toast.makeText(getApplication(), "Olet nyt kirjautunut ulos Mobiilitiedekerhosta", Toast.LENGTH_LONG).show();
-
-                //Removes token from SharedPreferences.
-                StatusService.StaticStatusService.context.getSharedPreferences("mobiilitiedekerho", Context.MODE_PRIVATE).edit().clear().commit();
-
-                String url = StatusService.StaticStatusService.sc.AnonymousSession();
-                hp = new HTTPSRequester(new GotToken()).execute(url);
+                logoutAndNotifyTheUser();
             }
         });
 
@@ -178,6 +171,21 @@ public class UserActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+
+
+    /**
+    * Logouts and shows a dialog to the user about it.
+    */
+    private void logoutAndNotifyTheUser() {
+        StatusService.setLoggedIn(false);
+        Toast.makeText(getApplication(), "Olet nyt kirjautunut ulos Mobiilitiedekerhosta", Toast.LENGTH_LONG).show();
+
+        //Removes token from SharedPreferences.
+        StatusService.StaticStatusService.context.getSharedPreferences("mobiilitiedekerho", Context.MODE_PRIVATE).edit().clear().commit();
+
+        String url = StatusService.StaticStatusService.sc.AnonymousSession();
+        hp = new HTTPSRequester(new GotToken()).execute(url);
     }
 
     /**
