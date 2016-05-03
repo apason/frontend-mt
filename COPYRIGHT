@@ -1,15 +1,16 @@
 
-The project is under copyright of Helsingin Yliopisto with its respecting license.
+The project is under copyright of Helsingin Yliopisto with the MIT License.
+The license can be found in the file: MIT_LICENSE
 
 
 All Java code under app/src/main/java/name/cpr/ is copyright of Cristian Perez under the MIT license.
-(Also VideoScreen is bades in the example activity.)
+(Also VideoScreen is based in the example activity.)
 Its license can be found in VideoEnabledWebView-MIT_LICENSE
-(https://github.com/cprcrack/VideoEnabledWebView)
+(See https://github.com/cprcrack/VideoEnabledWebView for more information.)
+
 
 
 External library copyrights and licenses:
-
 
 
 Files google* and gson* in the directory app/libs are under copyrigtht of: Google Inc.
@@ -17,8 +18,3 @@ Files httpclient* and httpcore* in the directory app/libs are under copyrigtht o
 
 License: Apache License Version 2.0
 The license can be found in the file APACHE_LICENSE
-
-
-Files aws* in the directory app/libs are under copyrigtht of: ~ Amazon Inc.
-Library file in libs/aws-android-sdk-cognito-2.2.12.jar is under the Amazon Software License it can be found in the file LICENSE_AMAZON.
-The others aws* libs in /libs are under the Apache License Version 2.0. The license can be found in the file APACHE_LICENSE
