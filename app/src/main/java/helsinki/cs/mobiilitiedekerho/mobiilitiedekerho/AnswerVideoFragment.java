@@ -73,36 +73,44 @@ public class AnswerVideoFragment extends Fragment implements View.OnClickListene
     }
 
     // Takes care of drawing some of the fragment's elements on screen.
+    // That is of the answerbuttons.
     private void answers(String response) {
         Log.i("responssi", response);
         LinearLayout ll = (LinearLayout) view.findViewById(R.id.answers);
         ll.setOrientation(LinearLayout.HORIZONTAL);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         lp.setMargins(0, 0, 0, 15);
+        
         // Execute this if we got an acceptable answer from the server
         boolean parsingWorked = StatusService.StaticStatusService.jc.newJson(response);
         if (parsingWorked && StatusService.StaticStatusService.sc.checkStatus()) {
-            ArrayList<HashMap<String, String>> answers = StatusService.StaticStatusService.jc.getObjects();
+            this.drawAnswerButtons(ll, lp);
+        }
+        //TODO: else?
+    }
+    
+    // Draws the answerbuttons to the screen.
+    private void drawAnswerButtons(LinearLayout ll, LinearLayout.LayoutParams lp) {
+        ArrayList<HashMap<String, String>> answers = StatusService.StaticStatusService.jc.getObjects();
 
-            // Draws the chosen number of taskvideobuttons:
-            Button[] answerbutton = new Button[answers.size()];
-            for (int i = 0; i < answers.size(); i++) {
-                if (!answers.get(i).isEmpty()) {
+        // Draws the chosen number of answervideobuttons:
+        Button[] answerbutton = new Button[answers.size()];
+        for (int i = 0; i < answers.size(); i++) {
+            if (!answers.get(i).isEmpty()) {
 
-                    String id = answers.get(i).get("id");
-                    answerbutton[i] = new Button(getContext());
-                    answerbutton[i].setOnClickListener(this);
-                    answerbutton[i].setLayoutParams(lp);
-                    answerbutton[i].setBackgroundColor(Color.RED);
-                    answerbutton[i].setText("VASTAUS "+id);
-                    final float scale = getContext().getResources().getDisplayMetrics().density;
-                    answerbutton[i].setMinimumHeight((int) (50 * scale + 0.5f));
-                    answerbutton[i].setMinimumWidth((int) (100 * scale + 0.5f));
+                String id = answers.get(i).get("id");
+                answerbutton[i] = new Button(getContext());
+                answerbutton[i].setOnClickListener(this);
+                answerbutton[i].setLayoutParams(lp);
+                answerbutton[i].setBackgroundColor(Color.RED);
+                answerbutton[i].setText("VASTAUS "+id);
+                final float scale = getContext().getResources().getDisplayMetrics().density;
+                answerbutton[i].setMinimumHeight((int) (50 * scale + 0.5f));
+                answerbutton[i].setMinimumWidth((int) (100 * scale + 0.5f));
 
-                    ((ViewGroup.MarginLayoutParams) answerbutton[i].getLayoutParams()).leftMargin = 7;
-                    answerbutton[i].setId(Integer.parseInt(answers.get(i).get("id")));
-                    ll.addView(answerbutton[i], lp);
-                }
+                ((ViewGroup.MarginLayoutParams) answerbutton[i].getLayoutParams()).leftMargin = 7;
+                answerbutton[i].setId(Integer.parseInt(answers.get(i).get("id")));
+                ll.addView(answerbutton[i], lp);
             }
         }
     }
