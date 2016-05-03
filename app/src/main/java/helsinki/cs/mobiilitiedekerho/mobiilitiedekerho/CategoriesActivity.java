@@ -11,15 +11,20 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.LinearLayout;
 
+
+/**
+ *  A class responsible for adding the needed fragments to show the categories
+ */
 public class CategoriesActivity extends AppCompatActivity {
 
     public final static String EXTRA_MESSAGE_CATEGORY = "helsinki.cs.mobiilitiedekerho.mobiilitiedekerho.CATEGORY";
     LinearLayout ll;
 
+    // Adds the fragments needed for this activity to FragmentTransaction
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        //Cheks if there is an internet connection available. Note:  isConnectedOrConnecting () is true if connection is being established, but hasn't already.
-        new ConnectionCheck().conMgr(this);
+        //  Checks if there is an internet connection available. Note:  isConnectedOrConnecting () is true if connection is being established, but hasn't already.
+        StatusService.StaticStatusService.cc.conMgr();
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.categories_activity);
@@ -32,20 +37,27 @@ public class CategoriesActivity extends AppCompatActivity {
         transaction.commit();
     }
 
-    //Starts CategoryActivity with the particular task chosen
+    /**
+    * Starts CategoryActivity with the particular task chosen.
+    * @param id the task id.
+    */
     public void startCategory(String id) {
         Intent intent = new Intent(this, CategoryActivity.class);
         intent.putExtra(EXTRA_MESSAGE_CATEGORY, id);
         startActivity(intent);
     }
 
+    // If the user returns to this activity, then do the following
     @Override
     public void onResume() {  // Refreshes screen when returning to this page, after eg. logging in or out
         super.onResume();
-        new ConnectionCheck().conMgr(this);
+        StatusService.StaticStatusService.cc.conMgr();
         drawScreen();
     }
 
+    /**
+    * Draws the needed components to the screen.
+    */
     public void drawScreen() {
         CategoriesFragment cf = new CategoriesFragment();
         HomeButtonFragment hbf = new HomeButtonFragment();

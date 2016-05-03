@@ -151,6 +151,7 @@ public class JsonConverter {
     }
 
     /**
+     * Use this to get the all objects in the JSON from the server.  
      * @return Arraylist of HashMaps containing all OBJECTS
      * (see the JsonResponse convention) of the json.
      * Note that return value can be an empty list.
@@ -160,8 +161,8 @@ public class JsonConverter {
     }
 
     /**
-     * @return first (or only) returned object.
-     * Note that return value can be null.
+     * Use this to get the first (or only) object in the JSON from the server. 
+     * @return first (or only) returned object. Note: the returned value can be null.
      */
     public HashMap<String, String> getObject(){
         if (objects.size() != 0) return objects.get(0);

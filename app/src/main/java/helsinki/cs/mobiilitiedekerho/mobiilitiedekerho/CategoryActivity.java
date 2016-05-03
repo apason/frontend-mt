@@ -5,6 +5,10 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 
+
+/**
+* An activity responsible of managing the category-view and the task-buttons.
+*/
 public class CategoryActivity extends AppCompatActivity {
 
     // task_id viestinä (MESSAGE) TaskActivity.javalle:
@@ -21,7 +25,7 @@ public class CategoryActivity extends AppCompatActivity {
 
         setContentView(R.layout.category_layout);
 
-        new ConnectionCheck().conMgr(this);
+        StatusService.StaticStatusService.cc.conMgr();
 
         TasksFragment tf = new TasksFragment();
         HomeButtonFragment hbf = new HomeButtonFragment();
@@ -46,10 +50,13 @@ public class CategoryActivity extends AppCompatActivity {
     @Override
     public void onResume() {  // Refreshes screen when returning to this page, after eg. logging in or out
         super.onResume();
-        new ConnectionCheck().conMgr(this);
+        StatusService.StaticStatusService.cc.conMgr();
         drawScreen();
     }
 
+    /**
+    * Draws the needed components to the screen.
+    */
     public void drawScreen() {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         Intent intent = getIntent();

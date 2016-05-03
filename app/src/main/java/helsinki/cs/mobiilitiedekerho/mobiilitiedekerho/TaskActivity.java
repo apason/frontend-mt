@@ -8,6 +8,9 @@ import android.util.Log;
 import android.view.Window;
 
 //public class TaskActivity extends FragmentActivity {
+/**
+* No idea, guess that something about tasks... ???
+*/
 public class TaskActivity extends AppCompatActivity {
 
     public final static String EXTRA_MESSAGE_URL = "helsinki.cs.mobiilitiedekerho.mobiilitiedekerho.CATEGORY";
@@ -18,7 +21,10 @@ public class TaskActivity extends AppCompatActivity {
         // Draw components described in activity_main.xml on screen
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
-        new ConnectionCheck().conMgr(getApplicationContext());
+        StatusService.StaticStatusService.context = getApplicationContext(); //needed for saving files to internal memory.
+        StatusService.StaticStatusService.dialogContext = TaskActivity.this;
+
+        StatusService.StaticStatusService.cc.conMgr();
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.task_activity);
@@ -52,6 +58,9 @@ public class TaskActivity extends AppCompatActivity {
         transaction.commit();
     }
 
+    /**
+    * ???
+    */
     public void playback(String uri, String contentType) {
         Intent intent = new Intent(this, VideoScreen.class);
         StatusService.StaticStatusService.url = uri;
@@ -62,10 +71,13 @@ public class TaskActivity extends AppCompatActivity {
     @Override
     public void onResume() {  // Refreshes screen when returning to this page, after eg. logging in or out
         super.onResume();
-        new ConnectionCheck().conMgr(this);
+        StatusService.StaticStatusService.cc.conMgr();
         drawScreen();
     }
 
+    /**
+    * Draws the needed components to the screen.
+    */
     public void drawScreen() {
         CameraFragment cf = new CameraFragment();
         AnswerVideoFragment avf = new AnswerVideoFragment();

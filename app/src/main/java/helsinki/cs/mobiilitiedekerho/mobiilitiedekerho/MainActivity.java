@@ -16,6 +16,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+
+/**
+ * Main activity of the app.
+ * It does initialize the process.
+ * And also servers as the Main-menu.
+ * TODO: A separate class for the initialization?
+ */
 public class MainActivity extends AppCompatActivity {
 
     private AsyncTask hp = null;
@@ -135,16 +142,17 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    // A method that draws the required objects on screen
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        new ConnectionCheck().conMgr(this);
-
-
         new StatusService();
         StatusService.StaticStatusService.context = getApplicationContext(); //needed for saving files to internal memory.
-        
+        StatusService.StaticStatusService.dialogContext = MainActivity.this;
+
+        StatusService.StaticStatusService.cc.conMgr();
+
         //Saves the screen resolution for being able to show correct sized images.
         DisplayMetrics metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
@@ -159,9 +167,10 @@ public class MainActivity extends AppCompatActivity {
             String url = StatusService.StaticStatusService.sc.AnonymousSession();
             hp = new HTTPSRequester(new GotToken()).execute(url);
         }
-        
+
     }
 
+    // This is executed every time the user accessess this activity
     @Override
     protected void onStart() {
         super.onStart();
@@ -174,25 +183,29 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    // This is executed every time the user returns to this activity e.g. onBackPress
     @Override
     public void onResume() {  // Refreshes screen when returning to this page, after eg. logging in or out
         super.onResume();
-        new ConnectionCheck().conMgr(this);
+        StatusService.StaticStatusService.cc.conMgr();
         drawScreen();
     }
 
-
+    // This initiates the drawScreen method
+    // Can be used also to do "extra-stuff" before drawing.
     public void start() {
-        // TODO: Maybe some kind of data-preloading.
         drawScreen();
     }
 
+    /**
+     * Draws the needed components to the screen.
+     */
     public void drawScreen() {
         setContentView(R.layout.main_activity);
         LoginFragment lf = new LoginFragment();
         UserVideosFragment uvf = new UserVideosFragment();
         InfoTextFragment itf = new InfoTextFragment();
-        
+
         //taskId is -1 so InfoTextFragment displays user info
         Bundle bundle = new Bundle();
         bundle.putString("task", "-1");
@@ -208,16 +221,30 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * Starts the CategoriesActivity.
+     */
     public void startCategories() {
         Intent intent = new Intent(this, CategoriesActivity.class);
         startActivity(intent);
     }
 
+    /**
+     * Starts the UserActivity.
+     */
     public void startUserActivity() {
         Intent intent = new Intent(this, UserActivity.class);
         startActivity(intent);
     }
 
+
+    /**
+     * A method for taking care to notify VideoScreen the right type of the media to be played.
+     * And starts it.
+     * Note: It uses StatusService's variables for this.
+     * @param uri Uri to be streamed or well readed by the WebView.
+     * @param mediaTypee the media-type of the stuff, "video" or "image".
+     */
     public void playback(String uri, String mediaTypee) {
         Intent intent = new Intent(this, VideoScreen.class);
         StatusService.StaticStatusService.url = uri;

@@ -14,9 +14,8 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 
-
 /**
- * Activity to create new sub-users.
+ * An activity used to create new sub-users.
  */
 public class SubUserActivity extends AppCompatActivity {
 
@@ -30,8 +29,8 @@ public class SubUserActivity extends AppCompatActivity {
 
     
     /**
-     * A listener that checks if saving sub-user worked out and notifies the user of the result.
-     */
+    * A listener that checks if saving sub-user worked out and notifies the user of the result.
+    */
     public class SubListener implements TaskCompleted {
         @Override
         public void taskCompleted(String response) {
@@ -57,13 +56,13 @@ public class SubUserActivity extends AppCompatActivity {
         }
     }
 
-
+    // Draws the required objects on screen
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // Inflate the layout for this activity
         super.onCreate(savedInstanceState);
 
-        new ConnectionCheck().conMgr(this);
+        StatusService.StaticStatusService.cc.conMgr();
 
         setContentView(R.layout.sub_user_activity);
 
@@ -93,15 +92,17 @@ public class SubUserActivity extends AppCompatActivity {
         iv = (ImageView) findViewById(R.id.thumbnailpreview);
     }
 
+    /**
+    * Notifies the server to crate a new subuser for the current user.
+    * Makes SubListener to listen to the response.
+    */
     public void saveSubUser(String subuser) {
         String url = StatusService.StaticStatusService.sc.CreateSubUser(subuser);
-        Log.i("urli", url);
         hp = new HTTPSRequester(new SubListener()).execute(url);
     }
 
-    /**
-     * If the image capture is successful show the image in the ImageView iv
-     */
+
+     // If the image capture is successful show the image in the ImageView iv
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == SubUserActivity.this.RESULT_OK) {

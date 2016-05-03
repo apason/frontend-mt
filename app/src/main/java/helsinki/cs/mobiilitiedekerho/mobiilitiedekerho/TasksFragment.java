@@ -19,6 +19,9 @@ import android.widget.RelativeLayout;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ *  A class responsible for taking care of the individual tasks inside a category.
+ */
 public class TasksFragment extends Fragment implements View.OnClickListener {
 
 
@@ -32,6 +35,10 @@ public class TasksFragment extends Fragment implements View.OnClickListener {
     private AsyncTask hp = null;
 
     
+    /**
+     * A listener that takes the response of the DescribeTasksByCategory-API-call and calls the tasks-method with the response.
+     * Just that.
+     */
     public class listener implements TaskCompleted {
         @Override
         public void taskCompleted(String response) {
@@ -39,6 +46,10 @@ public class TasksFragment extends Fragment implements View.OnClickListener {
         }
     }
 
+    /**
+     * A listener that takes the response of S3Upload and if succes it calls drawImages-method, otherwise checkErrors-method.
+     * Just that.
+     */
     public class taskImgsDownloaded implements TaskCompleted {
         @Override
         public void taskCompleted(String response) {
@@ -47,6 +58,10 @@ public class TasksFragment extends Fragment implements View.OnClickListener {
         }
     }
 
+    /**
+     * A listener that checks if the images that could not be downlaoded last time ahd been downloaded right this time.
+     * TODO: This method does nothing at the moment actually, makes some error handling.
+     */
     public class restOfImgsDownloaded implements TaskCompleted {
         @Override
         public void taskCompleted(String response) {
@@ -77,6 +92,11 @@ public class TasksFragment extends Fragment implements View.OnClickListener {
         return view;
     }
 
+    /**
+     * Checks if the tasks' icons are already in the device and if not it downloads the ones that are missing.
+     * If no missing it calls drawImages() if some missing it calls S3Download correctly.
+     * @param response contains the response form the server to the API-call DescribeTasksByCategory.
+     */
     private void tasks(String response) {
         Log.i("responssi", response);
         boolean parsingWorked = StatusService.StaticStatusService.jc.newJson(response);
@@ -111,6 +131,12 @@ public class TasksFragment extends Fragment implements View.OnClickListener {
         //TODO: else?
     }
 
+    /**
+     * Checks which erros has happened in S3Download.
+     * If "failure" it tries again if not already; if names and url don't match in size then nothing for now.
+     * At last it does try to get again the images that could not be got last time.
+     * @param response the Response from S3Download.
+     */
     private void checkErrors(String response) {
         // Communicating with S3 failed, try again.
         if (response.equals("failure")) {
@@ -140,7 +166,9 @@ public class TasksFragment extends Fragment implements View.OnClickListener {
         }
     }
 
-    //draws imagebuttons with task video thumbnails
+    /**
+    * Draws imagebuttons with task video thumbnails and sets to the upper-left corner the category-icon too.
+    */
     private void drawImages() {
         LinearLayout category = (LinearLayout) view.findViewById(R.id.category_icon);
         try {
@@ -154,7 +182,14 @@ public class TasksFragment extends Fragment implements View.OnClickListener {
             Log.e("Image error", e.toString());
         }
 
+        createCategoryButtons();
+    }
 
+    /**
+    * Draws the task-icons to the screen.
+    * TODO: In the future it must fit the icons to a grid and place them based in the coordinates (that would be of the grid's).
+    */
+    private void createCategoryButtons() {
         RelativeLayout rl = (RelativeLayout) view.findViewById(R.id.tasks);
 
         ImageButton[] taskbutton = new ImageButton[tasks.size()];

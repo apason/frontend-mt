@@ -20,8 +20,9 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+
 /**
- * Activity responsible for the user info screen
+ * Activity responsible for the user info screen.
  */
 public class UserActivity extends AppCompatActivity {
 
@@ -34,7 +35,9 @@ public class UserActivity extends AppCompatActivity {
     Button subUser3;
     private ArrayList<HashMap<String, String>> subUsers;
 
-
+    /**
+    * A listener that checks if it returned response contains a valid token for the user.
+    */
     public class GotToken implements TaskCompleted {
         @Override
         public void taskCompleted(String response) {
@@ -66,7 +69,12 @@ public class UserActivity extends AppCompatActivity {
             }
         }
     }
+
     
+    /**
+    * A listener that checks if it returned response contains a valid EULA.
+    * If it is valid it sets it to the local variable eula otherwise it sets it to "Ongelma käyttöehtojen lataamisessa."
+    */
     public class EULAListener implements TaskCompleted {
         @Override
         public void taskCompleted(String response) {
@@ -78,10 +86,10 @@ public class UserActivity extends AppCompatActivity {
             else eula = "Ongelma käyttöehtojen lataamisessa."; //Jotta ei crassha null viitteeseen.
         }
     }
-    
+
     /**
-     * A listener that checks if saving the privacy level worked out and notifies the user of the result.
-     */
+    * A listener that checks if saving the privacy level worked out and notifies the user of the result.
+    */
     public class PrivacyListener implements TaskCompleted {
         @Override
         public void taskCompleted(String response) {
@@ -98,19 +106,21 @@ public class UserActivity extends AppCompatActivity {
         }
     }
 
-    
     // Draw content of user_activity.xml to the screen
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        new ConnectionCheck().conMgr(getApplicationContext());
+        StatusService.StaticStatusService.context = getApplicationContext(); //needed for saving files to internal memory.
+
+        StatusService.StaticStatusService.cc.conMgr();
 
         setContentView(R.layout.user_activity);
 
         String url = StatusService.StaticStatusService.sc.GetEULA();
         hp = new HTTPSRequester(new UserActivity.EULAListener()).execute(url);
 
+        // The radiobuttons responsible for changing the privacy level
         RadioButton a = (RadioButton) findViewById(R.id.onlyme);
         RadioButton b = (RadioButton) findViewById(R.id.registered);
         RadioButton c = (RadioButton) findViewById(R.id.anyone);
@@ -127,7 +137,7 @@ public class UserActivity extends AppCompatActivity {
                 c.setChecked(true);
                 break;
         }
-
+        // The buttons responsible for changing the sub-user
         subUser1 = (Button) findViewById(R.id.subUser1);
 
         subUser2 = (Button) findViewById(R.id.subUser2);
@@ -140,14 +150,7 @@ public class UserActivity extends AppCompatActivity {
         logoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                StatusService.setLoggedIn(false);
-                Toast.makeText(getApplication(), "Olet nyt kirjautunut ulos Mobiilitiedekerhosta", Toast.LENGTH_LONG).show();
-
-                //Removes token from SharedPreferences.
-                StatusService.StaticStatusService.context.getSharedPreferences("mobiilitiedekerho", Context.MODE_PRIVATE).edit().clear().commit();
-
-                String url = StatusService.StaticStatusService.sc.AnonymousSession();
-                hp = new HTTPSRequester(new GotToken()).execute(url);
+                logoutAndNotifyTheUser();
             }
         });
 
@@ -170,6 +173,24 @@ public class UserActivity extends AppCompatActivity {
         });
     }
 
+
+    /**
+    * Logouts and shows a dialog to the user about it.
+    */
+    private void logoutAndNotifyTheUser() {
+        StatusService.setLoggedIn(false);
+        Toast.makeText(getApplication(), "Olet nyt kirjautunut ulos Mobiilitiedekerhosta", Toast.LENGTH_LONG).show();
+
+        //Removes token from SharedPreferences.
+        StatusService.StaticStatusService.context.getSharedPreferences("mobiilitiedekerho", Context.MODE_PRIVATE).edit().clear().commit();
+
+        String url = StatusService.StaticStatusService.sc.AnonymousSession();
+        hp = new HTTPSRequester(new GotToken()).execute(url);
+    }
+
+    /**
+    * Shows the user agreement
+    */
     public void showUserAgreement() {
         AlertDialog.Builder alert = new AlertDialog.Builder(UserActivity.this);
         alert.setTitle("Mobiilitiedekerhon käyttöehdot");
@@ -186,15 +207,18 @@ public class UserActivity extends AppCompatActivity {
         });
         alert.show();
     }
-    
+
+    /**
+    * After the user has looged out call this, it pass the crrent activity to MainActivity.
+    */
     public void afterLogout() {
         Intent intent = new Intent(getApplication(), MainActivity.class);
         startActivity(intent);
     }
 
     /**
-     * Method for handling changes in usage rights the user makes.
-     */
+    * Method for handling changes in usage rights the user makes.
+    */
     public void radioButtonOnClick(View view) {
         boolean checked = ((RadioButton) view).isChecked();
 
@@ -215,6 +239,10 @@ public class UserActivity extends AppCompatActivity {
         }
     }
 
+    /**
+    * Sets the privacy level for the current user
+    * @param i the userights code.
+    */
     public void setPrivacyLevel(int i) {
     
         //Saves the privacy level for later use.
@@ -227,9 +255,10 @@ public class UserActivity extends AppCompatActivity {
     }
 
     /**
-     * A listener that checks the response for DescribeSubUsers.
-     * If it is successful, draw an alertdialog on screen which the user can use to select the desired sub-user.
-     */
+    * A listener that checks the response for DescribeSubUsers.
+    * If it is successful, draw an alertdialog on screen which the user can use to select the desired sub-user.
+    * TODO: Slice this to pieces!
+    */
     public class GotSubUsers implements TaskCompleted {
         @Override
         public void taskCompleted(String response) {
@@ -301,6 +330,7 @@ public class UserActivity extends AppCompatActivity {
         }
     }
 
+    // Do this when the user first starts this activity.
     @Override
     protected void onStart() {
         super.onStart();

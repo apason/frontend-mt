@@ -1,3 +1,7 @@
+//NOT IN USE AND BROKEN AT THE MOMENT.
+//MEANT FOR SOME KIND OF DATA-PRELOADING.
+//SERVICE SHOPULD BE USED FOR THIS.
+//
 // package helsinki.cs.mobiilitiedekerho.mobiilitiedekerho;
 // 
 // import android.os.AsyncTask;

@@ -16,6 +16,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 
+/**
+ * A class that handles the answer-videos and -images that users have sent.
+ */
 public class AnswerVideoFragment extends Fragment implements View.OnClickListener {
 
     private View view;
@@ -24,6 +27,9 @@ public class AnswerVideoFragment extends Fragment implements View.OnClickListene
     private String answerURL;
 
     
+    /**
+    * A listener for answers from the database.
+    */
     public class AnswerListener implements TaskCompleted {
         @Override
         public void taskCompleted(String response) {
@@ -31,6 +37,9 @@ public class AnswerVideoFragment extends Fragment implements View.OnClickListene
         }
     }
 
+    /**
+    * A listener for the answer description.
+    */
     public class URLListener implements TaskCompleted {
         @Override
         public void taskCompleted(String response) {
@@ -39,6 +48,7 @@ public class AnswerVideoFragment extends Fragment implements View.OnClickListene
     }
 
     
+    // Draws the content of this fragments content on the screen
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -54,6 +64,7 @@ public class AnswerVideoFragment extends Fragment implements View.OnClickListene
         return view;
     }
 
+    // An OnClickListener for the answerbutton
     @Override
     public void onClick(View v) {
         int button = v.getId();
@@ -61,46 +72,50 @@ public class AnswerVideoFragment extends Fragment implements View.OnClickListene
         hp = new HTTPSRequester(new URLListener()).execute(url);
     }
 
+    // Takes care of drawing some of the fragment's elements on screen.
+    // That is of the answerbuttons.
     private void answers(String response) {
         Log.i("responssi", response);
         LinearLayout ll = (LinearLayout) view.findViewById(R.id.answers);
         ll.setOrientation(LinearLayout.HORIZONTAL);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         lp.setMargins(0, 0, 0, 15);
+        
+        // Execute this if we got an acceptable answer from the server
         boolean parsingWorked = StatusService.StaticStatusService.jc.newJson(response);
         if (parsingWorked && StatusService.StaticStatusService.sc.checkStatus()) {
-            ArrayList<HashMap<String, String>> answers = StatusService.StaticStatusService.jc.getObjects();
+            this.drawAnswerButtons(ll, lp);
+        }
+        //TODO: else?
+    }
+    
+    // Draws the answerbuttons to the screen.
+    private void drawAnswerButtons(LinearLayout ll, LinearLayout.LayoutParams lp) {
+        ArrayList<HashMap<String, String>> answers = StatusService.StaticStatusService.jc.getObjects();
 
-            //draws chosen number of taskvideobuttons:
-            Button[] answerbutton = new Button[10];
-            for (int i = 0; i < answers.size(); i++) {
-                if (!answers.get(i).isEmpty()) {
+        // Draws the chosen number of answervideobuttons:
+        Button[] answerbutton = new Button[answers.size()];
+        for (int i = 0; i < answers.size(); i++) {
+            if (!answers.get(i).isEmpty()) {
 
-                    String id = answers.get(i).get("id");
-                    //int imageID = getResources().getIdentifier(id, "drawable", getActivity().getApplicationContext().getPackageName());
-                    answerbutton[i] = new Button(getContext());
-                    //answerbutton[i].setImageResource(imageID);
-                    //answerbutton[i].setScaleType(ImageView.ScaleType.FIT_CENTER); // skaalaa vastausvideon thumbnailin, jos erikokoisia
-                    answerbutton[i].setOnClickListener(this);
-                    answerbutton[i].setLayoutParams(lp);
-                    answerbutton[i].setBackgroundColor(Color.RED);
-                    answerbutton[i].setText("VASTAUS "+id);
-                    final float scale = getContext().getResources().getDisplayMetrics().density;
-                    answerbutton[i].setMinimumHeight((int) (50 * scale + 0.5f));
-                    answerbutton[i].setMinimumWidth((int) (100 * scale + 0.5f));
+                String id = answers.get(i).get("id");
+                answerbutton[i] = new Button(getContext());
+                answerbutton[i].setOnClickListener(this);
+                answerbutton[i].setLayoutParams(lp);
+                answerbutton[i].setBackgroundColor(Color.RED);
+                answerbutton[i].setText("VASTAUS "+id);
+                final float scale = getContext().getResources().getDisplayMetrics().density;
+                answerbutton[i].setMinimumHeight((int) (50 * scale + 0.5f));
+                answerbutton[i].setMinimumWidth((int) (100 * scale + 0.5f));
 
-                    ((ViewGroup.MarginLayoutParams) answerbutton[i].getLayoutParams()).leftMargin = 7;
-                    //TAI: ((MarginLayoutParams) answerbutton[i].getLayoutParams()).leftMargin = 7;
-                    answerbutton[i].setId(Integer.parseInt(answers.get(i).get("id")));
-                    ll.addView(answerbutton[i], lp);
-                }
+                ((ViewGroup.MarginLayoutParams) answerbutton[i].getLayoutParams()).leftMargin = 7;
+                answerbutton[i].setId(Integer.parseInt(answers.get(i).get("id")));
+                ll.addView(answerbutton[i], lp);
             }
         }
-        //TODO else?
-        
     }
 
-    //Gets URL from database and calls activity's method to play video in VideoScreen object.
+    // Gets URL from database and calls activity's method to play video in VideoScreen object.
     private void answerURL (String response) {
         boolean parsingWorked = StatusService.StaticStatusService.jc.newJson(response);
         if (parsingWorked && StatusService.StaticStatusService.sc.checkStatus()) {
@@ -109,6 +124,5 @@ public class AnswerVideoFragment extends Fragment implements View.OnClickListene
             String answerType = answer.get(0).get("answer_type");
             ((TaskActivity) getActivity()).playback(answerURL, answerType);
         }
-        //TODO else?
     }
 }

@@ -21,6 +21,10 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+
+/**
+* A fragment-class to show a view of the current subuser's answers.
+*/
 public class UserVideosFragment extends Fragment implements View.OnClickListener {
 
     private Dialog list = null;
@@ -30,6 +34,9 @@ public class UserVideosFragment extends Fragment implements View.OnClickListener
     
     private AsyncTask hp = null;
 
+    /**
+    * A listener for the response of DescribeSubUserAnswers.
+    */
     public class FetchUserVideos implements TaskCompleted {
         @Override
         public void taskCompleted(String response) {
@@ -56,6 +63,9 @@ public class UserVideosFragment extends Fragment implements View.OnClickListener
         hp = new HTTPSRequester(new FetchUserVideos()).execute(url);
     }
 
+    /**
+    * Something, I got tired of documenting other people's code.
+    */
     public void openUserVideoDialog(String response) {
         if(StatusService.StaticStatusService.currentSubUserID == null) {
             AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
@@ -105,7 +115,9 @@ public class UserVideosFragment extends Fragment implements View.OnClickListener
         }
     }
 
-    //draws buttons with user video thumbnails
+    /**
+    * Draws imagebuttons with task video thumbnails.
+    */
     private void drawImages() {
 
         RelativeLayout rl = (RelativeLayout) list.findViewById(R.id.uservideos);
