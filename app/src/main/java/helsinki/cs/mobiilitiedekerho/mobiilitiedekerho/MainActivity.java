@@ -147,11 +147,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        StatusService.StaticStatusService.cc.conMgr();
-
-
         new StatusService();
         StatusService.StaticStatusService.context = getApplicationContext(); //needed for saving files to internal memory.
+        StatusService.StaticStatusService.dialogContext = MainActivity.this;
+
+        StatusService.StaticStatusService.cc.conMgr();
 
         //Saves the screen resolution for being able to show correct sized images.
         DisplayMetrics metrics = new DisplayMetrics();

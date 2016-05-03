@@ -1,6 +1,8 @@
 package helsinki.cs.mobiilitiedekerho.mobiilitiedekerho;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -12,6 +14,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 
 /**
@@ -26,6 +31,7 @@ public class LoginDialog extends AppCompatActivity {
     private String url;
     private String email;
     private String password;
+    private ArrayList<HashMap<String, String>> subUsers;
     
     private AsyncTask hp = null;
 
@@ -69,6 +75,8 @@ public class LoginDialog extends AppCompatActivity {
                 Toast.makeText(this, "Kirjautuminen onnistui.",
                     Toast.LENGTH_LONG).show();
                 StatusService.setLoggedIn(true);
+                String suburl = StatusService.StaticStatusService.sc.DescribeSubUsers();
+                hp = new HTTPSRequester(new GotSubUsers()).execute(suburl);
                 this.finish();
             } else {
                 // If username or password is incorrect empty TextViews and notify user.
@@ -173,6 +181,59 @@ public class LoginDialog extends AppCompatActivity {
         lp.height = WindowManager.LayoutParams.MATCH_PARENT;
         login.show();
         login.getWindow().setAttributes(lp);
+    }
+
+    /**
+     * A listener that checks the response for DescribeSubUsers.
+     * If it is successful, draw an alertdialog on screen which the user can use to select the desired sub-user.
+     */
+    public class GotSubUsers implements TaskCompleted {
+        @Override
+        public void taskCompleted(String response) {
+            boolean parsingWorked = StatusService.StaticStatusService.jc.newJson(response);
+            if (parsingWorked) {
+                subUsers = StatusService.StaticStatusService.jc.getObjects();
+                if (!subUsers.isEmpty()) {
+                    Log.i("subit", "saatiin");
+                    //List<String> subList = new ArrayList<String>();
+                    //for (int i = 0; i < subUsers.size(); i++) {
+                    //    subList.add(subUsers.get(i).get("nick"));
+                    //}
+                    //CharSequence subs[] = subList.toArray(new CharSequence[subList.size()]);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(StatusService.StaticStatusService.dialogContext);
+                    builder.setTitle("Valitse käyttäjä");
+                    StatusService.StaticStatusService.currentSubUserID = subUsers.get(0).get("id");
+                    builder.setPositiveButton(subUsers.get(0).get("nick"), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            StatusService.setSubUser(subUsers.get(0).get("id"));
+                            Log.i("Current sub = ", StatusService.StaticStatusService.currentSubUserID);
+                        }
+                    });
+                    Log.i ("subilista", subUsers.toString());
+                    if(subUsers.size() >= 2) {
+                        builder.setNeutralButton(subUsers.get(1).get("nick"), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                StatusService.setSubUser(subUsers.get(1).get("id"));
+                                Log.i("Current sub = ", StatusService.StaticStatusService.currentSubUserID);
+                            }
+                        });
+                    }
+                    if(subUsers.size() == 3) {
+                        builder.setNegativeButton(subUsers.get(2).get("nick"), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                StatusService.setSubUser(subUsers.get(2).get("id"));
+                                Log.i("Current sub = ", StatusService.StaticStatusService.currentSubUserID);
+                            }
+                        });
+                    }
+
+                    builder.show();
+                }
+            }
+        }
     }
     
 }

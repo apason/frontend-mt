@@ -69,7 +69,9 @@ public class StatusService {
         /* */
         // This is for the 'helper-classes' since the apllication's context is needed for saving data, etc.
         protected static Context context;
-
+        
+        // Used for passing the correct activity's context to the login-dialog
+        protected static Context dialogContext;
 
         // For VideoScreen-activity, they are like parameters for what to show:
         // (Note supposed to be setted only in MainActivity's playVideo()-method)

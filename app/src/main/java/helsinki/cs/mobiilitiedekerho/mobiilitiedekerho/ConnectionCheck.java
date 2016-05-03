@@ -14,10 +14,10 @@ import android.util.Log;
 public class ConnectionCheck {
 
     /**
-    * Checks if network connection aviable and notifies the user if there is no network available.
-    */
+     * Checks if network connection aviable and notifies the user if there is no network available.
+     */
     public void conMgr() {
-        if (!isNetworkAvailable(StatusService.StaticStatusService.context)) {
+        if (!isNetworkAvailable()) {
             AlertDialog.Builder alert = new AlertDialog.Builder(StatusService.StaticStatusService.context);
             alert.setTitle("Tietoliikennevirhe");
             alert.setMessage("Laite ei ole yhteydessä internetiin. Suurinta osaa Mobiilitiedekerhon toiminnoista ei voi käyttää ilman toimivaa verkkoyhteyttä");
@@ -34,11 +34,11 @@ public class ConnectionCheck {
     private boolean isNetworkAvailable() {
         ConnectivityManager cm = (ConnectivityManager)StatusService.StaticStatusService.context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-        
+
         // Note: Is Connecting does not mean that the connection establisation will work out!
         // TODO: Do something appart that for what happens in the "succes/failure -branches" that is do somehting in case of connecting.
         boolean isConnected = activeNetwork != null && activeNetwork.isConnectedOrConnecting();
-        
+
         Log.i("yhteys", Boolean.toString(isConnected));
         return isConnected;
     }
