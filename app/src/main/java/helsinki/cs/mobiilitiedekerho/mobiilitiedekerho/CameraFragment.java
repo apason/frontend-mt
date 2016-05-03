@@ -121,7 +121,7 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        // If user hasn't logged in disable camera functionality.
+        // If user hasn't logged in disable uploading functionality.
         if (!StatusService.loggedIn()) {
             Intent intent = new Intent(getActivity().getApplicationContext(), LoginDialog.class);
             startActivity(intent);
@@ -131,118 +131,14 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
             upload.setContentView(R.layout.answer_upload_fragment);
             upload.setTitle("Lisää vastaus tehtävään");
 
-            //Create button that after clicking leads the user to record a video using the device's camera
-            newVideoButton =
-                    (Button) upload.findViewById(R.id.newVideoButton);
-            newVideoButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    // The directory where taken videos (and images) related to this app are stored.
-                    File mediaStorageDirectory = new File(Environment.getExternalStoragePublicDirectory(
-                            Environment.DIRECTORY_PICTURES), "Mobiilitiedekerho");
+            // Create the buttons.
+            createNewVideoButton();
+            createExistingVideoButton();
+            createNewImageButton();
+            createExistingImageButton();
+            createCancelButton();
 
-                    // Creates new folder if necessary. If the new folder could not be created, then notify ???
-                    if (!mediaStorageDirectory.exists()) {
-                        if (!mediaStorageDirectory.mkdirs()) {
-                            Log.e("Mobiilitiedekerho", "failed to create directory");
-                        }
-                    }
-
-                    // Creates a file for saving the shot video VID + timestamp + .mp4
-                    String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-
-                    // The file that was selected by the user
-                    selectedFile = new File(mediaStorageDirectory.getPath() + File.separator +
-                            "VID_" + timeStamp + ".mp4");
-                    try {
-                        selectedFile.createNewFile();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    selectedFileName = selectedFile.getName();
-
-                    // Create a new Intent to shoot video and save the result to the file specified earlier
-                    Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-                    fileUri = Uri.fromFile(selectedFile);
-
-                    // Start the intent using the device's own camera software
-                    intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
-                    startActivityForResult(intent, VIDEO_CAPTURE);
-                }
-            });
-
-            // Creates a button that after clicking leads the user to upload a video from the device's gallery.
-            existingVideoButton =
-                    (Button) upload.findViewById(R.id.existingVideoButton);
-            existingVideoButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent pickMedia = new Intent(Intent.ACTION_GET_CONTENT);
-                    pickMedia.setType("video/*");
-                    startActivityForResult(pickMedia, VIDEO_SAVED);
-                }
-            });
-
-            //Create button that after clicking leads the user to take a picture using the device's camera.
-            newImageButton =
-                    (Button) upload.findViewById(R.id.newImageButton);
-            newImageButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    // The directory where taken videos (and images) related to this app are stored.
-                    File mediaStorageDirectory = new File(Environment.getExternalStoragePublicDirectory(
-                            Environment.DIRECTORY_PICTURES), "Mobiilitiedekerho");
-
-                    // Creates new folder if necessary. If the new folder could not be created, then notify ???
-                    if (!mediaStorageDirectory.exists()) {
-                        if (!mediaStorageDirectory.mkdirs()) {
-                            Log.e("Mobiilitiedekerho", "failed to create directory");
-                        }
-                    }
-
-                    // Creates a file for saving the shot image VID + timestamp + .JPEG
-                    // TODO: the name should contain task.
-                    String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-                    selectedFile = new File(mediaStorageDirectory.getPath() + File.separator +
-                            "IID_" + timeStamp + ".JPEG");
-                    try {
-                        selectedFile.createNewFile();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    selectedFileName = selectedFile.getName();
-
-                    // Create a new Intent to shoot image and save the result to the file specified earlier
-                    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                    fileUri = Uri.fromFile(selectedFile);
-
-                    // Start the intent using the device's own camera software
-                    intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
-                    startActivityForResult(intent, IMAGE_CAPTURE);
-                }
-            });
-            // Creates a button that opens the device's image gallery
-            existingImageButton =
-                    (Button) upload.findViewById(R.id.existingImageButton);
-            existingImageButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent pickMedia = new Intent(Intent.ACTION_GET_CONTENT);
-                    pickMedia.setType("image/*");
-                    startActivityForResult(pickMedia, IMAGE_SAVED);
-                }
-            });
-
-            // Creates a button that closes the dialog
-            Button cancelButton =
-                    (Button) upload.findViewById(R.id.cancelButton);
-            cancelButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    upload.dismiss();
-                }
-            });
-
+            // Sets the buttons to the dialog.
             WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
             lp.copyFrom(upload.getWindow().getAttributes());
             lp.width = WindowManager.LayoutParams.MATCH_PARENT;
@@ -251,6 +147,130 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
             upload.getWindow().setAttributes(lp);
         }
     }
+
+
+	//Create a button that after clicking leads the user to record a video using the device's camera.
+    private void createNewVideoButton() {
+        newVideoButton =
+                (Button) upload.findViewById(R.id.newVideoButton);
+        newVideoButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // The directory where taken videos (and images) related to this app are stored.
+                File mediaStorageDirectory = new File(Environment.getExternalStoragePublicDirectory(
+                        Environment.DIRECTORY_PICTURES), "Mobiilitiedekerho");
+
+                // Creates new folder if necessary. If the new folder could not be created, then notify ???
+                if (!mediaStorageDirectory.exists()) {
+                    if (!mediaStorageDirectory.mkdirs()) {
+                        Log.e("Mobiilitiedekerho", "failed to create directory");
+                    }
+                }
+
+                // Creates a file for saving the shot video VID + timestamp + .mp4
+                String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+
+                // The file that was selected by the user
+                selectedFile = new File(mediaStorageDirectory.getPath() + File.separator +
+                        "VID_" + timeStamp + ".mp4");
+                try {
+                    selectedFile.createNewFile();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                selectedFileName = selectedFile.getName();
+
+                // Create a new Intent to shoot video and save the result to the file specified earlier
+                Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+                fileUri = Uri.fromFile(selectedFile);
+
+                // Start the intent using the device's own camera software
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
+                startActivityForResult(intent, VIDEO_CAPTURE);
+            }
+        });
+    }
+    
+    // Creates a button that after clicking leads the user to upload a video from the device's gallery.
+    private void createExistingVideoButton() {
+        existingVideoButton =
+                (Button) upload.findViewById(R.id.existingVideoButton);
+        existingVideoButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent pickMedia = new Intent(Intent.ACTION_GET_CONTENT);
+                pickMedia.setType("video/*");
+                startActivityForResult(pickMedia, VIDEO_SAVED);
+            }
+        });
+	}
+    
+    //Create button that after clicking leads the user to take a picture using the device's camera.
+	private void createNewImageButton() {
+        newImageButton =
+                (Button) upload.findViewById(R.id.newImageButton);
+        newImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // The directory where taken videos (and images) related to this app are stored.
+                File mediaStorageDirectory = new File(Environment.getExternalStoragePublicDirectory(
+                        Environment.DIRECTORY_PICTURES), "Mobiilitiedekerho");
+
+                // Creates new folder if necessary. If the new folder could not be created, then notify ???
+                if (!mediaStorageDirectory.exists()) {
+                    if (!mediaStorageDirectory.mkdirs()) {
+                        Log.e("Mobiilitiedekerho", "failed to create directory");
+                    }
+                }
+
+                // Creates a file for saving the shot image VID + timestamp + .JPEG
+                // TODO: the name should contain task.
+                String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+                selectedFile = new File(mediaStorageDirectory.getPath() + File.separator +
+                        "IID_" + timeStamp + ".JPEG");
+                try {
+                    selectedFile.createNewFile();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                selectedFileName = selectedFile.getName();
+
+                // Create a new Intent to shoot image and save the result to the file specified earlier
+                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                fileUri = Uri.fromFile(selectedFile);
+
+                // Start the intent using the device's own camera software
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
+                startActivityForResult(intent, IMAGE_CAPTURE);
+            }
+        });
+	}
+    
+	// Creates a button that opens the device's image gallery to upload a image as an asnwer.
+	private void createExistingImageButton() {
+        existingImageButton =
+                (Button) upload.findViewById(R.id.existingImageButton);
+        existingImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent pickMedia = new Intent(Intent.ACTION_GET_CONTENT);
+                pickMedia.setType("image/*");
+                startActivityForResult(pickMedia, IMAGE_SAVED);
+            }
+        });
+	}
+	
+	// Creates a button that closes the dialog
+	private void createCancelButton() {
+        Button cancelButton =
+                (Button) upload.findViewById(R.id.cancelButton);
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                upload.dismiss();
+            }
+        });
+	}
 
     // Activity handler for checking if the answer recording was successful
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
