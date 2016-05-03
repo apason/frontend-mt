@@ -322,7 +322,7 @@ public class UserActivity extends AppCompatActivity {
         }
     }
 
-    // Do this when the user first starts this activity
+    // Do this when the user first starts this activity.
     @Override
     protected void onStart() {
         super.onStart();

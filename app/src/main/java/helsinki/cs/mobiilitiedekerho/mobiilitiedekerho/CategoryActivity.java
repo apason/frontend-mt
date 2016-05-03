@@ -5,6 +5,10 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 
+
+/**
+* An activity responsible of managing the category-view and the task-buttons.
+*/
 public class CategoryActivity extends AppCompatActivity {
 
     // task_id viestinä (MESSAGE) TaskActivity.javalle:
@@ -50,6 +54,9 @@ public class CategoryActivity extends AppCompatActivity {
         drawScreen();
     }
 
+    /**
+    * Draws the needed components to the screen.
+    */
     public void drawScreen() {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         Intent intent = getIntent();

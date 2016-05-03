@@ -102,7 +102,7 @@ public class FileHandling extends AppCompatActivity {
     }
 
     /**
-    * Saves the wanted image to the Applications data directory.
+    * Saves the wanted image to the Application's data-directory.
     * It saves it as PNG.
     * @param name the to-be-saved file's name.
     * @param image the image to be saved.

@@ -10,6 +10,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 
+/**
+* A fragment-class for drawing in the upper-right corner a button thats:
+* If the user is not logged in, is a closed lock notifyaing that the user is not signed in,
+* If the user is logged in a "user-icon" showing that it is logged in.
+* TODO: It would be desirable to place here the users "avatar-icon" if setted.
+*/
 public class LoginFragment extends Fragment implements View.OnClickListener {
 
     private Dialog login = null;

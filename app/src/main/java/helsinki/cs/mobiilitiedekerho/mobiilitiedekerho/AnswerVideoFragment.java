@@ -38,7 +38,7 @@ public class AnswerVideoFragment extends Fragment implements View.OnClickListene
     }
 
     /**
-    * A listener for the answer description
+    * A listener for the answer description.
     */
     public class URLListener implements TaskCompleted {
         @Override

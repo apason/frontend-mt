@@ -241,7 +241,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      * A method for taking care to notify VideoScreen the right type of the media to be played.
      * And starts it.
-     * Note: it uses StatusService's variables for this.
+     * Note: It uses StatusService's variables for this.
      * @param uri Uri to be streamed or well readed by the WebView.
      * @param mediaTypee the media-type of the stuff, "video" or "image".
      */

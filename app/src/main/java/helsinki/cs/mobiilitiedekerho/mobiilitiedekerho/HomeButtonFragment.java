@@ -11,7 +11,7 @@ import android.widget.ImageButton;
 
 
 /**
- * A Fragment for handling the onClick events for the homebutton that takes the user back to MainActivity.
+ * A Fragment for drawnig the homebutton and handling the onClick events for the homebutton that takes the user back to MainActivity.
  */
 public class HomeButtonFragment extends Fragment {
 

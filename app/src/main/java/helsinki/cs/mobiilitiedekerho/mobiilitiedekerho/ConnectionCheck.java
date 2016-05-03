@@ -14,7 +14,7 @@ import android.util.Log;
 public class ConnectionCheck {
 
     /**
-     * Checks if network connection aviable and notifies the user if there is no network available.
+     * Checks if a network connection is aviable and notifies the user about the program's use if there is no network available.
      */
     public void conMgr() {
         if (!isNetworkAvailable()) {
