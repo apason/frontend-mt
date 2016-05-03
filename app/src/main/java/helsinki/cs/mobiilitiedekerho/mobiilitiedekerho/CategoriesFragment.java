@@ -225,7 +225,7 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
 
     /**
     * Draws the needed components to the screen.
-    * etc.
+    * That is the background and category-icons.
     */
     private void drawImages() {
         RelativeLayout rl = (RelativeLayout) view.findViewById(R.id.categories);
@@ -245,6 +245,14 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
         rl.getLayoutParams().height = 6000;
         rl.getLayoutParams().width = 9000;
 
+        createCategoryButtons(rl);
+    }
+
+    /**
+    * Draws the category-icons to the screen.
+    * TODO: In the future it must fit the icons to a grid based and place them based in the coordinates (that would be of the grid's).
+    */
+    private void createCategoryButtons(RelativeLayout rl) {
         ImageButton[] categorybutton = new ImageButton[categories.size()];
         for (int i = 0; i < categories.size(); i++) {
             try {
@@ -253,8 +261,8 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
                     RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
 
                     // WHAT, busy wait?!!? TODO: Fix something this is no good.
-                    start = System.currentTimeMillis();
-                    timer = 0;
+                    long start = System.currentTimeMillis();
+                    long timer = 0;
                     while (!StatusService.StaticStatusService.fh.checkIfImageExists("category_icon_id_" + categories.get(i).get("id") + ".png") && timer < 5000) {
                         timer = System.currentTimeMillis() - start;
                     }
