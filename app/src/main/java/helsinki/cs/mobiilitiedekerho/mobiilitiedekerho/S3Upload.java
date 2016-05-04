@@ -1,6 +1,5 @@
 package helsinki.cs.mobiilitiedekerho.mobiilitiedekerho;
 
-import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.webkit.MimeTypeMap;
