@@ -66,7 +66,8 @@ public class S3Upload extends AsyncTask<String, Void, String> {
                 bos.write(i);
             }
             bos.close();
-            
+
+            connection.getResponseCode();
             connection.disconnect();
 
             return "success";
