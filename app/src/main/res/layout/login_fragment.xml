@@ -21,14 +21,14 @@
             android:id="@+id/username"
             android:layout_gravity="left|top"
             android:background="#d9d9d9"
-            android:layout_margin="10dp" android:text="matti.meikalainen@gmail.com"/>
+            android:layout_margin="10dp" android:text=""/>
         <EditText
             android:layout_width="324dp"
             android:layout_height="61dp"
             android:id="@+id/password"
             android:layout_gravity="left|center"
             android:background="#d9d9d9"
-            android:layout_margin="10dp" android:inputType="text" android:text="salasana1"/>
+            android:layout_margin="10dp" android:inputType="text" android:text=""/>
 
         <TextView
             android:layout_width="185dp"
