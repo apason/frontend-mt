@@ -139,7 +139,13 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    // A method that draws the required objects on screen
+    // This method is called when this activity is initialized, since this is the main class
+    // this is where the program begins to execute (if android code in snot counted).
+    // - It does initalize the program (starts StatusService and pass what needed for it)
+    // - Checks if internet connection.
+    // - (Gets info about the current screen)
+    // - Check if some (authenticated user)-token is saved and checks its validity. (Other methods execution of this ends)
+    // After all this others methods deals with the graphics of the Main Menu.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
