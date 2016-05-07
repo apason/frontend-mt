@@ -23,6 +23,33 @@ public class StatusService {
         // TODO: Auto-fullscreen does not work for some reason.
         // TODO: It may be better to not hard-code it like this.
         protected static final String VideoPlay_HtmlTemplate = "<!DOCTYPE html><head><script>var elem = document.getElementById(\"video\");if (elem.requestFullscreen) {elem.requestFullscreen();} else if (elem.msRequestFullscreen) {elem.msRequestFullscreen();} else if (elem.mozRequestFullScreen) {elem.mozRequestFullScreen();} else if (elem.webkitRequestFullscreen) {elem.webkitRequestFullscreen();}elem.play();</script></head><body><video controls id=\"video\" width=\"100%\" height=\"100%\" preload=\"auto\" data-setup=\"{}\" autoplay><source src=\"#video_src#\"></video></body>";
+        /* This code (cleanly) written directly as htmls is like this:
+            <!DOCTYPE html>
+            <head>
+                <script>
+                    var elem = document.getElementById("video");
+
+                    if (elem.requestFullscreen) {
+                        elem.requestFullscreen();
+                    } else if (elem.msRequestFullscreen) {
+                        elem.msRequestFullscreen();
+                    } else if (elem.mozRequestFullScreen) {
+                        elem.mozRequestFullScreen();
+                    } else if (elem.webkitRequestFullscreen) {
+                        elem.webkitRequestFullscreen();
+                    }
+
+                    elem.play();
+                </script>
+            </head>
+
+            <body>
+                <video controls id="video" width="100%" height="100%" preload="auto" data-setup="{}" autoplay>
+                    <source src="#video_src#">
+                </video>
+
+            </body>
+        */
 
 
         /* These are variables storing info about the current user. */
